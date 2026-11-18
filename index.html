@@ -203,7 +203,7 @@ function sbDb(){
   async set(obj){guard();await sbReq(T+'?on_conflict=path',{method:'POST',headers:sbH({'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'}),body:JSON.stringify({path,data:obj,updated_at:new Date().toISOString()})})},
   async delete(){guard();await sbReq(T+'?path=eq.'+enc(path),{method:'DELETE',headers:sbH()})}
  });
- const collection=name=>({async get(){const a=await(await sbReq(T+'?select=path,data&path=like.'+enc(%/*'),{headers:sbH()})).json();loaded=true;return{docs:a.map(x=>({id:x.path.slice(name.length+1),data:()=>x.data}))}}});
+ const collection=name=>({async get(){const a=await(await sbReq(T+'?select=path,data&path=like.'+enc(name+'/%'),{headers:sbH()})).json();loaded=true;return{docs:a.map(x=>({id:x.path.slice(name.length+1),data:()=>x.data}))}}});
  return{doc,collection};
 }
 function sbAssets(){
