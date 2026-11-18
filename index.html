@@ -66,8 +66,8 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 .addrow{display:flex;gap:8px;padding:10px 14px;border-bottom:1px solid var(--bd);align-items:center}
 .addrow label.btn{flex:1;text-align:center;cursor:pointer;padding:13px}
 .addrow input[type=date]{height:44px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);padding:0 8px}
-#feed{flex:1;overflow-y:auto;padding:14px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-content:start}
-.card{border:1px solid var(--bd);border-radius:14px;overflow:hidden;background:var(--sf)}
+#feed{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:max-content;gap:12px;align-content:start}
+.card{border:1px solid var(--bd);border-radius:14px;overflow:hidden;background:var(--sf);display:flex;flex-direction:column}
 .card .ch{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;padding:6px 8px;background:var(--bg);gap:4px}
 .tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;background:#fef3c7;color:#b45309;margin-right:6px}
 .tag.old{background:var(--bd);color:var(--mut)}
