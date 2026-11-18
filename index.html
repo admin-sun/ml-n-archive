@@ -309,12 +309,21 @@ function feed(){
   if(!sel)return;const ph=photosOf(sel),f=$('feed');$('pcount').textContent=(sel.startsWith('C_')?'追加区画':sel)+'｜写真 '+ph.length+'枚';f.innerHTML='';
   if(!ph.length){f.innerHTML='<div style="grid-column:1/-1;border:2px dashed var(--bd);border-radius:14px;padding:30px;text-align:center;color:var(--mut)"><b>まだ写真がありません</b><br>上の「＋ 写真を追加する」から登録できます</div>';return}
   ph.forEach((p,i)=>{const c=document.createElement('article');c.className='card';
-    c.innerHTML=`<div class="ch"><div><span class="tag ${i?'old':''}">${i?'履歴 #'+(ph.length-i):'最新'}</span><b style="font-size:12px">投稿日: ${p.postedAt}</b>${p.local?' <span style="font-size:11px;color:var(--mut)">📱この端末のみ</span>':''}</div><div style="display:flex;gap:4px"><button class="nb" data-a="fs" data-i="${i}">全画面</button>${p.isStatic?'':`<button class="nb" data-a="del" data-id="${p.id}" aria-label="削除">🗑</button>`}</div></div><img src="${p.dataUrl}" alt="農地写真" loading="lazy" data-a="fs" data-i="${i}">`;f.appendChild(c)});
+    const m=p.postedAt.match(/(\d+)年(\d+)月(\d+)日/),iso=m?`${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`:todayISO();
+    c.innerHTML=`<div class="ch"><div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px"><span class="tag ${i?'old':''}">${i?'履歴 #'+(ph.length-i):'最新'}</span><b style="font-size:12px">投稿日: ${p.postedAt}</b>${p.isStatic?'':`<button class="nb" data-a="edate" data-id="${p.id}" style="height:24px;padding:0 6px;font-size:11px" title="投稿日を編集">✏️</button><input type="date" value="${iso}" data-did="${p.id}" style="position:fixed;opacity:0;pointer-events:none;width:0;height:0">`}${p.local?' <span style="font-size:11px;color:var(--mut)">📱この端末のみ</span>':''}</div><div style="display:flex;gap:4px"><button class="nb" data-a="fs" data-i="${i}">全画面</button>${p.isStatic?'':`<button class="nb" data-a="del" data-id="${p.id}" aria-label="削除">🗑</button>`}</div></div><img src="${p.dataUrl}" alt="農地写真" loading="lazy" data-a="fs" data-i="${i}">`;f.appendChild(c)});
 }
 $('feed').addEventListener('click',async e=>{
   const t=e.target.closest('[data-a]');if(!t||!sel)return;
   if(t.dataset.a==='fs')return openLB(+t.dataset.i);
+  if(t.dataset.a==='edate'){const inp=$('feed').querySelector(`input[data-did="${t.dataset.id}"]`);if(inp){if(inp.showPicker)try{inp.showPicker()}catch(x){inp.click()}else inp.click()}return}
   if(t.dataset.a==='del'){if(!await ask('写真の削除','この履歴写真を削除してもよろしいですか？'))return;const r=rec(sel),dp=r.photos.find(p=>p.id===t.dataset.id);r.photos=r.photos.filter(p=>p.id!==t.dataset.id);if(dp&&dp.assetId&&ASS){try{await ASS.delete(dp.assetId)}catch(x){}}await saveState();feed();render();toast('写真を削除しました')}
+});
+$('feed').addEventListener('change',async e=>{
+  const inp=e.target.closest('input[data-did]');if(!inp||!sel||!inp.value)return;
+  const r=rec(sel),p=r.photos.find(x=>x.id===inp.dataset.did);if(!p)return;
+  const tm=p.postedAt.match(/\d{2}:\d{2}$/);
+  p.postedAt=jpDate(inp.value,tm?tm[0]:'');
+  await saveState();feed();toast('投稿日を更新しました');
 });
 function meta(){if(!sel)return;const r=rec(sel);r.lotNumber=$('lot').value.trim();r.cropName=$('crop').value.trim();render();saveSoon()}
 $('lot').addEventListener('input',meta);$('crop').addEventListener('input',meta);
