@@ -185,7 +185,7 @@ const STATIC_PHOTOS={};
 const photosOf=id=>[...((S.records[id]&&S.records[id].photos)||[]),...(STATIC_PHOTOS[id]||[]).map((p,i)=>({id:'S_'+id+'_'+i,dataUrl:p.src,postedAt:p.postedAt,isStatic:true}))];
 /* ---------- Supabase 連携 ---------- */
 const SUPABASE_URL='https://supabase.co';
-const SUPABASE_KEY='sb_publishable_rVd7KEoOrJZOeIhdc14Nkg_ghFCtNJr';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNwYndqeWdzeGF3cGtyb25ldW56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ5ODE4NjQsImV4cCI6MjExMDU1Nzg2NH0.pQ1FZV1Rhy8B5t3wA2GQsV-1PKLjEX1oz4MGb2XOpw4';
 const SUPABASE_BUCKET='photos';
 const SB_OK=!/xxxx|ここに/.test(SUPABASE_URL+SUPABASE_KEY);
 const sbH=x=>Object.assign({apikey:SUPABASE_KEY},SUPABASE_KEY.startsWith('eyJ')?{Authorization:'Bearer '+SUPABASE_KEY}:{},x||{});
@@ -199,7 +199,7 @@ function sbDb(){
     return row?{exists:true,id:path.split('/').pop(),data:()=>row.data}:{exists:false,id:path.split('/').pop(),data:()=>undefined};
   },
   async set(obj){
-    await sbReq(T+'?on_conflict=path',{method:'POST',headers:sbH({'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'}),body:JSON.stringify({path,data:obj,updated_at:new Date().toISOString()})});
+    await sbReq(T+'?on_conflict=path',{method:'POST',headers:sbH({'Content-Type':'application/json',Prefer:'resolution=merge-duplicates'}),body:JSON.stringify({path,data:obj,updated_at:new Date().toISOString()})});
   },
   async delete(){
     await sbReq(T+'?path=eq.'+enc(path),{method:'DELETE',headers:sbH()});
