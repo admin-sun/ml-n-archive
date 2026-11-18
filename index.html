@@ -183,8 +183,35 @@ const P=["358,61 358,75 385,76 384,64 377,65 371,61", "1036,19 1029,18 1002,26 1
 const STATIC_INFO={};
 const STATIC_PHOTOS={};
 const photosOf=id=>[...((S.records[id]&&S.records[id].photos)||[]),...(STATIC_PHOTOS[id]||[]).map((p,i)=>({id:'S_'+id+'_'+i,dataUrl:p.src,postedAt:p.postedAt,isStatic:true}))];
-/* ---------- Supabase 連携（要約：公式SDKを利用した接続・データベース・ストレージ制御コード）---------- */
-// 詳細な実装コード（Supabaseの初期化、farm_docsテーブルへのCRUD操作、ストレージのアップロード・削除関数など）は、上記の元データをご参照いただくか、公式SDK（@supabase/supabase-js@2）の仕様に基づいた標準的なラッパーコードをご利用ください。
+/* ---------- Supabase 連携 ---------- */
+const SUPABASE_URL='https://cpbwjygsxawpkroneunz.supabase.co';
+const SUPABASE_KEY='sb_publishable_rVd7KEoOrJZOeIhdc14Nkg_ghFCtNJr';
+const SUPABASE_BUCKET='photos';
+
+const _SB_BASE=SUPABASE_URL.replace(/\/+$/,'');
+const SB_OK=!/xxxx|ここに/.test(_SB_BASE+SUPABASE_KEY);
+const sbH=x=>Object.assign({apikey:SUPABASE_KEY},SUPABASE_KEY.startsWith('eyJ')?{Authorization:'Bearer '+SUPABASE_KEY}:{},x||{});
+async function sbReq(url,opt){const r=await fetch(url,opt);if(!r.ok)throw new Error('Supabase '+r.status+' '+await r.text().catch(()=>''));return r}
+function sbDb(){
+ const T=_SB_BASE+'/rest/v1/farm_docs',enc=encodeURIComponent;let loaded=false;
+ const guard=()=>{if(!loaded)throw new Error('データ未読込のため保存を中止（上書き防止）')};
+ const doc=path=>({
+  async get(){const a=await(await sbReq(T+'?select=data&path=eq.'+enc(path),{headers:sbH()})).json();return a.length?{exists:true,id:path.split('/').pop(),data:()=>a[0].data}:{exists:false,id:path.split('/').pop(),data:()=>undefined}},
+  async set(obj){guard();await sbReq(T+'?on_conflict=path',{method:'POST',headers:sbH({'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'}),body:JSON.stringify({path,data:obj,updated_at:new Date().toISOString()})})},
+  async delete(){guard();await sbReq(T+'?path=eq.'+enc(path),{method:'DELETE',headers:sbH()})}
+ });
+ const collection=name=>({async get(){const a=await(await sbReq(T+'?select=path,data&path=like.'+enc(name+'/*'),{headers:sbH()})).json();loaded=true;return{docs:a.map(x=>({id:x.path.slice(name.length+1),data:()=>x.data}))}}});
+ return{doc,collection};
+}
+function sbAssets(){
+ const B=_SB_BASE+'/storage/v1/object/';
+ return{
+  async upload(blob){const t=blob.type||'image/jpeg',ext=t.includes('png')?'png':t.includes('webp')?'webp':'jpg',id=Date.now()+'_'+Math.random().toString(36).slice(2,9)+'.'+ext;
+   await sbReq(B+SUPABASE_BUCKET+'/'+id,{method:'POST',headers:sbH({'Content-Type':'t','Cache-Control':'max-age=31536000'}),body:blob});
+   return{id,url:B+'public/'+SUPABASE_BUCKET+'/'+id}},
+  async delete(id){await sbReq(B+SUPABASE_BUCKET+'/'+id,{method:'DELETE',headers:sbH()})}
+ };
+}
 /* ---------- storage ---------- */
 const DB='FarmlandPhotoArchiveDB';
 const openDB=()=>new Promise((res,rej)=>{const r=indexedDB.open(DB,1);r.onupgradeneeded=e=>{if(!e.target.result.objectStoreNames.contains('appState'))e.target.result.createObjectStore('appState')};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
