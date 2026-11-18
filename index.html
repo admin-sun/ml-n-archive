@@ -241,7 +241,7 @@ async function saveState(){
   for(const id in records){const s=JSON.stringify(records[id]);if(lastSaved[id]!==s){await DBH.doc('parcels/'+id).set(JSON.parse(s));lastSaved[id]=s}}
   for(const id in lastSaved){if(id!=='__meta'&&!records[id]){await DBH.doc('parcels/'+id).delete();delete lastSaved[id]}}
   return true
- }catch(e){console.error(e);toast('保存に失敗しました（編集権限を確認してください）');return false}
+}catch(e){console.error(e);toast('エラー詳細: '+e.message);return false}
 }
 let saveT;const saveSoon=()=>{clearTimeout(saveT);saveT=setTimeout(saveState,300)};
 
