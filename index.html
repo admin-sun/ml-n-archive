@@ -188,10 +188,9 @@ const photosOf=id=>[...((S.records[id]&&S.records[id].photos)||[]),...(STATIC_PH
    Supabase管理画面 → Project Settings → API
    SUPABASE_URL : Project URL（例 https://abcdefgh.supabase.co）
    SUPABASE_KEY : anon public キー（または publishable キー）。※service_role キーは絶対に入れないこと */
-const SUPABASE_URL='https://cpbwjygsxawpkroneunz.supabase.co/';
+const SUPABASE_URL='https://supabase.co';
 const SUPABASE_KEY='sb_publishable_rVd7KEoOrJZOeIhdc14Nkg_ghFCtNJr';
-const SUPABASE_BUCKET='photos'; /* Storageのバケット名（SQLで作成するものと同じ） */
-/* ★★★ 設定はここまで ★★★ */
+const SUPABASE_BUCKET='photos';
 const SB_OK=!/xxxx|ここに/.test(SUPABASE_URL+SUPABASE_KEY);
 const sbH=x=>Object.assign({apikey:SUPABASE_KEY},SUPABASE_KEY.startsWith('eyJ')?{Authorization:'Bearer '+SUPABASE_KEY}:{},x||{});
 async function sbReq(url,opt){const r=await fetch(url,opt);if(!r.ok)throw new Error('Supabase '+r.status+' '+await r.text().catch(()=>''));return r}
