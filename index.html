@@ -203,11 +203,12 @@ function sbDb(){
  const collection=name=>({async get(){const a=await(await sbReq(T+'?select=path,data&path=like.'+enc(name+'/*'),{headers:sbH()})).json();loaded=true;return{docs:a.map(x=>({id:x.path.slice(name.length+1),data:()=>x.data}))}}});
  return{doc,collection};
 }
+// ✅ 正しいコード
 function sbAssets(){
  const B=_SB_BASE+'/storage/v1/object/';
  return{
   async upload(blob){const t=blob.type||'image/jpeg',ext=t.includes('png')?'png':t.includes('webp')?'webp':'jpg',id=Date.now()+'_'+Math.random().toString(36).slice(2,9)+'.'+ext;
-   await sbReq(B+SUPABASE_BUCKET+'/'+id,{method:'POST',headers:sbH({'Content-Type':'t','Cache-Control':'max-age=31536000'}),body:blob});
+   await sbReq(B+SUPABASE_BUCKET+'/'+id,{method:'POST',headers:sbH({'Content-Type':t,'Cache-Control':'max-age=31536000'}),body:blob});
    return{id,url:B+'public/'+SUPABASE_BUCKET+'/'+id}},
   async delete(id){await sbReq(B+SUPABASE_BUCKET+'/'+id,{method:'DELETE',headers:sbH()})}
  };
