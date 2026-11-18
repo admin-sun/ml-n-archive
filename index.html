@@ -196,7 +196,8 @@ function sbDb(){
  const T=_SB_BASE+'/rest/v1/farm_docs',enc=encodeURIComponent;let loaded=false;
  const guard=()=>{if(!loaded)throw new Error('データ未読込のため保存を中止（上書き防止）')};
  const doc=path=>({
-  async get(){const a=await(await sbReq(T+'?select=data&path=eq.'+enc(path),{headers:sbH()})).json();return a.length?{exists:true,id:path.split('/').pop(),data:()=>a[0].data}:{exists:false,id:path.split('/').pop(),data:()=>undefined}},
+  // 1つ目の問題：data:()=>a[0].data ではなく data:()=>a.data になっていた場合
+async get(){const a=await(await sbReq(T+'?select=data&path=eq.'+enc(path),{headers:sbH()})).json();return a.length?{exists:true,id:path.split('/').pop(),data:()=>a[0].data}:{exists:false,id:path.split('/').pop(),data:()=>undefined}},
   async set(obj){guard();await sbReq(T+'?on_conflict=path',{method:'POST',headers:sbH({'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'}),body:JSON.stringify({path,data:obj,updated_at:new Date().toISOString()})})},
   async delete(){guard();await sbReq(T+'?path=eq.'+enc(path),{method:'DELETE',headers:sbH()})}
  });
