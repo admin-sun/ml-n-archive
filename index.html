@@ -65,9 +65,9 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 .fld:focus-within{border-color:var(--g2)}
 .addrow{display:flex;gap:8px;padding:6px 14px;border-bottom:1px solid var(--bd);align-items:center;justify-content:flex-end}
 .addrow input[type=date]{width:auto;max-width:155px;height:36px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);padding:0 8px;font-size:13px;font-weight:700}
-.addrow label.add-fab{width:42px;height:42px;border-radius:50%;background:var(--g2);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.18);transition:transform .12s,background .15s}
+.addrow label.add-fab{width:38px;height:38px;border-radius:50%;background:var(--g2);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.18);transition:transform .12s}
 .addrow label.add-fab:active{transform:scale(.93)}
-.addrow label.add-fab svg{width:22px;height:22px;stroke:#fff;stroke-width:2.8;stroke-linecap:round}
+.addrow label.add-fab svg{width:20px;height:20px;stroke:#fff;stroke-width:2.8;stroke-linecap:round}
 #feed{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:max-content;gap:12px;align-content:start}
 .card{border:1px solid var(--bd);border-radius:14px;overflow:hidden;background:var(--sf);display:flex;flex-direction:column}
 .card .ch{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;padding:6px 8px;background:var(--bg);gap:4px}
@@ -82,13 +82,34 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 #toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#0f172ae6;color:#fff;padding:9px 16px;border-radius:99px;font-size:13px;z-index:90;opacity:0;transition:opacity .2s;pointer-events:none}
 #confirm{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:16px}
 #confirm div{background:var(--sf);border-radius:16px;padding:18px;max-width:340px;width:100%}
-@media(max-width:767px){
-aside{position:fixed;left:0;right:0;bottom:0;width:100%;height:78vh;border-radius:20px 20px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.25);transform:translateY(100%);transition:transform .28s;padding-bottom:env(safe-area-inset-bottom,0px)}
-aside.open{transform:none}
-#empty{display:none}
-.pill,.dsk{display:none!important}
-#adj-panel{width:210px}
-}
+/* マルチデバイス＆画面サイズ自動最適化 */
+body.is-touch .addrow{padding:8px 14px;gap:10px}
+body.is-touch .addrow input[type=date]{max-width:165px;height:40px;font-size:16px;padding:0 10px}
+body.is-touch .addrow label.add-fab{width:42px;height:42px}
+body.is-touch .addrow label.add-fab svg{width:22px;height:22px}
+body.is-touch .fld input{font-size:16px}
+body.is-touch #zoom button{width:44px;height:44px;font-size:20px}
+body.is-touch .nb{height:34px;padding:0 10px;font-size:13px}
+body.layout-sheet aside{position:fixed;left:0;right:0;bottom:0;width:100%;height:82vh;border-radius:20px 20px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.25);transform:translateY(100%);transition:transform .28s;padding-bottom:env(safe-area-inset-bottom,0px)}
+body.layout-sheet aside.open{transform:none}
+body.layout-sheet #empty{display:none}
+body.layout-sheet .pill,body.layout-sheet .dsk{display:none!important}
+body.sz-xs header{padding:0 8px;gap:4px}
+body.sz-xs header h1{font-size:14px}
+body.sz-xs .hb{padding:0 7px;font-size:12px;height:32px}
+body.sz-xs aside{height:86vh}
+body.sz-xs #feed{grid-template-columns:1fr;padding:10px;gap:10px}
+body.sz-sm #feed{grid-template-columns:1fr;padding:12px;gap:14px}
+body.dev-tablet.layout-sheet aside{height:68vh}
+body.dev-tablet #feed{grid-template-columns:repeat(2,minmax(0,1fr));padding:14px;gap:14px}
+body.dev-tablet.layout-split aside{width:50%}
+body.dev-tablet.layout-split #feed{grid-template-columns:repeat(2,minmax(0,1fr))}
+body.dev-pc .addrow input[type=date]{max-width:150px;height:34px;font-size:13px}
+body.dev-pc .addrow label.add-fab{width:36px;height:36px}
+body.dev-pc #zoom button{width:34px;height:34px;font-size:16px}
+body.sz-lg aside{width:46%}
+body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(min-width:1800px){body.sz-lg #feed{grid-template-columns:repeat(4,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -307,7 +328,7 @@ function selectP(id,center){
   $('lot').value=r.lotNumber||p.defaultLot;$('crop').value=r.cropName||'';$('pdate').value=todayISO();
   $('cfoot').classList.toggle('hidden',!id.startsWith('C_'));
   render();feed();
-  if(center)focusP(id,innerWidth<768?.14:.5);
+  if(center)focusP(id,window.USE_SHEET?.22:.5);
 }
 function closeP(){sel=null;panel.classList.remove('open');$('empty').classList.remove('hidden');$('active').classList.add('hidden');$('hint').classList.remove('hidden');render()}
 function feed(){
@@ -339,7 +360,7 @@ $('i-photos').addEventListener('change',async e=>{
   try{if(!ASS&&DBH){toast('この環境では写真を追加できません（編集権限が必要です）');return}for(const f of files){const bl=await compress(f);let url,aid,loc=false;if(ASS){try{const a=await ASS.upload(bl);url=a.url;aid=a.id}catch(x){}}if(!url){if(DBH)throw new Error('upload');url=await new Promise((ok,ng)=>{const fr=new FileReader();fr.onload=()=>ok(fr.result);fr.onerror=ng;fr.readAsDataURL(bl)});loc=true}r.photos.unshift({id:'PH_'+Date.now()+Math.random().toString(36).slice(2,7),dataUrl:url,assetId:aid,local:loc,postedAt:when,timestamp:Date.now()})}await saveState();feed();render();toast(files.length+'枚の写真を追加しました')}catch(x){toast('画像の読み込みに失敗しました')}finally{e.target.value=''}
 });
 function step(d){const ps=allParcels(),i=ps.findIndex(p=>p.id===sel);selectP(ps[(i<0?0:(i+d+ps.length)%ps.length)].id,true)}
-$('n-prev').onclick=()=>step(-1);$('n-next').onclick=()=>step(1);$('n-loc').onclick=()=>{if(sel){if(innerWidth<768)panel.classList.remove('open');focusP(sel,innerWidth<768?.5:.5)}};$('n-close').onclick=closeP;
+$('n-prev').onclick=()=>step(-1);$('n-next').onclick=()=>step(1);$('n-loc').onclick=()=>{if(sel){if(window.USE_SHEET)panel.classList.remove('open');focusP(sel,.5)}};$('n-close').onclick=closeP;
 $('b-delc').onclick=async()=>{if(!sel||!sel.startsWith('C_'))return;if(!await ask('追加区画の削除','この追加区画と登録写真を削除しますか？'))return;S.customParcels=S.customParcels.filter(p=>p.id!==sel);delete S.records[sel];delete S.parcelOverrides[sel];await saveState();closeP();toast('追加区画を削除しました')};
 
 /* ---------- lightbox ---------- */
@@ -419,8 +440,38 @@ $('i-map').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;
 $('mapimg').addEventListener('error',()=>{if(!S.customMapDataUrl)$('upload').classList.remove('hidden')});
 $('mapimg').addEventListener('load',()=>{$('upload').classList.add('hidden');updAdj()});
 
+/* ---------- マルチデバイス＆画面サイズ自動判別 ---------- */
+function detectDevice(){
+  const w=window.innerWidth,h=window.innerHeight;
+  const isTouch=('ontouchstart' in window)||(navigator.maxTouchPoints>0)||window.matchMedia('(pointer:coarse)').matches;
+  const ua=navigator.userAgent;
+  const isIpad=/iPad/.test(ua)||(/Macintosh/.test(ua)&&isTouch);
+  const isAndroidTab=/Android/.test(ua)&&!/Mobile/.test(ua);
+  const isMobPhone=/iPhone|iPod|BlackBerry|IEMobile|Opera Mini/.test(ua)||(/Android/.test(ua)&&/Mobile/.test(ua));
+
+  let dev='pc';
+  if(isMobPhone||(isTouch&&Math.min(w,h)<600))dev='mobile';
+  else if(isIpad||isAndroidTab||(isTouch&&Math.min(w,h)>=600))dev='tablet';
+
+  const useSheet=(dev==='mobile')||(dev==='tablet'&&w<h)||(w<768);
+  let sz='md';
+  if(w<380)sz='xs';
+  else if(w<768)sz='sm';
+  else if(w>=1440)sz='lg';
+
+  const b=document.body;
+  b.classList.remove('dev-mobile','dev-tablet','dev-pc','is-touch','layout-sheet','layout-split','sz-xs','sz-sm','sz-md','sz-lg');
+  b.classList.add('dev-'+dev,useSheet?'layout-sheet':'layout-split','sz-'+sz);
+  if(isTouch)b.classList.add('is-touch');
+  window.USE_SHEET=useSheet;
+}
+detectDevice();
+window.addEventListener('resize',detectDevice);
+window.addEventListener('orientationchange',()=>setTimeout(detectDevice,100));
+
 /* ---------- init ---------- */
 addEventListener('DOMContentLoaded',async()=>{
+  detectDevice();
   const s=await loadState();if(s){S=normState(s);if(S.customMapDataUrl)$('mapimg').src=S.customMapDataUrl}
   else if($('mapimg').complete&&!$('mapimg').naturalWidth)$('upload').classList.remove('hidden');
   render();fit(false);
