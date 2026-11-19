@@ -119,6 +119,23 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
   .addrow input[type=date]{height:32px;width:100%;font-size:12px}
   #feed{grid-template-columns:repeat(2,minmax(0,1fr))!important;padding:14px!important}
 }
+  /* 緑色の丸＋ボタンと日付入力の並び調整 */
+.addrow{display:flex;align-items:center;gap:10px}
+.addrow label.btn.circle-add{width:46px!important;height:46px!important;min-width:46px;padding:0!important;border-radius:50%!important;display:inline-flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;line-height:1;flex:none!important}
+.addrow input[type=date]{height:42px;flex:1;min-width:0}
+
+@media(min-width:768px){
+  .addrow{flex-direction:row!important;width:auto!important;justify-content:flex-start!important}
+  .addrow input[type=date]{width:138px!important;flex:none!important}
+}
+
+/* スマホ表示時のヘッダーボタンはみ出し防止 */
+@media(max-width:767px){
+  header{padding:0 8px;gap:4px}
+  header h1{font-size:14px}
+  header > div{gap:4px!important}
+  .hb{padding:0 6px;font-size:11px;height:30px;white-space:nowrap}
+}
 </style>
 </head>
 <body>
@@ -126,9 +143,9 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
   <h1>🌾 農地写真アーカイブ</h1>
   <div style="display:flex;gap:6px;align-items:center;position:relative">
     <span class="pill">登録済 <b id="reg">0</b> / <span id="tot">0</span></span>
-    <button class="hb" id="b-draw">＋区画追加</button>
-    <button class="hb" id="b-num">🔢番号</button>
-    <button class="hb" id="b-adj">📐位置調整</button>
+  <button class="hb" id="b-draw">区画追加</button>
+  <button class="hb" id="b-num">🔢番号</button>
+  <button class="hb" id="b-adj">📐位置調整</button>
     <button class="hb" id="b-menu" aria-label="メニュー">⋮</button>
     <div id="menu" class="fl hidden">
       <button id="b-export">⬇ データを書き出し (JSON)</button>
@@ -190,8 +207,8 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
         </div>
       </div>
       <div class="addrow">
+        <label class="btn circle-add" aria-label="写真を追加する">＋<input id="i-photos" type="file" accept="image/*" multiple class="hidden"></label>
         <input id="pdate" type="date" aria-label="投稿日">
-        <label class="btn">＋ 写真を追加する<input id="i-photos" type="file" accept="image/*" multiple class="hidden"></label>
       </div>
     </div>
     <div id="feed"></div>
@@ -285,7 +302,7 @@ const getP=id=>allParcels().find(p=>p.id===id)||null;
 const centroid=s=>{const a=parse(s);return{x:a.reduce((t,p)=>t+p[0],0)/a.length,y:a.reduce((t,p)=>t+p[1],0)/a.length}};
 function rec(id){if(!S.records[id]){const m=getP(id);const si=STATIC_INFO[id]||{};S.records[id]={lotNumber:si.lotNumber||(m?m.defaultLot:id),cropName:si.cropName||'',photos:[]}}{const r0=S.records[id],s0=STATIC_INFO[id],m0=getP(id);if(s0){if(s0.lotNumber&&(!r0.lotNumber||(m0&&r0.lotNumber===m0.defaultLot)))r0.lotNumber=s0.lotNumber;if(s0.cropName&&!r0.cropName)r0.cropName=s0.cropName}}return S.records[id]}
 const todayISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
-const jpDate=(iso,t)=>{const p=iso.split('-');return p[0]+'年'+Number(p[1])+'月'+Number(p[2])+'日'+(t?' '+t:'')};
+const jpDate=iso=>iso.replace(/-/g,'/');
 function toast(m){const t=$('toast');t.textContent=m;t.style.opacity=1;clearTimeout(window._tt);window._tt=setTimeout(()=>t.style.opacity=0,2200)}
 function ask(title,body){return new Promise(res=>{$('c-t').textContent=title;$('c-b').textContent=body;$('confirm').classList.remove('hidden');const done=v=>{$('confirm').classList.add('hidden');res(v)};$('c-ok').onclick=()=>done(true);$('c-no').onclick=()=>done(false)})}
 function compress(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=e=>{const im=new Image();im.onload=()=>{let w=im.width,h=im.height;const M=1600;if(w>M||h>M){if(w>h){h=Math.round(h*M/w);w=M}else{w=Math.round(w*M/h);h=M}}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);c.toBlob(b=>res(b),'image/jpeg',.84)};im.onerror=rej;im.src=e.target.result};fr.onerror=rej;fr.readAsDataURL(file)})}
@@ -363,7 +380,7 @@ function meta(){if(!sel)return;const r=rec(sel);r.lotNumber=$('lot').value.trim(
 $('lot').addEventListener('input',meta);$('crop').addEventListener('input',meta);
 $('i-photos').addEventListener('change',async e=>{
   const files=[...e.target.files];if(!files.length||!sel)return;const r=rec(sel),d=$('pdate').value||todayISO(),now=new Date();
-  const when=jpDate(d,d===todayISO()?String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0'):'');
+const when=jpDate(d);
   toast('写真を処理中... ('+files.length+'枚)');
   try{if(!ASS&&DBH){toast('この環境では写真を追加できません（編集権限が必要です）');return}for(const f of files){const bl=await compress(f);let url,aid,loc=false;if(ASS){try{const a=await ASS.upload(bl);url=a.url;aid=a.id}catch(x){}}if(!url){if(DBH)throw new Error('upload');url=await new Promise((ok,ng)=>{const fr=new FileReader();fr.onload=()=>ok(fr.result);fr.onerror=ng;fr.readAsDataURL(bl)});loc=true}r.photos.unshift({id:'PH_'+Date.now()+Math.random().toString(36).slice(2,7),dataUrl:url,assetId:aid,local:loc,postedAt:when,timestamp:Date.now()})}await saveState();feed();render();toast(files.length+'枚の写真を追加しました')}catch(x){toast('画像の読み込みに失敗しました')}finally{e.target.value=''}
 });
