@@ -161,6 +161,18 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
   .fld{padding:4px 7px}
   .fld input{font-size:13px}
 }
+/* スマホ閲覧時：農地選択パネルを隙間のない完全な全画面表示にする */
+@media(max-width:767px){
+  aside{
+    top:0 !important;
+    bottom:0 !important;
+    height:100% !important;
+    max-height:100% !important;
+    border-radius:0 !important;
+    z-index:50 !important;
+    padding-top:env(safe-area-inset-top,0px);
+  }
+}
 </style>
 </head>
 <body>
