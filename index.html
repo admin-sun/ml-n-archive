@@ -401,7 +401,7 @@ $('b-delc').onclick=async()=>{if(!sel||!sel.startsWith('C_'))return;if(!await as
 /* ---------- lightbox ---------- */
 let lbP=[],lbI=0;
 function openLB(i){lbP=photosOf(sel);if(!lbP.length)return;lbI=Math.min(i,lbP.length-1);updLB();$('lb').classList.remove('hidden')}
-function updLB(){const p=lbP[lbI],r=rec(sel);$('lb-t').textContent=(r.lotNumber||sel)+(r.cropName?'（'+r.cropName+'）':'');$('lb-d').textContent='投稿日: '+p.postedAt;$('lb-c').textContent=(lbI+1)+' / '+lbP.length;$('lb-i').src=p.dataUrl}
+function updLB(){const p=lbP[lbI],r=rec(sel);$('lb-t').textContent=(r.lotNumber||sel)+(r.cropName?'（'+r.cropName+'）':'');$('lb-d').textContent='投稿日: '+fmtDate(p.postedAt);;$('lb-c').textContent=(lbI+1)+' / '+lbP.length;$('lb-i').src=p.dataUrl}
 const lbStep=d=>{lbI=(lbI+d+lbP.length)%lbP.length;updLB()};
 $('lb-x').onclick=()=>$('lb').classList.add('hidden');$('lb-p').onclick=()=>lbStep(-1);$('lb-n').onclick=()=>lbStep(1);
 addEventListener('keydown',e=>{if($('lb').classList.contains('hidden'))return;if(e.key==='Escape')$('lb').classList.add('hidden');if(e.key==='ArrowLeft')lbStep(-1);if(e.key==='ArrowRight')lbStep(1)});
