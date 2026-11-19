@@ -173,6 +173,24 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
     padding-top:env(safe-area-inset-top,0px);
   }
 }
+/* スマホ閲覧時：「← 前」「次 →」「📍地図」ボタンの文字ずれ・折り返し防止 */
+@media(max-width:767px){
+  .bar .nb{
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    white-space:nowrap !important;
+    padding:0 7px !important;
+    height:28px !important;
+    font-size:11px !important;
+    line-height:1 !important;
+  }
+  #pcount{
+    white-space:nowrap !important;
+    font-size:11px !important;
+    padding:3px 7px !important;
+  }
+}
 </style>
 </head>
 <body>
