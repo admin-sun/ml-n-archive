@@ -144,6 +144,23 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
   padding: 0 6px !important;
   font-size: 13px !important;
 }
+/* スマホ・パソコン共通：操作バー（地番・作物名＋丸ボタン・日付）の横並び配置 */
+#active .top-controls{display:flex;align-items:stretch;border-bottom:1px solid var(--bd);background:var(--bg)}
+.bar{flex:1;border-bottom:0;padding:8px 10px;min-width:0}
+.fields{margin-top:6px;gap:6px}
+.addrow{display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;border-bottom:0!important;border-left:1px solid var(--bd);padding:8px 8px!important;width:auto!important;gap:6px!important}
+.addrow input[type=date]{width:108px!important;max-width:108px!important;height:30px!important;padding:0 4px!important;font-size:12px!important;flex:none!important}
+.addrow label.btn.circle-add{width:38px!important;height:38px!important;min-width:38px!important;font-size:22px!important}
+
+/* 写真カードの投稿日変更欄 */
+.card-date{border:1px solid var(--bd);background:var(--sf);border-radius:6px;padding:2px 4px;font-size:12px;font-weight:700;height:26px}
+
+/* スマホ用：下スライドで閉じるためのつまみ（ハンドル）表示 */
+@media(max-width:767px){
+  aside::before{content:"";display:block;width:40px;height:5px;background:var(--bd);border-radius:99px;margin:8px auto 2px;flex-shrink:0}
+  .fld{padding:4px 7px}
+  .fld input{font-size:13px}
+}
 </style>
 </head>
 <body>
@@ -366,17 +383,22 @@ function selectP(id,center){
   if(center)focusP(id,window.USE_SHEET?.22:.5);
 }
 function closeP(){sel=null;panel.classList.remove('open');$('empty').classList.remove('hidden');$('active').classList.add('hidden');$('hint').classList.remove('hidden');render()}
+const toISO=s=>{const m=fmtDate(s).match(/(\d{4})\/(\d{1,2})\/(\d{1,2})/);return m?m[1]+'-'+m[2].padStart(2,'0')+'-'+m[3].padStart(2,'0'):todayISO()};
 function feed(){
   if(!sel)return;const ph=photosOf(sel),f=$('feed');$('pcount').textContent=(sel.startsWith('C_')?'追加区画':sel)+'｜写真 '+ph.length+'枚';f.innerHTML='';
-  if(!ph.length){f.innerHTML='<div style="grid-column:1/-1;border:2px dashed var(--bd);border-radius:14px;padding:30px;text-align:center;color:var(--mut)"><b>まだ写真がありません</b><br>上の「＋ 写真を追加する」から登録できます</div>';return}
+  if(!ph.length){f.innerHTML='<div style="grid-column:1/-1;border:2px dashed var(--bd);border-radius:14px;padding:30px;text-align:center;color:var(--mut)"><b>まだ写真がありません</b><br>上の「＋」ボタンから登録できます</div>';return}
   ph.forEach((p,i)=>{const c=document.createElement('article');c.className='card';
-    const m=p.postedAt.match(/(\d+)年(\d+)月(\d+)日/),iso=m?`${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`:todayISO();
-    c.innerHTML=`<div class="ch"><div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px"><span class="tag ${i?'old':''}">${i?'履歴 #'+(ph.length-i):'最新'}</span><b style="font-size:12px">投稿日: ${fmtDate(p.postedAt)}</b>${p.isStatic?'':`<button class="nb" data-a="edate" data-id="${p.id}" style="height:24px;padding:0 6px;font-size:11px" title="投稿日を編集">✏️</button><input type="date" value="${iso}" data-did="${p.id}" style="position:fixed;opacity:0;pointer-events:none;width:0;height:0">`}${p.local?' <span style="font-size:11px;color:var(--mut)">📱この端末のみ</span>':''}</div><div style="display:flex;gap:4px"><button class="nb" data-a="fs" data-i="${i}">全画面</button>${p.isStatic?'':`<button class="nb" data-a="del" data-id="${p.id}" aria-label="削除">🗑</button>`}</div></div><img src="${p.dataUrl}" alt="農地写真" loading="lazy" data-a="fs" data-i="${i}">`;f.appendChild(c)});
+    const dateUI=p.isStatic?`<b style="font-size:12px">${fmtDate(p.postedAt)}</b>`:`<input type="date" class="card-date" data-id="${p.id}" value="${toISO(p.postedAt)}" aria-label="投稿日を変更">`;
+    c.innerHTML=`<div class="ch"><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap"><span class="tag ${i?'old':''}">${i?'履歴 #'+(ph.length-i):'最新'}</span>${dateUI}${p.local?' <span style="font-size:11px;color:var(--mut)">📱この端末のみ</span>':''}</div><div style="display:flex;gap:4px"><button class="nb" data-a="fs" data-i="${i}">全画面</button>${p.isStatic?'':`<button class="nb" data-a="del" data-id="${p.id}" aria-label="削除">🗑</button>`}</div></div><img src="${p.dataUrl}" alt="農地写真" loading="lazy" data-a="fs" data-i="${i}">`;f.appendChild(c)});
 }
+$('feed').addEventListener('change',async e=>{
+  const t=e.target.closest('.card-date');if(!t||!sel||!t.value)return;
+  const r=rec(sel),ph=r.photos.find(p=>p.id===t.dataset.id);
+  if(ph){ph.postedAt=jpDate(t.value);await saveState();toast('投稿日を変更しました')}
+});
 $('feed').addEventListener('click',async e=>{
   const t=e.target.closest('[data-a]');if(!t||!sel)return;
   if(t.dataset.a==='fs')return openLB(+t.dataset.i);
-  if(t.dataset.a==='edate'){const inp=$('feed').querySelector(`input[data-did="${t.dataset.id}"]`);if(inp){if(inp.showPicker)try{inp.showPicker()}catch(x){inp.click()}else inp.click()}return}
   if(t.dataset.a==='del'){if(!await ask('写真の削除','この履歴写真を削除してもよろしいですか？'))return;const r=rec(sel),dp=r.photos.find(p=>p.id===t.dataset.id);r.photos=r.photos.filter(p=>p.id!==t.dataset.id);if(dp&&dp.assetId&&ASS){try{await ASS.delete(dp.assetId)}catch(x){}}await saveState();feed();render();toast('写真を削除しました')}
 });
 $('feed').addEventListener('change',async e=>{
@@ -503,7 +525,23 @@ function detectDevice(){
 detectDevice();
 window.addEventListener('resize',detectDevice);
 window.addEventListener('orientationchange',()=>setTimeout(detectDevice,100));
-
+/* ---------- スマホ用：パネルを下スライドして地図に戻る ---------- */
+let py0=0,pdy=0,pswipe=false;
+panel.addEventListener('touchstart',e=>{
+  if(innerWidth>=768||e.touches.length!==1)return;
+  if(e.target.closest('#feed')&&$('feed').scrollTop>0)return;
+  py0=e.touches[0].clientY;pdy=0;pswipe=true;panel.style.transition='none';
+},{passive:true});
+panel.addEventListener('touchmove',e=>{
+  if(!pswipe)return;
+  pdy=e.touches[0].clientY-py0;
+  if(pdy>0)panel.style.transform=`translateY(${pdy}px)`;
+},{passive:true});
+panel.addEventListener('touchend',()=>{
+  if(!pswipe)return;pswipe=false;panel.style.transition='';
+  if(pdy>90){panel.style.transform='';closeP()}
+  else{panel.style.transform=''}
+});
 /* ---------- init ---------- */
 addEventListener('DOMContentLoaded',async()=>{
   detectDevice();
