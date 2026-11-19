@@ -191,6 +191,12 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
     padding:3px 7px !important;
   }
 }
+/* スマホ閲覧時：左下のズームボタン（＋・－・全体）を非表示にする */
+@media(max-width:767px){
+  #zoom{
+    display: none !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -571,6 +577,14 @@ panel.addEventListener('touchend',()=>{
   if(!pswipe)return;pswipe=false;panel.style.transition='';
   if(pdy>90){panel.style.transform='';closeP()}
   else{panel.style.transform=''}
+});
+/* ---------- スマホ用：地図のダブルタップで全体表示に戻る ---------- */
+let lastTap=0;
+vp.addEventListener('touchend',e=>{
+  if(innerWidth>=768||drawing||moved||e.touches.length>0)return;
+  const now=Date.now();
+  if(now-lastTap<300){e.preventDefault();fit(true);lastTap=0}
+  else{lastTap=now}
 });
 /* ---------- init ---------- */
 addEventListener('DOMContentLoaded',async()=>{
