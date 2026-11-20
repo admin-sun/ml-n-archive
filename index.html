@@ -66,14 +66,16 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 .addrow label.btn.circle-add{width:38px;height:38px;min-width:38px;padding:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;line-height:1}
 .addrow input[type=date]{width:108px;max-width:108px;height:30px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);padding:0 4px;font-size:12px;font-weight:700}
 #active .top-controls{display:flex;align-items:stretch;border-bottom:1px solid var(--bd);background:var(--bg)}
-#feed{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:max-content;gap:12px;align-content:start}
-.card{border:1px solid var(--bd);border-radius:14px;overflow:hidden;background:var(--sf);display:flex;flex-direction:column}
-.card .ch{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;padding:6px 8px;background:var(--bg);gap:4px}
-.tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;background:#fef3c7;color:#b45309;margin-right:6px}
-.tag.old{background:var(--bd);color:var(--mut)}
-.card img{width:100%;aspect-ratio:4/3;object-fit:contain;display:block;cursor:zoom-in;background:#0002;min-height:180px;opacity:0;transition:opacity .28s ease}
-.card img.loaded{min-height:0;background:none;opacity:1}
-.card-date{border:1px solid var(--bd);background:var(--sf);border-radius:6px;padding:2px 4px;font-size:12px;font-weight:700;height:26px}
+#feed{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:max-content;gap:1px;background:rgba(148,163,184,.28);align-content:start}
+.card{position:relative;border:none;border-radius:0;overflow:hidden;background:var(--sf);display:block}
+.card .ch{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:center;padding:4px 6px;gap:4px;background:linear-gradient(to top,rgba(15,23,42,.52),rgba(15,23,42,0));pointer-events:none}
+.card .ch > div{pointer-events:auto}
+.tag{font-size:10px;font-weight:500;padding:1px 5px;border-radius:4px;background:rgba(255,255,255,.78);color:#334155;margin-right:4px}
+.tag.old{background:rgba(15,23,42,.45);color:#f1f5f9}
+.card img{width:100%;aspect-ratio:1 / 1;object-fit:cover;min-height:0;display:block;cursor:zoom-in;background:rgba(148,163,184,.12);opacity:0;transition:opacity .25s ease}
+.card img.loaded{opacity:1}
+.card-date{border:none;background:rgba(255,255,255,.78);color:#1e293b;border-radius:4px;padding:0 4px;font-size:10px;font-weight:500;height:20px}
+.card .ch .nb{height:20px;padding:0 5px;font-size:10px;font-weight:500;background:rgba(255,255,255,.78);color:#1e293b;border:none;border-radius:4px}
 #lb{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.95);display:flex;flex-direction:column;color:#fff;opacity:1;transition:opacity .38s ease,transform .38s ease}
 #lb.closing{opacity:0!important;pointer-events:none!important}
 #lb .top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;height:68px;min-height:68px;max-height:68px;flex-shrink:0;overflow:visible;position:relative;z-index:30}
@@ -458,7 +460,7 @@ function feed(){
   const eagerCount=innerWidth<768?2:4;
   ph.forEach((p,i)=>{
     const c=document.createElement('article');c.className='card';
-    const dateUI=p.isStatic?`<b style="font-size:12px">${fmtDate(p.postedAt)}</b>`:`<input type="date" class="card-date" data-id="${p.id}" value="${toISO(p.postedAt)}" aria-label="投稿日を変更">`;
+    const dateUI=p.isStatic?`<span style="font-size:10px;color:#f8fafc;text-shadow:0 1px 2px rgba(0,0,0,.7)">${fmtDate(p.postedAt)}</span>`:`<input type="date" class="card-date" data-id="${p.id}" value="${toISO(p.postedAt)}" aria-label="投稿日を変更">`;
     const isEager=i<eagerCount;
     c.innerHTML=`<div class="ch"><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap"><span class="tag ${i?'old':''}">${i?'履歴 #'+(ph.length-i):'最新'}</span>${dateUI}${p.local?' <span style="font-size:11px;color:var(--mut)">📱この端末のみ</span>':''}</div><div style="display:flex;gap:4px"><button class="nb" data-a="fs" data-i="${i}">全画面</button>${p.isStatic?'':`<button class="nb" data-a="del" data-id="${p.id}" aria-label="削除">🗑</button>`}</div></div><img ${isEager?`src="${p.dataUrl}" fetchpriority="high"`:`data-src="${p.dataUrl}"`} alt="農地写真" decoding="async" data-a="fs" data-i="${i}">`;
     const im=c.querySelector('img');
