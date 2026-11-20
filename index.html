@@ -203,6 +203,25 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
   stroke: #14532d !important;
   stroke-width: 2.2 !important;
 }
+ /* 全画面表示：タイトルが2行になっても写真の上下位置・高さを一切変えない */
+#lb .top{
+  height: 68px !important;
+  min-height: 68px !important;
+  max-height: 68px !important;
+  flex-shrink: 0 !important;
+  overflow: hidden !important;
+}
+#lb .top > div:first-child{
+  min-width: 0;
+  flex: 1;
+}
+#lb-t{
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.35;
+}
 </style>
 </head>
 <body>
