@@ -110,15 +110,16 @@ body.dev-tablet.layout-split aside{width:50%}
 body.sz-lg aside{width:46%}
 body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
 @media(min-width:1800px){body.sz-lg #feed{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media(max-width:767px){
-  header{padding:0 8px;gap:4px}
-  header h1{font-size:14px}
-  header > div{gap:4px!important}
-  .hb{padding:0 6px;font-size:11px;height:30px;white-space:nowrap}
-  .fld{padding:4px 7px}
-  .fld input{font-size:13px}
-  .bar .nb{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;padding:0 7px;height:28px;font-size:11px;line-height:1}
-  #pcount{white-space:nowrap;font-size:11px;padding:3px 7px}
+@media(min-width:768px){
+  #active .top-controls{display:flex;align-items:stretch;border-bottom:1px solid var(--bd);background:var(--bg)}
+  .bar{flex:1;border-bottom:0;padding:8px 10px}
+  .fields{margin-top:6px;gap:6px}
+  .addrow{flex-direction:column;justify-content:center;border-bottom:0;border-left:1px solid var(--bd);padding:8px 10px;width:auto;gap:6px}
+  #feed,
+  body.sz-lg #feed{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    padding:14px!important;
+  }
 }
 </style>
 </head>
