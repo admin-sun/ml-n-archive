@@ -289,6 +289,25 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
 #lb-pmenu{
   z-index: 100 !important;
 }
+/* 写真カード：読み込み中のスケルトン演出と滑らかなフェードイン */
+.card img{
+  min-height: 180px;
+  background: linear-gradient(110deg, #e2e8f0 30%, #f1f5f9 50%, #e2e8f0 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite linear;
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+.card img.loaded{
+  min-height: 0;
+  background: none;
+  animation: none;
+  opacity: 1;
+}
+@keyframes shimmer{
+  0%{background-position: 200% 0}
+  100%{background-position: -200% 0}
+}
 </style>
 </head>
 <body>
@@ -464,7 +483,7 @@ const fmtDate=s=>String(s||'').replace(/(\d{4})年(\d{1,2})月(\d{1,2})日.*/,(_
 function toast(m){const t=$('toast');t.textContent=m;t.style.opacity=1;clearTimeout(window._tt);window._tt=setTimeout(()=>t.style.opacity=0,2200)}
 function ask(title,body){return new Promise(res=>{$('c-t').textContent=title;$('c-b').textContent=body;$('confirm').classList.remove('hidden');const done=v=>{$('confirm').classList.add('hidden');res(v)};$('c-ok').onclick=()=>done(true);$('c-no').onclick=()=>done(false)})}
 function ask(title,body){return new Promise(res=>{$('c-t').textContent=title;$('c-b').textContent=body;$('confirm').classList.remove('hidden');const done=v=>{$('confirm').classList.add('hidden');res(v)};$('c-ok').onclick=()=>done(true);$('c-no').onclick=()=>done(false)})}
-function compress(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=e=>{const im=new Image();im.onload=()=>{let w=im.width,h=im.height;const M=1600;if(w>M||h>M){if(w>h){h=Math.round(h*M/w);w=M}else{w=Math.round(w*M/h);h=M}}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);c.toBlob(b=>res(b),'image/jpeg',.84)};im.onerror=rej;im.src=e.target.result};fr.onerror=rej;fr.readAsDataURL(file)})}
+function compress(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=e=>{const im=new Image();im.onload=()=>{let w=im.width,h=im.height;const M=1400;if(w>M||h>M){if(w>h){h=Math.round(h*M/w);w=M}else{w=Math.round(w*M/h);h=M}}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);c.toBlob(b=>res(b),'image/webp',.85)};im.onerror=rej;im.src=e.target.result};fr.onerror=rej;fr.readAsDataURL(file)})}
 
 /* ---------- map pan / zoom ---------- */
 const vp=$('map-viewport'),layer=$('layer');
@@ -533,12 +552,38 @@ $('cfoot').classList.remove('hidden');
 }
 function closeP(){sel=null;panel.classList.remove('open');$('empty').classList.remove('hidden');$('active').classList.add('hidden');$('hint').classList.remove('hidden');render()}
 const toISO=s=>{const m=fmtDate(s).match(/(\d{4})\/(\d{1,2})\/(\d{1,2})/);return m?m[1]+'-'+m[2].padStart(2,'0')+'-'+m[3].padStart(2,'0'):todayISO()};
+const _origPhotosOf=photosOf;
+photosOf=function(id){
+  return[..._origPhotosOf(id)].sort((a,b)=>{
+    const da=toISO(a.postedAt),db=toISO(b.postedAt);
+    if(da!==db)return db.localeCompare(da);
+    return(b.timestamp||0)-(a.timestamp||0);
+  });
+};
 function feed(){
-  if(!sel)return;const ph=photosOf(sel),f=$('feed');const curP=getP(sel);$('pcount').textContent=(curP?curP.code:sel)+'｜写真 '+ph.length+'枚';f.innerHTML='';
+  if(!sel)return;const ph=photosOf(sel),f=$('feed'),curP=getP(sel);
+  $('pcount').textContent=(curP?curP.code:sel)+'｜写真 '+ph.length+'枚';f.innerHTML='';
   if(!ph.length){f.innerHTML='<div style="grid-column:1/-1;border:2px dashed var(--bd);border-radius:14px;padding:30px;text-align:center;color:var(--mut)"><b>まだ写真がありません</b><br>上の「＋」ボタンから登録できます</div>';return}
-  ph.forEach((p,i)=>{const c=document.createElement('article');c.className='card';
+  const eagerCount=innerWidth<768?2:4;
+  ph.forEach((p,i)=>{
+    const c=document.createElement('article');c.className='card';
     const dateUI=p.isStatic?`<b style="font-size:12px">${fmtDate(p.postedAt)}</b>`:`<input type="date" class="card-date" data-id="${p.id}" value="${toISO(p.postedAt)}" aria-label="投稿日を変更">`;
-    c.innerHTML=`<div class="ch"><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap"><span class="tag ${i?'old':''}">${i?'履歴 #'+(ph.length-i):'最新'}</span>${dateUI}${p.local?' <span style="font-size:11px;color:var(--mut)">📱この端末のみ</span>':''}</div><div style="display:flex;gap:4px"><button class="nb" data-a="fs" data-i="${i}">全画面</button>${p.isStatic?'':`<button class="nb" data-a="del" data-id="${p.id}" aria-label="削除">🗑</button>`}</div></div><img src="${p.dataUrl}" alt="農地写真" loading="lazy" data-a="fs" data-i="${i}">`;f.appendChild(c)});
+    const isEager=i<eagerCount;
+    c.innerHTML=`<div class="ch"><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap"><span class="tag ${i?'old':''}">${i?'履歴 #'+(ph.length-i):'最新'}</span>${dateUI}${p.local?' <span style="font-size:11px;color:var(--mut)">📱この端末のみ</span>':''}</div><div style="display:flex;gap:4px"><button class="nb" data-a="fs" data-i="${i}">全画面</button>${p.isStatic?'':`<button class="nb" data-a="del" data-id="${p.id}" aria-label="削除">🗑</button>`}</div></div><img ${isEager?`src="${p.dataUrl}" fetchpriority="high"`:`data-src="${p.dataUrl}"`} alt="農地写真" decoding="async" data-a="fs" data-i="${i}">`;
+    const im=c.querySelector('img');
+    im.onload=()=>im.classList.add('loaded');
+    if(im.complete&&im.naturalWidth)im.classList.add('loaded');
+    f.appendChild(c);
+  });
+  const lazyImgs=[...f.querySelectorAll('img[data-src]')];
+  if(lazyImgs.length){
+    const loadImg=im=>{if(!im.dataset.src)return;im.src=im.dataset.src;im.removeAttribute('data-src')};
+    const io=new IntersectionObserver((es,o)=>{es.forEach(e=>{if(e.isIntersecting){loadImg(e.target);o.unobserve(e.target)}})},{root:f,rootMargin:'250px'});
+    lazyImgs.forEach((im,idx)=>{
+      io.observe(im);
+      setTimeout(()=>{if(sel&&im.dataset.src){loadImg(im);io.unobserve(im)}},300+idx*160);
+    });
+  }
 }
 $('feed').addEventListener('change',async e=>{
   const t=e.target.closest('.card-date');if(!t||!sel||!t.value)return;
