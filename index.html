@@ -422,10 +422,7 @@ function render(){
     const el=mk('polygon',{points:p.points,'data-id':p.id,class:'poly'+(n?' has':'')+(p.id===sel?' sel':'')});
     el.addEventListener('click',e=>{if(drawing||moved)return;e.stopPropagation();selectP(p.id,false)});
     $('parcels').appendChild(el);
-    if(n>0){const c=centroid(p.points),g=mk('g',{}),k=1/Math.max(V.s,.6);
-      g.appendChild(mk('circle',{cx:c.x,cy:c.y,r:10,fill:p.id===sel?'#b45309':'#1b4332',stroke:'#fff','stroke-width':1.8}));
-      const t=mk('text',{x:c.x,y:c.y+3.5,'text-anchor':'middle',fill:'#fff','font-size':10,'font-weight':700});t.textContent=n;g.appendChild(t);$('badges').appendChild(g)}
-    if(showNum){const c2=centroid(p.points),lt=mk('text',{x:c2.x,y:n>0?c2.y-14:c2.y+4,'text-anchor':'middle','font-size':12,'font-weight':700,fill:'#7c2d12',stroke:'#fff','stroke-width':3,'paint-order':'stroke'});lt.textContent=p.code;$('badges').appendChild(lt)}
+if(showNum){const c2=centroid(p.points),lt=mk('text',{x:c2.x,y:c2.y+4,'text-anchor':'middle','font-size':12,'font-weight':700,fill:'#7c2d12',stroke:'#fff','stroke-width':3,'paint-order':'stroke'});lt.textContent=p.code;$('badges').appendChild(lt)}
   });
   $('reg').textContent=reg;$('tot').textContent=ps.length;renderHandles();updAdj();
 }
