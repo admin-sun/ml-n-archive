@@ -151,6 +151,23 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
   .addrow label.btn.circle-add{width:36px;height:36px;min-width:36px;font-size:20px}
   .addrow input[type=date]{width:102px;max-width:102px;height:30px;font-size:11px;padding:0 3px}
 }
+@media(min-width:768px){
+  #active .top-controls{display:flex;align-items:stretch;border-bottom:1px solid var(--bd);background:var(--bg)}
+  .bar{flex:1;border-bottom:0;padding:8px 10px}
+  .fields{margin-top:6px;gap:6px}
+  .addrow{flex-direction:column;justify-content:center;border-bottom:0;border-left:1px solid var(--bd);padding:8px 10px;width:auto;gap:6px}
+
+  #feed,
+  body.sz-lg #feed,
+  body.dev-tablet #feed{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    grid-auto-rows:max-content;
+    gap:12px;
+    padding:14px!important;
+    align-content:start;
+  }
+}
 </style>
 </head>
 <body>
