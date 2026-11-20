@@ -280,6 +280,15 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
   color:#f8fafc;font-size:13px;text-align:left;white-space:nowrap;
 }
 #lb-pmenu button:hover,#lb-pmenu button.on{background:rgba(255,255,255,.12);color:#fbbf24;font-weight:700}
+/* 全画面ヘッダー：高さを68pxに固定したままドロップダウンメニューを手前に表示する */
+#lb .top{
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 30 !important;
+}
+#lb-pmenu{
+  z-index: 100 !important;
+}
 </style>
 </head>
 <body>
