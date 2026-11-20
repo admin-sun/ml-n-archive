@@ -197,11 +197,28 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
     display: none !important;
   }
 }
-/* 写真登録済みの区画をハッキリした緑色で表示（円バッジ代わりの視認性向上） */
+/* 全区画の塗りつぶし統一（写真有無の緑色区別を廃止し、白塗りに統一） */
+.poly,
 .poly.has{
-  fill: rgba(22, 163, 74, 0.48) !important;
-  stroke: #14532d !important;
-  stroke-width: 2.2 !important;
+  fill: rgba(255, 255, 255, 0.42) !important;
+  stroke: rgba(27, 67, 50, 0.65) !important;
+  stroke-width: 1.8 !important;
+}
+
+/* マウスカーソルを当てたとき（ホバー時）のオレンジ色 */
+.poly:hover,
+.poly.has:hover{
+  fill: rgba(245, 158, 11, 0.38) !important;
+  stroke: #d97706 !important;
+  stroke-width: 2.6 !important;
+}
+
+/* 選択中（右パネル・サムネイルを開いている間）はオレンジ色を維持 */
+.poly.sel,
+.poly.has.sel{
+  fill: rgba(217, 119, 6, 0.48) !important;
+  stroke: #b45309 !important;
+  stroke-width: 3.5 !important;
 }
  /* 全画面表示：タイトルが2行になっても写真の上下位置・高さを一切変えない */
 #lb .top{
