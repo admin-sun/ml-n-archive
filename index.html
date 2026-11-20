@@ -567,7 +567,27 @@ $('lb-s').addEventListener('touchend',()=>{
   if(ldir==='y'&&ldy>85){$('lb').style.transform='';$('lb').classList.add('hidden')}
   else{$('lb').style.transform='';if(ldir==='x'&&Math.abs(ldx)>45)lbStep(ldx>0?-1:1)}
 });
-
+/* ---------- 全画面写真：ダブルクリック（PC）・ダブルタップ（スマホ）で初期表示に戻す ---------- */
+function resetLBView(){
+  const im=$('lb-i'),st=$('lb-s');
+  im.style.transition='transform .2s';
+  im.style.transform='';
+  st.scrollTo({left:0,top:0,behavior:'smooth'});
+  lbZoomed=false;
+  setTimeout(()=>{im.style.transition=''},210);
+  if(window.visualViewport&&window.visualViewport.scale>1.01){
+    const m=document.querySelector('meta[name=viewport]');
+    if(m){const c=m.content;m.content=c+',maximum-scale=1';setTimeout(()=>{m.content=c},60)}
+  }
+}
+$('lb-i').addEventListener('dblclick',e=>{e.stopPropagation();resetLBView()});
+let lbLastTap=0;
+$('lb-i').addEventListener('touchend',e=>{
+  if(e.changedTouches.length!==1)return;
+  const now=Date.now();
+  if(now-lbLastTap<300){e.preventDefault();resetLBView();lbLastTap=0}
+  else{lbLastTap=now}
+});
 /* ---------- add custom parcel ---------- */
 function setDraw(on){drawing=on;draft=[];renderDraft();$('draw-banner').classList.toggle('hidden',!on);vp.classList.toggle('draw',on);$('b-draw').classList.toggle('on',on)}
 $('b-draw').onclick=()=>{if(adjusting)setAdj(false);setDraw(!drawing)};
