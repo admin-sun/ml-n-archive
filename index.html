@@ -495,8 +495,23 @@ $('b-delc').onclick=async()=>{
 /* ---------- lightbox ---------- */
 let lbP=[],lbI=0;
 function openLB(i){lbP=photosOf(sel);if(!lbP.length)return;lbI=Math.min(i,lbP.length-1);updLB();$('lb').classList.remove('hidden')}
-function updLB(){const p=lbP[lbI],r=rec(sel);$('lb-t').textContent=(r.lotNumber||sel)+(r.cropName?'（'+r.cropName+'）':'');$('lb-d').textContent='投稿日: '+fmtDate(p.postedAt);;$('lb-c').textContent=(lbI+1)+' / '+lbP.length;$('lb-i').src=p.dataUrl}
-const lbStep=d=>{lbI=(lbI+d+lbP.length)%lbP.length;updLB()};
+function updLB(){const p=lbP[lbI],r=rec(sel),cp=getP(sel);$('lb-t').textContent=(cp?cp.code+' ':'')+(r.lotNumber||sel)+(r.cropName?'（'+r.cropName+'）':'');$('lb-d').textContent='投稿日: '+fmtDate(p.postedAt);$('lb-c').textContent=(lbI+1)+' / '+lbP.length;$('lb-i').src=p.dataUrl}
+const lbStep=d=>{
+  const ni=lbI+d;
+  if(ni>=0&&ni<lbP.length){lbI=ni;updLB();return}
+  const ps=allParcels(),ci=ps.findIndex(p=>p.id===sel);
+  if(ci<0)return;
+  for(let k=1;k<=ps.length;k++){
+    const np=ps[(ci+d*k+ps.length*k)%ps.length],nph=photosOf(np.id);
+    if(nph.length){
+      selectP(np.id,false);
+      lbP=nph;
+      lbI=d>0?0:nph.length-1;
+      updLB();
+      return;
+    }
+  }
+};
 $('lb-x').onclick=()=>$('lb').classList.add('hidden');$('lb-p').onclick=()=>lbStep(-1);$('lb-n').onclick=()=>lbStep(1);
 addEventListener('keydown',e=>{if($('lb').classList.contains('hidden'))return;if(e.key==='Escape')$('lb').classList.add('hidden');if(e.key==='ArrowLeft')lbStep(-1);if(e.key==='ArrowRight')lbStep(1)});
 let tx0=0,ty0=0,ldx=0,ldy=0,ldir=null;
