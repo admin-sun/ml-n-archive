@@ -403,7 +403,7 @@ vp.addEventListener('pointerdown',e=>{stopZ();ptrs.set(e.pointerId,{x:e.clientX,
 vp.addEventListener('pointermove',e=>{const p=ptrs.get(e.pointerId);if(!p)return;if(Math.hypot(e.clientX-p.x,e.clientY-p.y)>4)moved=true;ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});if(ptrs.size===2){const a=[...ptrs.values()],d=Math.hypot(a[1].x-a[0].x,a[1].y-a[0].y);if(pd>0)zoomAt(ps*d/pd/V.s,pm.x,pm.y,false)}else if(drag&&ptrs.size===1){V.x=e.clientX-ds.x;V.y=e.clientY-ds.y;applyT()}});
 function pend(e){ptrs.delete(e.pointerId);if(!ptrs.size)drag=false;if(drawing&&!moved&&e.type==='pointerup'){const p=toSvg(e.clientX,e.clientY);if(p.x>=0&&p.x<=W&&p.y>=0&&p.y<=H){draft.push([p.x,p.y]);renderDraft()}}}
 vp.addEventListener('pointerup',pend);vp.addEventListener('pointercancel',pend);
-vp.addEventListener('wheel',e=>{e.preventDefault();const dy=Math.max(-200,Math.min(200,e.deltaY));zoomAt(Math.pow(1.003,-dy),e.clientX,e.clientY,true)},{passive:false});
+vp.addEventListener('wheel',e=>{e.preventDefault();const dy=Math.max(-250,Math.min(250,e.deltaY));zoomAt(Math.pow(1.006,-dy),e.clientX,e.clientY,true)},{passive:false});
 $('z-in').onclick=()=>{const r=vp.getBoundingClientRect();zoomAt(1.18,r.left+r.width/2,r.top+r.height/2,true)};
 $('z-out').onclick=()=>{const r=vp.getBoundingClientRect();zoomAt(1/1.18,r.left+r.width/2,r.top+r.height/2,true)};
 $('z-fit').onclick=()=>{stopZ();fit(true)};
