@@ -644,9 +644,15 @@ $('i-import').addEventListener('change',async e=>{
 });
 const pickMap=()=>$('i-map').click();$('b-remap').onclick=pickMap;$('b-upload').onclick=pickMap;
 $('i-map').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;if(!ASS){toast('地図の保存には編集権限が必要です');return}(async()=>{try{const u=(await ASS.upload(f)).url;S.customMapDataUrl=u;$('mapimg').src=u;await saveState();toast('地図を保存しました（以後は自動表示）')}catch(x){toast('地図の保存に失敗しました')}})()});
-$('mapimg').addEventListener('error',()=>{if(!S.customMapDataUrl)$('upload').classList.remove('hidden')});
-$('mapimg').addEventListener('load',()=>{$('upload').classList.add('hidden');updAdj()});
-
+$('mapimg').addEventListener('error',()=>{
+  if(window._appLoaded && !S.customMapDataUrl && !$('mapimg').naturalWidth){
+    $('upload').classList.remove('hidden');
+  }
+});
+$('mapimg').addEventListener('load',()=>{
+  $('upload').classList.add('hidden');
+  updAdj();
+});
 function detectDevice(){
   const w=window.innerWidth,h=window.innerHeight;
   const isTouch=('ontouchstart' in window)||(navigator.maxTouchPoints>0)||window.matchMedia('(pointer:coarse)').matches;
@@ -715,8 +721,17 @@ addEventListener('keydown',e=>{
 addEventListener('DOMContentLoaded',async()=>{
   detectDevice();
   const s=await loadState();
-  if(s){S=normState(s);if(S.customMapDataUrl)$('mapimg').src=S.customMapDataUrl}
-  else if($('mapimg').complete&&!$('mapimg').naturalWidth)$('upload').classList.remove('hidden');
+  if(s){
+    S=normState(s);
+    if(S.customMapDataUrl)$('mapimg').src=S.customMapDataUrl;
+  }
+  window._appLoaded=true;
+  const im=$('mapimg');
+  if(im.complete&&im.naturalWidth>0){
+    $('upload').classList.add('hidden');
+  }else if(!im.src||im.src===location.href){
+    $('upload').classList.remove('hidden');
+  }
   render();fit(false);
 });
 </script>
