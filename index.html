@@ -378,17 +378,35 @@ function compress(file){return new Promise((res,rej)=>{const fr=new FileReader()
 const vp=$('map-viewport'),layer=$('layer');
 function applyT(){layer.style.transform=`translate3d(${V.x}px,${V.y}px,0) scale(${V.s})`;if(adjusting)requestAnimationFrame(renderHandles)}
 function fit(anim){const r=vp.getBoundingClientRect();if(!r.width)return;const s=Math.min(r.width/W,r.height/H)*.96;if(anim){layer.style.transition='transform .25s';setTimeout(()=>layer.style.transition='',260)}V={s,x:(r.width-W*s)/2,y:(r.height-H*s)/2};applyT()}
-function zoomAt(f,cx,cy){const r=vp.getBoundingClientRect(),px=cx-r.left,py=cy-r.top,ns=Math.min(Math.max(V.s*f,.35),20),k=ns/V.s;V.x=px-(px-V.x)*k;V.y=py-(py-V.y)*k;V.s=ns;applyT()}
-function focusP(id,off){const p=getP(id);if(!p)return;const c=centroid(p.points),r=vp.getBoundingClientRect(),s=Math.max(V.s,1.35);layer.style.transition='transform .3s';setTimeout(()=>layer.style.transition='',320);V.s=s;V.x=r.width/2-c.x*s;V.y=r.height*(off||.5)-c.y*s;applyT()}
+let zRaf=0,zTgt=null;
+function stopZ(){if(zRaf){cancelAnimationFrame(zRaf);zRaf=0}zTgt=null}
+function zoomAt(f,cx,cy,smooth){
+  const r=vp.getBoundingClientRect(),px=cx-r.left,py=cy-r.top;
+  if(!smooth){stopZ();const ns=Math.min(Math.max(V.s*f,.35),20),k=ns/V.s;V.x=px-(px-V.x)*k;V.y=py-(py-V.y)*k;V.s=ns;applyT();return}
+  const base=zTgt?zTgt.s:V.s,ns=Math.min(Math.max(base*f,.35),20);
+  zTgt={s:ns,px,py};
+  if(!zRaf){
+    const tick=()=>{
+      if(!zTgt){zRaf=0;return}
+      const ds=zTgt.s-V.s;
+      if(Math.abs(ds)<0.0008){const k=zTgt.s/V.s;V.x=zTgt.px-(zTgt.px-V.x)*k;V.y=zTgt.py-(zTgt.py-V.y)*k;V.s=zTgt.s;applyT();zTgt=null;zRaf=0;return}
+      const next=V.s+ds*0.16,k=next/V.s;
+      V.x=zTgt.px-(zTgt.px-V.x)*k;V.y=zTgt.py-(zTgt.py-V.y)*k;V.s=next;applyT();
+      zRaf=requestAnimationFrame(tick);
+    };
+    zRaf=requestAnimationFrame(tick);
+  }
+}
+function focusP(id,off){stopZ();const p=getP(id);if(!p)return;const c=centroid(p.points),r=vp.getBoundingClientRect(),s=Math.max(V.s,1.35);layer.style.transition='transform .3s';setTimeout(()=>layer.style.transition='',320);V.s=s;V.x=r.width/2-c.x*s;V.y=r.height*(off||.5)-c.y*s;applyT()}
 const ptrs=new Map();let drag=false,ds={x:0,y:0},moved=false,pd=0,ps=1,pm={x:0,y:0};
-vp.addEventListener('pointerdown',e=>{ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=false;if(ptrs.size===1){drag=true;ds={x:e.clientX-V.x,y:e.clientY-V.y}}else if(ptrs.size===2){drag=false;const a=[...ptrs.values()];pd=Math.hypot(a[1].x-a[0].x,a[1].y-a[0].y);ps=V.s;pm={x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2}}});
-vp.addEventListener('pointermove',e=>{const p=ptrs.get(e.pointerId);if(!p)return;if(Math.hypot(e.clientX-p.x,e.clientY-p.y)>4)moved=true;ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});if(ptrs.size===2){const a=[...ptrs.values()],d=Math.hypot(a[1].x-a[0].x,a[1].y-a[0].y);if(pd>0)zoomAt(ps*d/pd/V.s,pm.x,pm.y)}else if(drag&&ptrs.size===1){V.x=e.clientX-ds.x;V.y=e.clientY-ds.y;applyT()}});
+vp.addEventListener('pointerdown',e=>{stopZ();ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=false;if(ptrs.size===1){drag=true;ds={x:e.clientX-V.x,y:e.clientY-V.y}}else if(ptrs.size===2){drag=false;const a=[...ptrs.values()];pd=Math.hypot(a[1].x-a[0].x,a[1].y-a[0].y);ps=V.s;pm={x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2}}});
+vp.addEventListener('pointermove',e=>{const p=ptrs.get(e.pointerId);if(!p)return;if(Math.hypot(e.clientX-p.x,e.clientY-p.y)>4)moved=true;ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});if(ptrs.size===2){const a=[...ptrs.values()],d=Math.hypot(a[1].x-a[0].x,a[1].y-a[0].y);if(pd>0)zoomAt(ps*d/pd/V.s,pm.x,pm.y,false)}else if(drag&&ptrs.size===1){V.x=e.clientX-ds.x;V.y=e.clientY-ds.y;applyT()}});
 function pend(e){ptrs.delete(e.pointerId);if(!ptrs.size)drag=false;if(drawing&&!moved&&e.type==='pointerup'){const p=toSvg(e.clientX,e.clientY);if(p.x>=0&&p.x<=W&&p.y>=0&&p.y<=H){draft.push([p.x,p.y]);renderDraft()}}}
 vp.addEventListener('pointerup',pend);vp.addEventListener('pointercancel',pend);
-vp.addEventListener('wheel',e=>{e.preventDefault();zoomAt(e.deltaY<0?1.18:.85,e.clientX,e.clientY)},{passive:false});
-$('z-in').onclick=()=>{const r=vp.getBoundingClientRect();zoomAt(1.3,r.left+r.width/2,r.top+r.height/2)};
-$('z-out').onclick=()=>{const r=vp.getBoundingClientRect();zoomAt(.77,r.left+r.width/2,r.top+r.height/2)};
-$('z-fit').onclick=()=>fit(true);
+vp.addEventListener('wheel',e=>{e.preventDefault();const dy=Math.max(-100,Math.min(100,e.deltaY));zoomAt(Math.pow(1.0011,-dy),e.clientX,e.clientY,true)},{passive:false});
+$('z-in').onclick=()=>{const r=vp.getBoundingClientRect();zoomAt(1.18,r.left+r.width/2,r.top+r.height/2,true)};
+$('z-out').onclick=()=>{const r=vp.getBoundingClientRect();zoomAt(1/1.18,r.left+r.width/2,r.top+r.height/2,true)};
+$('z-fit').onclick=()=>{stopZ();fit(true)};
 function toSvg(cx,cy){const r=layer.getBoundingClientRect();return{x:r2((cx-r.left)/r.width*W),y:r2((cy-r.top)/r.height*H)}}
 let lastW=innerWidth;
 window.addEventListener('resize',()=>{if(innerWidth!==lastW){lastW=innerWidth;fit(false)}});
