@@ -499,7 +499,23 @@ function updLB(){const p=lbP[lbI],r=rec(sel);$('lb-t').textContent=(r.lotNumber|
 const lbStep=d=>{lbI=(lbI+d+lbP.length)%lbP.length;updLB()};
 $('lb-x').onclick=()=>$('lb').classList.add('hidden');$('lb-p').onclick=()=>lbStep(-1);$('lb-n').onclick=()=>lbStep(1);
 addEventListener('keydown',e=>{if($('lb').classList.contains('hidden'))return;if(e.key==='Escape')$('lb').classList.add('hidden');if(e.key==='ArrowLeft')lbStep(-1);if(e.key==='ArrowRight')lbStep(1)});
-let tx0=0;$('lb-s').addEventListener('touchstart',e=>tx0=e.touches[0].clientX,{passive:true});$('lb-s').addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-tx0;if(Math.abs(d)>45)lbStep(d>0?-1:1)});
+let tx0=0,ty0=0,ldx=0,ldy=0,ldir=null;
+$('lb-s').addEventListener('touchstart',e=>{
+  if(e.touches.length!==1)return;
+  tx0=e.touches[0].clientX;ty0=e.touches[0].clientY;ldx=0;ldy=0;ldir=null;
+  $('lb').style.transition='none';
+},{passive:true});
+$('lb-s').addEventListener('touchmove',e=>{
+  if(e.touches.length!==1)return;
+  ldx=e.touches[0].clientX-tx0;ldy=e.touches[0].clientY-ty0;
+  if(!ldir&&(Math.abs(ldx)>10||Math.abs(ldy)>10))ldir=Math.abs(ldx)>Math.abs(ldy)?'x':'y';
+  if(ldir==='y'&&ldy>0)$('lb').style.transform=`translateY(${ldy}px)`;
+},{passive:true});
+$('lb-s').addEventListener('touchend',()=>{
+  $('lb').style.transition='';
+  if(ldir==='y'&&ldy>85){$('lb').style.transform='';$('lb').classList.add('hidden')}
+  else{$('lb').style.transform='';if(ldir==='x'&&Math.abs(ldx)>45)lbStep(ldx>0?-1:1)}
+});
 
 /* ---------- add custom parcel ---------- */
 function setDraw(on){drawing=on;draft=[];renderDraft();$('draw-banner').classList.toggle('hidden',!on);vp.classList.toggle('draw',on);$('b-draw').classList.toggle('on',on)}
@@ -597,22 +613,29 @@ function detectDevice(){
 detectDevice();
 window.addEventListener('resize',detectDevice);
 window.addEventListener('orientationchange',()=>setTimeout(detectDevice,100));
-/* ---------- スマホ用：パネルを下スライドして地図に戻る ---------- */
-let py0=0,pdy=0,pswipe=false;
+/* ---------- スマホ用：パネルの縦スワイプ（地図へ戻る）＆横スワイプ（隣の農地へ移動） ---------- */
+let px0=0,py0=0,pdx=0,pdy=0,pswipe=false,pdir=null;
 panel.addEventListener('touchstart',e=>{
-  if(innerWidth>=768||e.touches.length!==1)return;
-  if(e.target.closest('#feed')&&$('feed').scrollTop>0)return;
-  py0=e.touches[0].clientY;pdy=0;pswipe=true;panel.style.transition='none';
+  if(innerWidth>=768||e.touches.length!==1||e.target.closest('input'))return;
+  px0=e.touches[0].clientX;py0=e.touches[0].clientY;pdx=0;pdy=0;pswipe=true;pdir=null;
+  panel.style.transition='none';
 },{passive:true});
 panel.addEventListener('touchmove',e=>{
   if(!pswipe)return;
-  pdy=e.touches[0].clientY-py0;
-  if(pdy>0)panel.style.transform=`translateY(${pdy}px)`;
+  pdx=e.touches[0].clientX-px0;pdy=e.touches[0].clientY-py0;
+  if(!pdir&&(Math.abs(pdx)>10||Math.abs(pdy)>10)){
+    pdir=Math.abs(pdx)>Math.abs(pdy)?'x':'y';
+    if(pdir==='y'&&e.target.closest('#feed')&&$('feed').scrollTop>0){pswipe=false;return}
+  }
+  if(pdir==='y'&&pdy>0)panel.style.transform=`translateY(${pdy}px)`;
 },{passive:true});
 panel.addEventListener('touchend',()=>{
   if(!pswipe)return;pswipe=false;panel.style.transition='';
-  if(pdy>90){panel.style.transform='';closeP()}
-  else{panel.style.transform=''}
+  if(pdir==='y'&&pdy>90){panel.style.transform='';closeP()}
+  else{
+    panel.style.transform='';
+    if(pdir==='x'&&Math.abs(pdx)>65){step(pdx<0?1:-1)}
+  }
 });
 /* ---------- スマホ用：地図のダブルタップで全体表示に戻る ---------- */
 let lastTap=0;
