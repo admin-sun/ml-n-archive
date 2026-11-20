@@ -110,16 +110,46 @@ body.dev-tablet.layout-split aside{width:50%}
 body.sz-lg aside{width:46%}
 body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
 @media(min-width:1800px){body.sz-lg #feed{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media(min-width:768px){
-  #active .top-controls{display:flex;align-items:stretch;border-bottom:1px solid var(--bd);background:var(--bg)}
-  .bar{flex:1;border-bottom:0;padding:8px 10px}
-  .fields{margin-top:6px;gap:6px}
-  .addrow{flex-direction:column;justify-content:center;border-bottom:0;border-left:1px solid var(--bd);padding:8px 10px;width:auto;gap:6px}
-  #feed,
-  body.sz-lg #feed{
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
-    padding:14px!important;
+@media(max-width:767px){
+  header{padding:0 8px;gap:4px}
+  header h1{font-size:14px}
+  header > div{gap:4px!important}
+  .hb{padding:0 6px;font-size:11px;height:30px;white-space:nowrap}
+
+  /* スマホでは「前・次・地図」ボタンを非表示 */
+  #n-prev,#n-next,#n-loc{display:none!important}
+
+  .bar{padding:8px 10px;min-width:0}
+  .bar > div:first-child{justify-content:flex-end;align-items:center;gap:6px}
+  .bar > div:first-child > div:first-child{display:none!important}
+
+  #pcount{
+    white-space:nowrap;
+    font-size:12px;
+    padding:4px 10px;
+    line-height:1.1;
+    flex-shrink:0;
   }
+  #n-close{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:28px;
+    height:28px;
+    padding:0;
+    font-size:12px;
+    flex-shrink:0;
+  }
+
+  /* 地番表示・入力エリアを広く見やすく最適化 */
+  .fields{grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+  .fld{padding:6px 8px;min-width:0}
+  .fld label{font-size:10px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .fld input{font-size:14px;line-height:1.3;min-width:0;width:100%}
+
+  .addrow{padding:8px 6px;gap:6px}
+  .addrow label.btn.circle-add{width:36px;height:36px;min-width:36px;font-size:20px}
+  .addrow input[type=date]{width:102px;max-width:102px;height:30px;font-size:11px;padding:0 3px}
 }
 </style>
 </head>
