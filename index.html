@@ -407,6 +407,7 @@ vp.addEventListener('wheel',e=>{e.preventDefault();const dy=Math.max(-250,Math.m
 $('z-in').onclick=()=>{const r=vp.getBoundingClientRect();zoomAt(1.18,r.left+r.width/2,r.top+r.height/2,true)};
 $('z-out').onclick=()=>{const r=vp.getBoundingClientRect();zoomAt(1/1.18,r.left+r.width/2,r.top+r.height/2,true)};
 $('z-fit').onclick=()=>{stopZ();fit(true)};
+vp.addEventListener('dblclick',()=>{if(!drawing){stopZ();fit(true)}});
 function toSvg(cx,cy){const r=layer.getBoundingClientRect();return{x:r2((cx-r.left)/r.width*W),y:r2((cy-r.top)/r.height*H)}}
 let lastW=innerWidth;
 window.addEventListener('resize',()=>{if(innerWidth!==lastW){lastW=innerWidth;fit(false)}});
