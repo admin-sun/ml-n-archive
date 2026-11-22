@@ -144,8 +144,10 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
     border-radius:2px;
   }
   .card-date-wrap input:focus{background:#fef08a;color:#0f172a}
-  .card-date-wrap input.dy{width:26px}
-  .card-date-wrap input.dm,.card-date-wrap input.dd{width:14px}
+  .card-date-wrap{gap:0;padding:0 4px}
+  .card-date-wrap span{display:inline-flex;align-items:center;justify-content:center;width:6px;opacity:.75}
+  .card-date-wrap input.dy{width:26px;padding:0;margin:0}
+  .card-date-wrap input.dm,.card-date-wrap input.dd{width:11px;padding:0;margin:0}
 }
 .card-date.no-exif,.card-date-wrap.no-exif{
   box-shadow:0 0 0 1.5px #ea580c;
@@ -525,9 +527,8 @@ function extractExifDateISO(file){
     const fr=new FileReader();
     fr.onload=e=>{
       try{
-        const buf=e.target.result;
-        const view=new DataView(buf);
-        if(view.byteLength<4||view.getUint16(0,false)!==0xFFD8){res(null);return}
+        const view=new DataView(e.target.result);
+        if(view.byteLength<12||view.getUint16(0,false)!==0xFFD8){res(null);return}
 
         const readAscii=(start,len)=>{
           let s='';
@@ -551,67 +552,70 @@ function extractExifDateISO(file){
           return `${String(y).padStart(4,'0')}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         };
 
+        const parseExifAtTiff=(tiff,limitEnd)=>{
+          if(tiff+8>limitEnd||tiff+8>view.byteLength)return null;
+          const end=Math.min(limitEnd,view.byteLength);
+          const bo=view.getUint16(tiff,false);
+          const le=(bo===0x4949);
+          const be=(bo===0x4D4D);
+          if(!le&&!be)return null;
+
+          const u16=p=>(p+2<=end)?view.getUint16(p,le):0;
+          const u32=p=>(p+4<=end)?view.getUint32(p,le):0;
+          const ifd0Off=u32(tiff+4);
+
+          const parseIFD=(relOff,visited=new Set())=>{
+            if(!relOff||visited.has(relOff))return{};
+            visited.add(relOff);
+            const pos=tiff+relOff;
+            if(pos<tiff||pos+2>end)return{};
+            const n=u16(pos);
+            if(n>300)return{};
+            const found={};
+            for(let i=0;i<n;i++){
+              const ep=pos+2+i*12;
+              if(ep+12>end)break;
+              const tag=u16(ep);
+              const type=u16(ep+2);
+              const cnt=u32(ep+4);
+              const valField=ep+8;
+              const unit=(type===1||type===2||type===6||type===7)?1:(type===3||type===8)?2:4;
+              const totalBytes=cnt*unit;
+              const dataPos=(totalBytes<=4)?valField:(tiff+u32(valField));
+              if(tag===0x9003||tag===0x9004||tag===0x0132){
+                if(dataPos>=tiff&&dataPos+10<=end){
+                  const iso=toISOFromExifStr(readAscii(dataPos,Math.min(28,end-dataPos)));
+                  if(iso)found[tag]=iso;
+                }
+              }
+              if(tag===0x8769){
+                found.exifPtr=u32(valField);
+              }
+            }
+            return found;
+          };
+
+          const d0=parseIFD(ifd0Off);
+          if(d0.exifPtr){
+            const sub=parseIFD(d0.exifPtr);
+            if(sub[0x9003])return sub[0x9003];
+            if(sub[0x9004])return sub[0x9004];
+          }
+          if(d0[0x0132])return d0[0x0132];
+          return null;
+        };
+
         let offset=2;
         while(offset+4<=view.byteLength){
           const marker=view.getUint16(offset,false);
           offset+=2;
-
           if(marker===0xFFE1){
             const segLen=view.getUint16(offset,false);
             const segStart=offset+2;
             const segEnd=Math.min(view.byteLength,offset+segLen);
             if(segStart+12<=segEnd&&readAscii(segStart,6)==='Exif'){
-              const tiff=segStart+6;
-              if(tiff+8<=segEnd){
-                const bo=view.getUint16(tiff,false);
-                const le=(bo===0x4949);
-                const be=(bo===0x4D4D);
-                if(le||be){
-                  const u16=p=>(p+2<=segEnd)?view.getUint16(p,le):0;
-                  const u32=p=>(p+4<=segEnd)?view.getUint32(p,le):0;
-                  const ifd0Off=u32(tiff+4);
-
-                  const parseIFD=(relOff,visited=new Set())=>{
-                    if(!relOff||visited.has(relOff))return{};
-                    visited.add(relOff);
-                    const pos=tiff+relOff;
-                    if(pos<tiff||pos+2>segEnd)return{};
-                    const n=u16(pos);
-                    if(n>300)return{};
-                    const found={};
-                    for(let i=0;i<n;i++){
-                      const ep=pos+2+i*12;
-                      if(ep+12>segEnd)break;
-                      const tag=u16(ep);
-                      const type=u16(ep+2);
-                      const cnt=u32(ep+4);
-                      const valField=ep+8;
-                      const unit=(type===1||type===2||type===6||type===7)?1:(type===3||type===8)?2:4;
-                      const totalBytes=cnt*unit;
-                      const dataPos=(totalBytes<=4)?valField:(tiff+u32(valField));
-                      if(tag===0x9003||tag===0x9004||tag===0x0132){
-                        if(dataPos>=tiff&&dataPos+10<=segEnd){
-                          const raw=readAscii(dataPos,Math.min(28,segEnd-dataPos));
-                          const iso=toISOFromExifStr(raw);
-                          if(iso)found[tag]=iso;
-                        }
-                      }
-                      if(tag===0x8769){
-                        found.exifPtr=u32(valField);
-                      }
-                    }
-                    return found;
-                  };
-
-                  const d0=parseIFD(ifd0Off);
-                  if(d0.exifPtr){
-                    const sub=parseIFD(d0.exifPtr);
-                    if(sub[0x9003]){res(sub[0x9003]);return}
-                    if(sub[0x9004]){res(sub[0x9004]);return}
-                  }
-                  if(d0[0x0132]){res(d0[0x0132]);return}
-                }
-              }
+              const iso=parseExifAtTiff(segStart+6,segEnd);
+              if(iso){res(iso);return}
             }
             offset+=segLen;
           }else if(marker===0xFFDA){
@@ -623,6 +627,23 @@ function extractExifDateISO(file){
             break;
           }
         }
+
+        // フォールバック：先頭4MB内から "Exif\0\0" シグネチャを直接探索
+        const maxScan=Math.min(view.byteLength-14,4194304);
+        for(let i=2;i<maxScan;i++){
+          if(
+            view.getUint8(i)===0x45&&
+            view.getUint8(i+1)===0x78&&
+            view.getUint8(i+2)===0x69&&
+            view.getUint8(i+3)===0x66&&
+            view.getUint8(i+4)===0x00&&
+            view.getUint8(i+5)===0x00
+          ){
+            const iso=parseExifAtTiff(i+6,Math.min(view.byteLength,i+65536));
+            if(iso){res(iso);return}
+          }
+        }
+
         res(null);
       }catch(_){res(null)}
     };
