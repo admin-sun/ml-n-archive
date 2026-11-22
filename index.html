@@ -74,11 +74,79 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 .tag.old{background:rgba(15,23,42,.45);color:#f1f5f9}
 .card img{width:100%;aspect-ratio:1 / 1;object-fit:cover;min-height:0;display:block;cursor:zoom-in;background:rgba(148,163,184,.12);opacity:0;transition:opacity .25s ease}
 .card img.loaded{opacity:1}
-.card-date-wrap{display:inline-flex;align-items:center;background:rgba(255,255,255,.85);color:#1e293b;border-radius:4px;padding:0 4px;height:20px;font-size:10px;font-weight:600;gap:1px}
-.card-date-wrap input{border:none;background:transparent;color:#1e293b;font-size:10px;font-weight:600;padding:0;text-align:center;outline:none;height:18px;border-radius:2px}
-.card-date-wrap input:focus{background:#fef08a;color:#0f172a}
-.card-date-wrap input.dy{width:28px}
-.card-date-wrap input.dm,.card-date-wrap input.dd{width:16px}
+.card-date{
+  border:none;
+  background:rgba(255,255,255,.82);
+  color:#1e293b;
+  border-radius:4px;
+  padding:0 5px;
+  font-family:"Noto Sans JP",system-ui,sans-serif;
+  font-size:10px!important;
+  font-weight:600!important;
+  line-height:20px!important;
+  height:20px;
+  min-height:20px;
+  max-height:20px;
+  font-variant-numeric:tabular-nums;
+  -webkit-text-size-adjust:100%;
+  box-sizing:border-box;
+}
+.card-date::-webkit-datetime-edit,
+.card-date::-webkit-datetime-edit-fields-wrapper,
+.card-date::-webkit-datetime-edit-year-field,
+.card-date::-webkit-datetime-edit-month-field,
+.card-date::-webkit-datetime-edit-day-field,
+.card-date::-webkit-datetime-edit-text{
+  font-family:"Noto Sans JP",system-ui,sans-serif!important;
+  font-size:10px!important;
+  font-weight:600!important;
+  line-height:1!important;
+  padding:0!important;
+  margin:0!important;
+  color:#1e293b!important;
+}
+@media(max-width:767px){
+  .card-date-wrap{display:none!important}
+}
+@media(min-width:768px){
+  .card-date{display:none!important}
+  .card-date-wrap{
+    display:inline-flex;
+    align-items:center;
+    background:rgba(255,255,255,.85);
+    color:#1e293b;
+    border-radius:4px;
+    padding:0 5px;
+    height:20px;
+    font-family:"Noto Sans JP",system-ui,sans-serif;
+    font-size:10px;
+    font-weight:600;
+    line-height:1;
+    font-variant-numeric:tabular-nums;
+    gap:1px;
+  }
+  .card-date-wrap span,
+  .card-date-wrap input{
+    font-family:"Noto Sans JP",system-ui,sans-serif!important;
+    font-size:10px!important;
+    font-weight:600!important;
+    line-height:16px!important;
+    font-variant-numeric:tabular-nums;
+    color:#1e293b;
+  }
+  .card-date-wrap input{
+    border:none;
+    background:transparent;
+    padding:0;
+    text-align:center;
+    outline:none;
+    height:16px;
+    border-radius:2px;
+  }
+  .card-date-wrap input:focus{background:#fef08a;color:#0f172a}
+  .card-date-wrap input.dy{width:26px}
+  .card-date-wrap input.dm,.card-date-wrap input.dd{width:14px}
+}
 .card .ch .nb{height:20px;padding:0 5px;font-size:10px;font-weight:500;background:rgba(255,255,255,.78);color:#1e293b;border:none;border-radius:4px}
 
 /* 全区画グリッド表示（PCは従来の4列・正方形スタイル） */
@@ -665,8 +733,8 @@ function feed(){
     const isoParts=toISO(p.postedAt).split('-');
     const yVal=isoParts[0],mVal=String(Number(isoParts[1])),dVal=String(Number(isoParts[2]));
     const dateUI=p.isStatic
-      ? `<span style="font-size:10px;color:#f8fafc;text-shadow:0 1px 2px rgba(0,0,0,.7)">${yVal}/${mVal}/${dVal}</span>`
-      : `<span class="card-date-wrap" data-id="${p.id}" data-orig="${yVal}-${mVal}-${dVal}"><input type="text" inputmode="numeric" maxlength="4" class="dy" value="${yVal}" aria-label="年"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dm" value="${mVal}" aria-label="月"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dd" value="${dVal}" aria-label="日"></span>`;
+      ? `<span style="font-size:10px;color:#f8fafc;text-shadow:0 1px 2px rgba(0,0,0,.7)">${fmtDate(p.postedAt)}</span>`
+      : `<input type="date" class="card-date" data-id="${p.id}" value="${toISO(p.postedAt)}" aria-label="投稿日を変更"><span class="card-date-wrap" data-id="${p.id}" data-orig="${yVal}-${mVal}-${dVal}"><input type="text" inputmode="numeric" maxlength="4" class="dy" value="${yVal}" aria-label="年"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dm" value="${mVal}" aria-label="月"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dd" value="${dVal}" aria-label="日"></span>`;
     const isEager=i<eagerCount;
     c.innerHTML=`<div class="ch"><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap"><span class="tag ${i?'old':''}">${i?'履歴 #'+(ph.length-i):'最新'}</span>${dateUI}${p.local?' <span style="font-size:11px;color:var(--mut)">📱この端末のみ</span>':''}</div><div style="display:flex;gap:4px"><button class="nb" data-a="fs" data-i="${i}">全画面</button>${p.isStatic?'':`<button class="nb" data-a="del" data-id="${p.id}" aria-label="削除">🗑</button>`}</div></div><img ${isEager?`src="${p.dataUrl}" fetchpriority="high"`:`data-src="${p.dataUrl}"`} alt="農地写真" decoding="async" data-a="fs" data-i="${i}">`;
     const im=c.querySelector('img');
@@ -747,11 +815,10 @@ $('feed').addEventListener('keydown',async e=>{
   }
 });
 
-$('feed').addEventListener('focusout',e=>{
-  const wrap=e.target.closest('.card-date-wrap');if(!wrap)return;
-  setTimeout(()=>{
-    if(!wrap.contains(document.activeElement))commitCardDate(wrap);
-  },0);
+$('feed').addEventListener('change',async e=>{
+  const t=e.target.closest('.card-date');if(!t||!sel||!t.value)return;
+  const r=rec(sel),ph=r.photos.find(p=>p.id===t.dataset.id);
+  if(ph){ph.postedAt=jpDate(t.value);await saveState();feed();if(gridMode)renderAllGrid();toast('投稿日を変更しました')}
 });
 $('feed').addEventListener('click',async e=>{
   const t=e.target.closest('[data-a]');if(!t||!sel)return;
