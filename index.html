@@ -515,7 +515,94 @@ function allPhotosLatestFirst(){
 function toast(m){const t=$('toast');t.textContent=m;t.style.opacity=1;clearTimeout(window._tt);window._tt=setTimeout(()=>t.style.opacity=0,2200)}
 function ask(title,body){return new Promise(res=>{$('c-t').textContent=title;$('c-b').textContent=body;$('confirm').classList.remove('hidden');const done=v=>{$('confirm').classList.add('hidden');res(v)};$('c-ok').onclick=()=>done(true);$('c-no').onclick=()=>done(false)})}
 function compress(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=e=>{const im=new Image();im.onload=()=>{let w=im.width,h=im.height;const M=1400;if(w>M||h>M){if(w>h){h=Math.round(h*M/w);w=M}else{w=Math.round(w*M/h);h=M}}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);c.toBlob(b=>res(b),'image/webp',.85)};im.onerror=rej;im.src=e.target.result};fr.onerror=rej;fr.readAsDataURL(file)})}
-
+function extractExifDateISO(file){
+  return new Promise(res=>{
+    if(!file||!/^image\/(jpeg|jpg)$/i.test(file.type)){res(null);return}
+    const fr=new FileReader();
+    fr.onload=e=>{
+      try{
+        const buf=e.target.result;
+        const view=new DataView(buf);
+        if(view.byteLength<4||view.getUint16(0,false)!==0xFFD8){res(null);return}
+        let offset=2;
+        const readAscii=(start,len)=>{
+          let s='';
+          for(let i=0;i<len;i++){
+            if(start+i>=view.byteLength)break;
+            const c=view.getUint8(start+i);
+            if(c===0)break;
+            s+=String.fromCharCode(c);
+          }
+          return s;
+        };
+        const parseExifStr=str=>{
+          const m=str.match(/(\d{4})[:\-/](\d{1,2})[:\-/](\d{1,2})/);
+          if(!m)return null;
+          const y=m[1],mo=String(Number(m[2])).padStart(2,'0'),d=String(Number(m[3])).padStart(2,'0');
+          return `${y}-${mo}-${d}`;
+        };
+        while(offset+4<=view.byteLength){
+          const marker=view.getUint16(offset,false);
+          offset+=2;
+          if(marker===0xFFE1){
+            const size=view.getUint16(offset,false);
+            const segStart=offset+2;
+            if(segStart+10<=view.byteLength&&readAscii(segStart,6)==='Exif\0\0'){
+              const tiffStart=segStart+6;
+              const little=view.getUint16(tiffStart,false)===0x4949;
+              const u16=p=>view.getUint16(p,little);
+              const u32=p=>view.getUint32(p,little);
+              const ifd0Offset=u32(tiffStart+4);
+              const readIfd=ifdPos=>{
+                const abs=tiffStart+ifdPos;
+                if(abs+2>view.byteLength)return{};
+                const count=u16(abs);
+                const out={};
+                for(let i=0;i<count;i++){
+                  const ePos=abs+2+i*12;
+                  if(ePos+12>view.byteLength)break;
+                  const tag=u16(ePos);
+                  const type=u16(ePos+2);
+                  const num=u32(ePos+4);
+                  const valOff=ePos+8;
+                  const byteLen=num*((type===1||type===2||type===7)?1:(type===3?2:4));
+                  const dataPos=(byteLen<=4)?valOff:(tiffStart+u32(valOff));
+                  if(tag===0x9003||tag===0x9004||tag===0x0132){
+                    if(dataPos>=0&&dataPos+10<=view.byteLength){
+                      const iso=parseExifStr(readAscii(dataPos,20));
+                      if(iso)out[tag]=iso;
+                    }
+                  }
+                  if(tag===0x8769){
+                    out.exifSub=u32(valOff);
+                  }
+                }
+                return out;
+              };
+              const ifd0=readIfd(ifd0Offset);
+              if(ifd0.exifSub){
+                const sub=readIfd(ifd0.exifSub);
+                if(sub[0x9003]){res(sub[0x9003]);return}
+                if(sub[0x9004]){res(sub[0x9004]);return}
+              }
+              if(ifd0[0x0132]){res(ifd0[0x0132]);return}
+            }
+            offset+=size;
+          }else if((marker&0xFF00)===0xFF00){
+            if(offset+2>view.byteLength)break;
+            const size=view.getUint16(offset,false);
+            offset+=size;
+          }else{
+            break;
+          }
+        }
+        res(null);
+      }catch(_){res(null)}
+    };
+    fr.onerror=()=>res(null);
+    fr.readAsArrayBuffer(file.slice(0,262144));
+  });
+}
 const vp=$('map-viewport'),layer=$('layer');
 function applyT(){layer.style.transform=`translate3d(${V.x}px,${V.y}px,0) scale(${V.s})`;if(adjusting)requestAnimationFrame(renderHandles)}
 function fit(anim){const r=vp.getBoundingClientRect();if(!r.width||!r.height)return;const s=Math.min(r.width/W,r.height/H)*.96;if(anim){layer.style.transition='transform .25s';setTimeout(()=>layer.style.transition='',260)}V={s,x:(r.width-W*s)/2,y:(r.height-H*s)/2};applyT()}
@@ -828,17 +915,23 @@ $('feed').addEventListener('click',async e=>{
 function meta(){if(!sel)return;const r=rec(sel);r.lotNumber=$('lot').value.trim();r.cropName=$('crop').value.trim();render();saveSoon()}
 $('lot').addEventListener('input',meta);$('crop').addEventListener('input',meta);
 $('i-photos').addEventListener('change',async e=>{
-  const files=[...e.target.files];if(!files.length||!sel)return;const r=rec(sel),d=$('pdate').value||todayISO(),when=jpDate(d);
+  const files=[...e.target.files];if(!files.length||!sel)return;const r=rec(sel),fallbackISO=$('pdate').value||todayISO();
   toast('写真を処理中... ('+files.length+'枚)');
   try{
     if(!ASS&&DBH){toast('この環境では写真を追加できません（編集権限が必要です）');return}
+    let exifCount=0;
     for(const f of files){
+      const exifISO=await extractExifDateISO(f);
+      const iso=exifISO||fallbackISO;
+      if(exifISO)exifCount++;
+      const when=jpDate(iso);
       const bl=await compress(f);let url,aid,loc=false;
       if(ASS){try{const a=await ASS.upload(bl);url=a.url;aid=a.id}catch(x){}}
       if(!url){if(DBH)throw new Error('upload');url=await new Promise((ok,ng)=>{const fr=new FileReader();fr.onload=()=>ok(fr.result);fr.onerror=ng;fr.readAsDataURL(bl)});loc=true}
       r.photos.unshift({id:'PH_'+Date.now()+Math.random().toString(36).slice(2,7),dataUrl:url,assetId:aid,local:loc,postedAt:when,timestamp:Date.now()});
     }
-    await saveState();feed();render();toast(files.length+'枚の写真を追加しました');
+    await saveState();feed();render();
+    toast(files.length+'枚の写真を追加しました'+(exifCount?'（'+exifCount+'枚は撮影日を自動取得）':''));
   }catch(x){toast('画像の読み込みに失敗しました')}finally{e.target.value=''}
 });
 function step(d){const ps=allParcels(),i=ps.findIndex(p=>p.id===sel);selectP(ps[(i<0?0:(i+d+ps.length)%ps.length)].id,true)}
