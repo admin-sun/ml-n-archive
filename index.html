@@ -77,11 +77,21 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 .card-date{border:none;background:rgba(255,255,255,.78);color:#1e293b;border-radius:4px;padding:0 4px;font-size:10px;font-weight:500;height:20px}
 .card .ch .nb{height:20px;padding:0 5px;font-size:10px;font-weight:500;background:rgba(255,255,255,.78);color:#1e293b;border:none;border-radius:4px}
 
+/* 全区画グリッド表示：常に3列・画面内に3〜4行表示 */
 #all-grid-view{position:absolute;inset:0;z-index:25;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0}
-.insta-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:max-content;gap:1px;background:rgba(148,163,184,.28);align-content:start}
-@media(min-width:1024px){.insta-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-.g-tile{position:relative;aspect-ratio:1/1;overflow:hidden;background:var(--sf);cursor:zoom-in}
-.g-tile img{width:100%;height:100%;object-fit:cover;display:block}
+.insta-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-auto-rows:minmax(120px,calc((100dvh - 50px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)) / 3.5));
+  gap:1px;
+  background:rgba(148,163,184,.28);
+  align-content:start;
+  max-width:1080px;
+  margin:0 auto;
+}
+.g-tile{position:relative;width:100%;height:100%;overflow:hidden;background:rgba(148,163,184,.12);cursor:zoom-in}
+.g-tile img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .22s ease}
+.g-tile img.loaded{opacity:1}
 .g-meta{position:absolute;left:0;right:0;bottom:0;padding:4px 6px;font-size:10px;line-height:1.25;color:#fff;background:linear-gradient(to top,rgba(15,23,42,.65),rgba(15,23,42,0));display:flex;justify-content:space-between;gap:4px;pointer-events:none}
 .g-meta span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
@@ -368,7 +378,7 @@ let saveT;const saveSoon=()=>{clearTimeout(saveT);saveT=setTimeout(saveState,300
 
 let S={records:{},customParcels:[],deletedParcels:[],customMapDataUrl:null,parcelOverrides:{},globalAdjust:{dx:0,dy:0,sx:1,sy:1}};
 const normState=o=>({records:o.records||{},customParcels:o.customParcels||[],deletedParcels:o.deletedParcels||[],customMapDataUrl:o.customMapDataUrl||null,parcelOverrides:o.parcelOverrides||{},globalAdjust:o.globalAdjust||{dx:0,dy:0,sx:1,sy:1}});
-let sel=null,drawing=false,draft=[],adjusting=false,showNum=false,gridMode=false,gridPhotos=[],V={s:1,x:0,y:0};
+let sel=null,drawing=false,draft=[],adjusting=false,showNum=false,gridMode=false,gridPhotos=[],gridIO=null,V={s:1,x:0,y:0};
 
 const r2=n=>Math.round(n*100)/100;
 const parse=s=>s.trim().split(/\s+/).map(p=>p.split(',').map(Number));
@@ -478,7 +488,10 @@ function render(){
 function renderDraft(){const l=$('drawp');l.innerHTML='';if(!draft.length)return;if(draft.length>1)l.appendChild(mk('polygon',{points:str(draft),fill:'rgba(217,119,6,.35)',stroke:'#d97706','stroke-width':2,'stroke-dasharray':'5,3'}));draft.forEach(([x,y])=>l.appendChild(mk('circle',{cx:x,cy:y,r:4,fill:'#d97706',stroke:'#fff','stroke-width':1.5})))}
 
 function renderAllGrid(){
+  const view=$('all-grid-view');
   const wrap=$('insta-grid');
+  if(gridIO){gridIO.disconnect();gridIO=null}
+  view.scrollTop=0;
   gridPhotos=allPhotosLatestFirst();
   wrap.innerHTML='';
   if(!gridPhotos.length){
@@ -487,14 +500,49 @@ function renderAllGrid(){
     return;
   }
   wrap.style.background='';
+
+  // 最初の画面（3列×4行＝最大12枚）を優先的に上から順番に読み込み、それ以降は後から遅延読み込み
+  const INITIAL_EAGER=12;
+  const HIGH_PRIORITY=6;
+  const deferred=[];
+
   gridPhotos.forEach((p,idx)=>{
     const tile=document.createElement('div');
     tile.className='g-tile';
     tile.dataset.idx=idx;
-    tile.innerHTML=`<img src="${p.dataUrl}" alt="${p.parcelLabel}" loading="lazy" decoding="async"><div class="g-meta"><span>${p.parcelCode} ${p.parcelLabel}</span><span>${fmtDate(p.postedAt)}</span></div>`;
+
+    const isInitial=idx<INITIAL_EAGER;
+    const isHigh=idx<HIGH_PRIORITY;
+    const imgAttr=isInitial
+      ? `src="${p.dataUrl}" ${isHigh?'fetchpriority="high"':''}`
+      : `data-src="${p.dataUrl}" loading="lazy"`;
+
+    tile.innerHTML=`<img ${imgAttr} alt="${p.parcelLabel}" decoding="async"><div class="g-meta"><span>${p.parcelCode} ${p.parcelLabel}</span><span>${fmtDate(p.postedAt)}</span></div>`;
+    const im=tile.querySelector('img');
+    im.onload=()=>im.classList.add('loaded');
+    if(im.complete&&im.naturalWidth)im.classList.add('loaded');
+    if(!isInitial)deferred.push(im);
+
     tile.addEventListener('click',()=>openGridLB(idx));
     wrap.appendChild(tile);
   });
+
+  if(deferred.length){
+    const loadDeferred=im=>{
+      if(!im.dataset.src)return;
+      im.src=im.dataset.src;
+      im.removeAttribute('data-src');
+    };
+    gridIO=new IntersectionObserver((entries,obs)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          loadDeferred(entry.target);
+          obs.unobserve(entry.target);
+        }
+      });
+    },{root:view,rootMargin:'120px 0px'});
+    deferred.forEach(im=>gridIO.observe(im));
+  }
 }
 function setGridMode(on){
   gridMode=!!on;
@@ -504,6 +552,9 @@ function setGridMode(on){
     if(drawing)setDraw(false);
     if(adjusting)setAdj(false);
     renderAllGrid();
+  }else if(gridIO){
+    gridIO.disconnect();
+    gridIO=null;
   }
 }
 $('b-grid').onclick=()=>setGridMode(!gridMode);
