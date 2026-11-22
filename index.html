@@ -77,23 +77,33 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 .card-date{border:none;background:rgba(255,255,255,.78);color:#1e293b;border-radius:4px;padding:0 4px;font-size:10px;font-weight:500;height:20px}
 .card .ch .nb{height:20px;padding:0 5px;font-size:10px;font-weight:500;background:rgba(255,255,255,.78);color:#1e293b;border:none;border-radius:4px}
 
-/* 全区画グリッド表示：常に3列・画面内に3〜4行表示 */
+/* 全区画グリッド表示（PCは従来の4列・正方形スタイル） */
 #all-grid-view{position:absolute;inset:0;z-index:25;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0}
 .insta-grid{
   display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  grid-auto-rows:minmax(120px,calc((100dvh - 50px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)) / 3.5));
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-auto-rows:max-content;
   gap:1px;
   background:rgba(148,163,184,.28);
   align-content:start;
-  max-width:1080px;
-  margin:0 auto;
 }
-.g-tile{position:relative;width:100%;height:100%;overflow:hidden;background:rgba(148,163,184,.12);cursor:zoom-in}
+.g-tile{position:relative;width:100%;aspect-ratio:1 / 1;overflow:hidden;background:rgba(148,163,184,.12);cursor:zoom-in}
 .g-tile img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .22s ease}
 .g-tile img.loaded{opacity:1}
 .g-meta{position:absolute;left:0;right:0;bottom:0;padding:4px 6px;font-size:10px;line-height:1.25;color:#fff;background:linear-gradient(to top,rgba(15,23,42,.65),rgba(15,23,42,0));display:flex;justify-content:space-between;gap:4px;pointer-events:none}
 .g-meta span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* スマホ（768px未満）のみ：3列・1画面あたり3〜4行表示 */
+@media(max-width:767px){
+  .insta-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    grid-auto-rows:minmax(110px,calc((100dvh - 50px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)) / 3.5));
+  }
+  .g-tile{
+    aspect-ratio:auto;
+    height:100%;
+  }
+}
 
 #lb{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.95);display:flex;flex-direction:column;color:#fff;opacity:1;transition:opacity .38s ease,transform .38s ease}
 #lb.closing{opacity:0!important;pointer-events:none!important}
@@ -501,9 +511,10 @@ function renderAllGrid(){
   }
   wrap.style.background='';
 
-  // 最初の画面（3列×4行＝最大12枚）を優先的に上から順番に読み込み、それ以降は後から遅延読み込み
-  const INITIAL_EAGER=12;
-  const HIGH_PRIORITY=6;
+  const isMobile=window.innerWidth<768;
+  // スマホは最初の画面（3列×4行＝12枚）のみ即時読み込みし、残りはスクロールに応じて後から読み込み。PCは従来通り。
+  const INITIAL_EAGER=isMobile?12:gridPhotos.length;
+  const HIGH_PRIORITY=isMobile?6:0;
   const deferred=[];
 
   gridPhotos.forEach((p,idx)=>{
@@ -514,7 +525,7 @@ function renderAllGrid(){
     const isInitial=idx<INITIAL_EAGER;
     const isHigh=idx<HIGH_PRIORITY;
     const imgAttr=isInitial
-      ? `src="${p.dataUrl}" ${isHigh?'fetchpriority="high"':''}`
+      ? `src="${p.dataUrl}" ${isHigh?'fetchpriority="high"':(!isMobile?'loading="lazy"':'')}`
       : `data-src="${p.dataUrl}" loading="lazy"`;
 
     tile.innerHTML=`<img ${imgAttr} alt="${p.parcelLabel}" decoding="async"><div class="g-meta"><span>${p.parcelCode} ${p.parcelLabel}</span><span>${fmtDate(p.postedAt)}</span></div>`;
