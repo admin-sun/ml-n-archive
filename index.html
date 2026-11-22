@@ -147,6 +147,10 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
   .card-date-wrap input.dy{width:26px}
   .card-date-wrap input.dm,.card-date-wrap input.dd{width:14px}
 }
+.card-date.no-exif,.card-date-wrap.no-exif{
+  box-shadow:0 0 0 1.5px #ea580c;
+  background:rgba(255,247,237,.95);
+}
 .card .ch .nb{height:20px;padding:0 5px;font-size:10px;font-weight:500;background:rgba(255,255,255,.78);color:#1e293b;border:none;border-radius:4px}
 
 /* 全区画グリッド表示（PCは従来の4列・正方形スタイル） */
@@ -517,14 +521,15 @@ function ask(title,body){return new Promise(res=>{$('c-t').textContent=title;$('
 function compress(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=e=>{const im=new Image();im.onload=()=>{let w=im.width,h=im.height;const M=1400;if(w>M||h>M){if(w>h){h=Math.round(h*M/w);w=M}else{w=Math.round(w*M/h);h=M}}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);c.toBlob(b=>res(b),'image/webp',.85)};im.onerror=rej;im.src=e.target.result};fr.onerror=rej;fr.readAsDataURL(file)})}
 function extractExifDateISO(file){
   return new Promise(res=>{
-    if(!file||!/^image\/(jpeg|jpg)$/i.test(file.type)){res(null);return}
+    if(!file){res(null);return}
+    if(file.type&&!/^image\/(jpeg|jpg|pjpeg)$/i.test(file.type)&&!/\.(jpe?g)$/i.test(file.name||'')){
+      res(null);return;
+    }
     const fr=new FileReader();
     fr.onload=e=>{
       try{
-        const buf=e.target.result;
-        const view=new DataView(buf);
+        const view=new DataView(e.target.result);
         if(view.byteLength<4||view.getUint16(0,false)!==0xFFD8){res(null);return}
-        let offset=2;
         const readAscii=(start,len)=>{
           let s='';
           for(let i=0;i<len;i++){
@@ -535,63 +540,68 @@ function extractExifDateISO(file){
           }
           return s;
         };
-        const parseExifStr=str=>{
+        const toISOFromExifStr=str=>{
           const m=str.match(/(\d{4})[:\-/](\d{1,2})[:\-/](\d{1,2})/);
           if(!m)return null;
-          const y=m[1],mo=String(Number(m[2])).padStart(2,'0'),d=String(Number(m[3])).padStart(2,'0');
-          return `${y}-${mo}-${d}`;
+          const y=Number(m[1]),mo=Number(m[2]),d=Number(m[3]);
+          if(y<1990||y>2100||mo<1||mo>12||d<1||d>31)return null;
+          return `${String(y).padStart(4,'0')}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         };
+        let offset=2;
         while(offset+4<=view.byteLength){
           const marker=view.getUint16(offset,false);
           offset+=2;
           if(marker===0xFFE1){
-            const size=view.getUint16(offset,false);
+            const segLen=view.getUint16(offset,false);
             const segStart=offset+2;
-            if(segStart+10<=view.byteLength&&readAscii(segStart,6)==='Exif\0\0'){
-              const tiffStart=segStart+6;
-              const little=view.getUint16(tiffStart,false)===0x4949;
-              const u16=p=>view.getUint16(p,little);
-              const u32=p=>view.getUint32(p,little);
-              const ifd0Offset=u32(tiffStart+4);
-              const readIfd=ifdPos=>{
-                const abs=tiffStart+ifdPos;
-                if(abs+2>view.byteLength)return{};
-                const count=u16(abs);
-                const out={};
-                for(let i=0;i<count;i++){
-                  const ePos=abs+2+i*12;
-                  if(ePos+12>view.byteLength)break;
-                  const tag=u16(ePos);
-                  const type=u16(ePos+2);
-                  const num=u32(ePos+4);
-                  const valOff=ePos+8;
-                  const byteLen=num*((type===1||type===2||type===7)?1:(type===3?2:4));
-                  const dataPos=(byteLen<=4)?valOff:(tiffStart+u32(valOff));
-                  if(tag===0x9003||tag===0x9004||tag===0x0132){
-                    if(dataPos>=0&&dataPos+10<=view.byteLength){
-                      const iso=parseExifStr(readAscii(dataPos,20));
-                      if(iso)out[tag]=iso;
+            const segEnd=Math.min(view.byteLength,offset+segLen);
+            if(segStart+10<=segEnd&&readAscii(segStart,6)==='Exif\0\0'){
+              const tiff=segStart+6;
+              const endianMark=view.getUint16(tiff,false);
+              if(endianMark===0x4949||endianMark===0x4D4D){
+                const le=(endianMark===0x4949);
+                const u16=p=>(p+2<=segEnd)?view.getUint16(p,le):0;
+                const u32=p=>(p+4<=segEnd)?view.getUint32(p,le):0;
+                const ifd0Off=u32(tiff+4);
+                const parseIFD=relOff=>{
+                  const pos=tiff+relOff;
+                  if(pos+2>segEnd)return{};
+                  const n=u16(pos);
+                  const found={};
+                  for(let i=0;i<n;i++){
+                    const ep=pos+2+i*12;
+                    if(ep+12>segEnd)break;
+                    const tag=u16(ep),type=u16(ep+2),cnt=u32(ep+4),valField=ep+8;
+                    const unit=(type===1||type===2||type===6||type===7)?1:(type===3||type===8)?2:4;
+                    const totalBytes=cnt*unit;
+                    const dataPos=(totalBytes<=4)?valField:(tiff+u32(valField));
+                    if(tag===0x9003||tag===0x9004||tag===0x0132){
+                      if(dataPos>=tiff&&dataPos+10<=segEnd){
+                        const iso=toISOFromExifStr(readAscii(dataPos,Math.min(24,segEnd-dataPos)));
+                        if(iso)found[tag]=iso;
+                      }
+                    }
+                    if(tag===0x8769){
+                      found.exifPtr=u32(valField);
                     }
                   }
-                  if(tag===0x8769){
-                    out.exifSub=u32(valOff);
-                  }
+                  return found;
+                };
+                const d0=parseIFD(ifd0Off);
+                if(d0.exifPtr){
+                  const sub=parseIFD(d0.exifPtr);
+                  if(sub[0x9003]){res(sub[0x9003]);return}
+                  if(sub[0x9004]){res(sub[0x9004]);return}
                 }
-                return out;
-              };
-              const ifd0=readIfd(ifd0Offset);
-              if(ifd0.exifSub){
-                const sub=readIfd(ifd0.exifSub);
-                if(sub[0x9003]){res(sub[0x9003]);return}
-                if(sub[0x9004]){res(sub[0x9004]);return}
+                if(d0[0x0132]){res(d0[0x0132]);return}
               }
-              if(ifd0[0x0132]){res(ifd0[0x0132]);return}
             }
-            offset+=size;
+            offset+=segLen;
+          }else if(marker===0xFFDA){
+            break;
           }else if((marker&0xFF00)===0xFF00){
             if(offset+2>view.byteLength)break;
-            const size=view.getUint16(offset,false);
-            offset+=size;
+            offset+=view.getUint16(offset,false);
           }else{
             break;
           }
@@ -600,7 +610,7 @@ function extractExifDateISO(file){
       }catch(_){res(null)}
     };
     fr.onerror=()=>res(null);
-    fr.readAsArrayBuffer(file.slice(0,262144));
+    fr.readAsArrayBuffer(file.slice(0,4194304));
   });
 }
 const vp=$('map-viewport'),layer=$('layer');
@@ -819,9 +829,11 @@ function feed(){
     const c=document.createElement('article');c.className='card';
     const isoParts=toISO(p.postedAt).split('-');
     const yVal=isoParts[0],mVal=String(Number(isoParts[1])),dVal=String(Number(isoParts[2]));
+    const missCls=p.exifMissing?' no-exif':'';
+    const missTitle=p.exifMissing?' title="写真から撮影日を取得できなかったため画面の日付を設定しています"':'';
     const dateUI=p.isStatic
       ? `<span style="font-size:10px;color:#f8fafc;text-shadow:0 1px 2px rgba(0,0,0,.7)">${fmtDate(p.postedAt)}</span>`
-      : `<input type="date" class="card-date" data-id="${p.id}" value="${toISO(p.postedAt)}" aria-label="投稿日を変更"><span class="card-date-wrap" data-id="${p.id}" data-orig="${yVal}-${mVal}-${dVal}"><input type="text" inputmode="numeric" maxlength="4" class="dy" value="${yVal}" aria-label="年"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dm" value="${mVal}" aria-label="月"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dd" value="${dVal}" aria-label="日"></span>`;
+      : `<input type="date" class="card-date${missCls}" data-id="${p.id}" value="${toISO(p.postedAt)}" aria-label="投稿日を変更"${missTitle}><span class="card-date-wrap${missCls}" data-id="${p.id}" data-orig="${yVal}-${mVal}-${dVal}"${missTitle}><input type="text" inputmode="numeric" maxlength="4" class="dy" value="${yVal}" aria-label="年"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dm" value="${mVal}" aria-label="月"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dd" value="${dVal}" aria-label="日"></span>`;
     const isEager=i<eagerCount;
     c.innerHTML=`<div class="ch"><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap"><span class="tag ${i?'old':''}">${i?'履歴 #'+(ph.length-i):'最新'}</span>${dateUI}${p.local?' <span style="font-size:11px;color:var(--mut)">📱この端末のみ</span>':''}</div><div style="display:flex;gap:4px"><button class="nb" data-a="fs" data-i="${i}">全画面</button>${p.isStatic?'':`<button class="nb" data-a="del" data-id="${p.id}" aria-label="削除">🗑</button>`}</div></div><img ${isEager?`src="${p.dataUrl}" fetchpriority="high"`:`data-src="${p.dataUrl}"`} alt="農地写真" decoding="async" data-a="fs" data-i="${i}">`;
     const im=c.querySelector('img');
@@ -864,6 +876,7 @@ async function commitCardDate(wrap){
     const r=rec(sel),ph=r.photos.find(p=>p.id===wrap.dataset.id);
     if(ph){
       ph.postedAt=`${yNum}/${String(mNum).padStart(2,'0')}/${String(dNum).padStart(2,'0')}`;
+      ph.exifMissing=false;
       await saveState();
       feed();
       if(gridMode)renderAllGrid();
@@ -905,7 +918,7 @@ $('feed').addEventListener('keydown',async e=>{
 $('feed').addEventListener('change',async e=>{
   const t=e.target.closest('.card-date');if(!t||!sel||!t.value)return;
   const r=rec(sel),ph=r.photos.find(p=>p.id===t.dataset.id);
-  if(ph){ph.postedAt=jpDate(t.value);await saveState();feed();if(gridMode)renderAllGrid();toast('投稿日を変更しました')}
+  if(ph){ph.postedAt=jpDate(t.value);ph.exifMissing=false;await saveState();feed();if(gridMode)renderAllGrid();toast('投稿日を変更しました')}
 });
 $('feed').addEventListener('click',async e=>{
   const t=e.target.closest('[data-a]');if(!t||!sel)return;
@@ -919,19 +932,24 @@ $('i-photos').addEventListener('change',async e=>{
   toast('写真を処理中... ('+files.length+'枚)');
   try{
     if(!ASS&&DBH){toast('この環境では写真を追加できません（編集権限が必要です）');return}
-    let exifCount=0;
+    let exifCount=0,missCount=0;
     for(const f of files){
       const exifISO=await extractExifDateISO(f);
+      const hasExif=Boolean(exifISO);
       const iso=exifISO||fallbackISO;
-      if(exifISO)exifCount++;
+      if(hasExif)exifCount++;else missCount++;
       const when=jpDate(iso);
       const bl=await compress(f);let url,aid,loc=false;
       if(ASS){try{const a=await ASS.upload(bl);url=a.url;aid=a.id}catch(x){}}
       if(!url){if(DBH)throw new Error('upload');url=await new Promise((ok,ng)=>{const fr=new FileReader();fr.onload=()=>ok(fr.result);fr.onerror=ng;fr.readAsDataURL(bl)});loc=true}
-      r.photos.unshift({id:'PH_'+Date.now()+Math.random().toString(36).slice(2,7),dataUrl:url,assetId:aid,local:loc,postedAt:when,timestamp:Date.now()});
+      r.photos.unshift({id:'PH_'+Date.now()+Math.random().toString(36).slice(2,7),dataUrl:url,assetId:aid,local:loc,postedAt:when,exifMissing:!hasExif,timestamp:Date.now()});
     }
     await saveState();feed();render();
-    toast(files.length+'枚の写真を追加しました'+(exifCount?'（'+exifCount+'枚は撮影日を自動取得）':''));
+    if(gridMode)renderAllGrid();
+    const msg=missCount
+      ? `${files.length}枚追加（撮影日取得：${exifCount}枚／取得不可：${missCount}枚 → 画面の日付を設定）`
+      : `${files.length}枚の写真を追加しました（${exifCount}枚すべて撮影日を自動取得）`;
+    toast(msg);
   }catch(x){toast('画像の読み込みに失敗しました')}finally{e.target.value=''}
 });
 function step(d){const ps=allParcels(),i=ps.findIndex(p=>p.id===sel);selectP(ps[(i<0?0:(i+d+ps.length)%ps.length)].id,true)}
