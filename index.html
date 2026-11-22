@@ -522,78 +522,95 @@ function compress(file){return new Promise((res,rej)=>{const fr=new FileReader()
 function extractExifDateISO(file){
   return new Promise(res=>{
     if(!file){res(null);return}
-    if(file.type&&!/^image\/(jpeg|jpg|pjpeg)$/i.test(file.type)&&!/\.(jpe?g)$/i.test(file.name||'')){
-      res(null);return;
-    }
     const fr=new FileReader();
     fr.onload=e=>{
       try{
-        const view=new DataView(e.target.result);
+        const buf=e.target.result;
+        const view=new DataView(buf);
         if(view.byteLength<4||view.getUint16(0,false)!==0xFFD8){res(null);return}
+
         const readAscii=(start,len)=>{
           let s='';
           for(let i=0;i<len;i++){
             if(start+i>=view.byteLength)break;
             const c=view.getUint8(start+i);
             if(c===0)break;
-            s+=String.fromCharCode(c);
+            if(c>=32&&c<=126)s+=String.fromCharCode(c);
           }
           return s;
         };
+
         const toISOFromExifStr=str=>{
-          const m=str.match(/(\d{4})[:\-/](\d{1,2})[:\-/](\d{1,2})/);
+          if(!str)return null;
+          const m=str.match(/(\d{4})\s*[:\-/]\s*(\d{1,2})\s*[:\-/]\s*(\d{1,2})/);
           if(!m)return null;
           const y=Number(m[1]),mo=Number(m[2]),d=Number(m[3]);
           if(y<1990||y>2100||mo<1||mo>12||d<1||d>31)return null;
+          const maxD=new Date(y,mo,0).getDate();
+          if(d>maxD)return null;
           return `${String(y).padStart(4,'0')}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         };
+
         let offset=2;
         while(offset+4<=view.byteLength){
           const marker=view.getUint16(offset,false);
           offset+=2;
+
           if(marker===0xFFE1){
             const segLen=view.getUint16(offset,false);
             const segStart=offset+2;
             const segEnd=Math.min(view.byteLength,offset+segLen);
-            if(segStart+10<=segEnd&&readAscii(segStart,6)==='Exif\0\0'){
+            if(segStart+12<=segEnd&&readAscii(segStart,6)==='Exif'){
               const tiff=segStart+6;
-              const endianMark=view.getUint16(tiff,false);
-              if(endianMark===0x4949||endianMark===0x4D4D){
-                const le=(endianMark===0x4949);
-                const u16=p=>(p+2<=segEnd)?view.getUint16(p,le):0;
-                const u32=p=>(p+4<=segEnd)?view.getUint32(p,le):0;
-                const ifd0Off=u32(tiff+4);
-                const parseIFD=relOff=>{
-                  const pos=tiff+relOff;
-                  if(pos+2>segEnd)return{};
-                  const n=u16(pos);
-                  const found={};
-                  for(let i=0;i<n;i++){
-                    const ep=pos+2+i*12;
-                    if(ep+12>segEnd)break;
-                    const tag=u16(ep),type=u16(ep+2),cnt=u32(ep+4),valField=ep+8;
-                    const unit=(type===1||type===2||type===6||type===7)?1:(type===3||type===8)?2:4;
-                    const totalBytes=cnt*unit;
-                    const dataPos=(totalBytes<=4)?valField:(tiff+u32(valField));
-                    if(tag===0x9003||tag===0x9004||tag===0x0132){
-                      if(dataPos>=tiff&&dataPos+10<=segEnd){
-                        const iso=toISOFromExifStr(readAscii(dataPos,Math.min(24,segEnd-dataPos)));
-                        if(iso)found[tag]=iso;
+              if(tiff+8<=segEnd){
+                const bo=view.getUint16(tiff,false);
+                const le=(bo===0x4949);
+                const be=(bo===0x4D4D);
+                if(le||be){
+                  const u16=p=>(p+2<=segEnd)?view.getUint16(p,le):0;
+                  const u32=p=>(p+4<=segEnd)?view.getUint32(p,le):0;
+                  const ifd0Off=u32(tiff+4);
+
+                  const parseIFD=(relOff,visited=new Set())=>{
+                    if(!relOff||visited.has(relOff))return{};
+                    visited.add(relOff);
+                    const pos=tiff+relOff;
+                    if(pos<tiff||pos+2>segEnd)return{};
+                    const n=u16(pos);
+                    if(n>300)return{};
+                    const found={};
+                    for(let i=0;i<n;i++){
+                      const ep=pos+2+i*12;
+                      if(ep+12>segEnd)break;
+                      const tag=u16(ep);
+                      const type=u16(ep+2);
+                      const cnt=u32(ep+4);
+                      const valField=ep+8;
+                      const unit=(type===1||type===2||type===6||type===7)?1:(type===3||type===8)?2:4;
+                      const totalBytes=cnt*unit;
+                      const dataPos=(totalBytes<=4)?valField:(tiff+u32(valField));
+                      if(tag===0x9003||tag===0x9004||tag===0x0132){
+                        if(dataPos>=tiff&&dataPos+10<=segEnd){
+                          const raw=readAscii(dataPos,Math.min(28,segEnd-dataPos));
+                          const iso=toISOFromExifStr(raw);
+                          if(iso)found[tag]=iso;
+                        }
+                      }
+                      if(tag===0x8769){
+                        found.exifPtr=u32(valField);
                       }
                     }
-                    if(tag===0x8769){
-                      found.exifPtr=u32(valField);
-                    }
+                    return found;
+                  };
+
+                  const d0=parseIFD(ifd0Off);
+                  if(d0.exifPtr){
+                    const sub=parseIFD(d0.exifPtr);
+                    if(sub[0x9003]){res(sub[0x9003]);return}
+                    if(sub[0x9004]){res(sub[0x9004]);return}
                   }
-                  return found;
-                };
-                const d0=parseIFD(ifd0Off);
-                if(d0.exifPtr){
-                  const sub=parseIFD(d0.exifPtr);
-                  if(sub[0x9003]){res(sub[0x9003]);return}
-                  if(sub[0x9004]){res(sub[0x9004]);return}
+                  if(d0[0x0132]){res(d0[0x0132]);return}
                 }
-                if(d0[0x0132]){res(d0[0x0132]);return}
               }
             }
             offset+=segLen;
