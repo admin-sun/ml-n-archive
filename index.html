@@ -74,7 +74,11 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 .tag.old{background:rgba(15,23,42,.45);color:#f1f5f9}
 .card img{width:100%;aspect-ratio:1 / 1;object-fit:cover;min-height:0;display:block;cursor:zoom-in;background:rgba(148,163,184,.12);opacity:0;transition:opacity .25s ease}
 .card img.loaded{opacity:1}
-.card-date{border:none;background:rgba(255,255,255,.78);color:#1e293b;border-radius:4px;padding:0 4px;font-size:10px;font-weight:500;height:20px}
+.card-date-wrap{display:inline-flex;align-items:center;background:rgba(255,255,255,.85);color:#1e293b;border-radius:4px;padding:0 4px;height:20px;font-size:10px;font-weight:600;gap:1px}
+.card-date-wrap input{border:none;background:transparent;color:#1e293b;font-size:10px;font-weight:600;padding:0;text-align:center;outline:none;height:18px;border-radius:2px}
+.card-date-wrap input:focus{background:#fef08a;color:#0f172a}
+.card-date-wrap input.dy{width:28px}
+.card-date-wrap input.dm,.card-date-wrap input.dd{width:16px}
 .card .ch .nb{height:20px;padding:0 5px;font-size:10px;font-weight:500;background:rgba(255,255,255,.78);color:#1e293b;border:none;border-radius:4px}
 
 /* 全区画グリッド表示（PCは従来の4列・正方形スタイル） */
@@ -409,7 +413,7 @@ function rec(id){
 }
 const todayISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 const jpDate=iso=>iso.replace(/-/g,'/');
-const fmtDate=s=>String(s||'').replace(/(\d{4})年(\d{1,2})月(\d{1,2})日.*/,(_,y,m,d)=>y+'/'+m.padStart(2,'0')+'/'+d.padStart(2,'0')).replace(/\s+\d{1,2}:\d{2}.*/,'');
+const fmtDate=s=>String(s||'').replace(/(\d{4})[年\/\-](\d{1,2})[月\/\-](\d{1,2})日?.*/,(_,y,m,d)=>y+'/'+Number(m)+'/'+Number(d)).replace(/\s+\d{1,2}:\d{2}.*/,'');
 const toISO=s=>{const m=fmtDate(s).match(/(\d{4})\/(\d{1,2})\/(\d{1,2})/);return m?m[1]+'-'+m[2].padStart(2,'0')+'-'+m[3].padStart(2,'0'):todayISO()};
 function photosOf(id){
   const list=[...((S.records[id]&&S.records[id].photos)||[]),...(STATIC_PHOTOS[id]||[]).map((p,i)=>({id:'S_'+id+'_'+i,dataUrl:p.src,postedAt:p.postedAt,isStatic:true}))];
@@ -658,7 +662,11 @@ function feed(){
   const eagerCount=innerWidth<768?2:4;
   ph.forEach((p,i)=>{
     const c=document.createElement('article');c.className='card';
-    const dateUI=p.isStatic?`<span style="font-size:10px;color:#f8fafc;text-shadow:0 1px 2px rgba(0,0,0,.7)">${fmtDate(p.postedAt)}</span>`:`<input type="date" class="card-date" data-id="${p.id}" value="${toISO(p.postedAt)}" aria-label="投稿日を変更">`;
+    const isoParts=toISO(p.postedAt).split('-');
+    const yVal=isoParts[0],mVal=String(Number(isoParts[1])),dVal=String(Number(isoParts[2]));
+    const dateUI=p.isStatic
+      ? `<span style="font-size:10px;color:#f8fafc;text-shadow:0 1px 2px rgba(0,0,0,.7)">${yVal}/${mVal}/${dVal}</span>`
+      : `<span class="card-date-wrap" data-id="${p.id}" data-orig="${yVal}-${mVal}-${dVal}"><input type="text" inputmode="numeric" maxlength="4" class="dy" value="${yVal}" aria-label="年"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dm" value="${mVal}" aria-label="月"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dd" value="${dVal}" aria-label="日"></span>`;
     const isEager=i<eagerCount;
     c.innerHTML=`<div class="ch"><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap"><span class="tag ${i?'old':''}">${i?'履歴 #'+(ph.length-i):'最新'}</span>${dateUI}${p.local?' <span style="font-size:11px;color:var(--mut)">📱この端末のみ</span>':''}</div><div style="display:flex;gap:4px"><button class="nb" data-a="fs" data-i="${i}">全画面</button>${p.isStatic?'':`<button class="nb" data-a="del" data-id="${p.id}" aria-label="削除">🗑</button>`}</div></div><img ${isEager?`src="${p.dataUrl}" fetchpriority="high"`:`data-src="${p.dataUrl}"`} alt="農地写真" decoding="async" data-a="fs" data-i="${i}">`;
     const im=c.querySelector('img');
@@ -676,10 +684,74 @@ function feed(){
     });
   }
 }
-$('feed').addEventListener('change',async e=>{
-  const t=e.target.closest('.card-date');if(!t||!sel||!t.value)return;
-  const r=rec(sel),ph=r.photos.find(p=>p.id===t.dataset.id);
-  if(ph){ph.postedAt=jpDate(t.value);await saveState();feed();if(gridMode)renderAllGrid();toast('投稿日を変更しました')}
+async function commitCardDate(wrap){
+  if(!wrap||!sel||wrap.dataset.saving==='1')return;
+  const yIn=wrap.querySelector('.dy'),mIn=wrap.querySelector('.dm'),dIn=wrap.querySelector('.dd');
+  const yRaw=yIn.value.replace(/\D/g,''),mRaw=mIn.value.replace(/\D/g,''),dRaw=dIn.value.replace(/\D/g,'');
+  const orig=(wrap.dataset.orig||'').split('-');
+  if(yRaw.length!==4){
+    toast('年は数字4文字で入力してください');
+    if(orig.length===3){yIn.value=orig[0];mIn.value=orig[1];dIn.value=orig[2]}
+    return;
+  }
+  const yNum=Number(yRaw),mNum=Number(mRaw),dNum=Number(dRaw);
+  const maxDay=(yNum&&mNum>=1&&mNum<=12)?new Date(yNum,mNum,0).getDate():31;
+  if(!mRaw||mNum<1||mNum>12||!dRaw||dNum<1||dNum>maxDay){
+    toast('正しい月日を入力してください');
+    if(orig.length===3){yIn.value=orig[0];mIn.value=orig[1];dIn.value=orig[2]}
+    return;
+  }
+  const normKey=`${yNum}-${mNum}-${dNum}`;
+  yIn.value=String(yNum);mIn.value=String(mNum);dIn.value=String(dNum);
+  if(normKey===wrap.dataset.orig)return;
+  wrap.dataset.saving='1';
+  try{
+    const r=rec(sel),ph=r.photos.find(p=>p.id===wrap.dataset.id);
+    if(ph){
+      ph.postedAt=`${yNum}/${String(mNum).padStart(2,'0')}/${String(dNum).padStart(2,'0')}`;
+      await saveState();
+      feed();
+      if(gridMode)renderAllGrid();
+      toast('投稿日を変更しました');
+    }
+  }finally{
+    wrap.dataset.saving='0';
+  }
+}
+
+$('feed').addEventListener('input',e=>{
+  const inp=e.target.closest('.card-date-wrap input');if(!inp)return;
+  const max=inp.classList.contains('dy')?4:2;
+  const clean=inp.value.replace(/\D/g,'').slice(0,max);
+  if(inp.value!==clean)inp.value=clean;
+});
+
+$('feed').addEventListener('focusin',e=>{
+  const inp=e.target.closest('.card-date-wrap input');
+  if(inp)requestAnimationFrame(()=>inp.select());
+});
+
+$('feed').addEventListener('keydown',async e=>{
+  const inp=e.target.closest('.card-date-wrap input');if(!inp)return;
+  if(e.key==='Enter'){
+    e.preventDefault();
+    const wrap=inp.closest('.card-date-wrap');
+    if(inp.classList.contains('dy')){
+      const m=wrap.querySelector('.dm');m.focus();m.select();
+    }else if(inp.classList.contains('dm')){
+      const d=wrap.querySelector('.dd');d.focus();d.select();
+    }else if(inp.classList.contains('dd')){
+      await commitCardDate(wrap);
+      inp.blur();
+    }
+  }
+});
+
+$('feed').addEventListener('focusout',e=>{
+  const wrap=e.target.closest('.card-date-wrap');if(!wrap)return;
+  setTimeout(()=>{
+    if(!wrap.contains(document.activeElement))commitCardDate(wrap);
+  },0);
 });
 $('feed').addEventListener('click',async e=>{
   const t=e.target.closest('[data-a]');if(!t||!sel)return;
