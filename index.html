@@ -55,17 +55,216 @@ main{flex:1;display:flex;position:relative;overflow:hidden;min-height:0}
 aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:flex;flex-direction:column;z-index:20;min-height:0}
 #empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center;color:var(--mut)}
 #active{flex:1;display:flex;flex-direction:column;min-height:0}
-.bar{padding:10px 14px;border-bottom:1px solid var(--bd);background:var(--bg);min-width:0}
 .nb{height:30px;padding:0 9px;border-radius:8px;border:1px solid var(--bd);background:var(--sf);font-size:12px;font-weight:700}
-.fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
-.fld{border:1px solid var(--bd);background:var(--sf);border-radius:10px;padding:5px 10px}
-.fld label{display:block;font-size:11px;font-weight:700;color:var(--mut)}
-.fld input{width:100%;border:0;outline:0;background:none;font-weight:700;font-size:15px}
+
+/* サムネイル上部コントロール（PC/スマホ共通基盤） */
+#active .top-controls{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:8px 12px;
+  border-bottom:1px solid var(--bd);
+  background:var(--bg);
+  min-width:0;
+}
+.bar{
+  flex:1;
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.pcode-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:28px;
+  padding:0 8px;
+  border-radius:7px;
+  background:var(--g);
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.02em;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.pcount-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:26px;
+  padding:0 9px;
+  border-radius:99px;
+  background:var(--g2);
+  color:#fff;
+  font-size:11px;
+  font-weight:700;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.fld{
+  border:1px solid var(--bd);
+  background:var(--sf);
+  border-radius:8px;
+  padding:3px 8px;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.fld label{
+  display:block;
+  font-size:10px;
+  font-weight:700;
+  line-height:1.15;
+  color:var(--mut);
+  white-space:nowrap;
+}
+.fld input{
+  width:100%;
+  min-width:0;
+  border:0;
+  outline:0;
+  background:none;
+  font-weight:700;
+  font-size:14px;
+  line-height:1.25;
+  padding:0;
+}
 .fld:focus-within{border-color:var(--g2)}
-.addrow{display:flex;flex-direction:column;justify-content:center;align-items:center;border-left:1px solid var(--bd);padding:8px;gap:6px;flex-shrink:0}
-.addrow label.btn.circle-add{width:38px;height:38px;min-width:38px;padding:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;line-height:1}
-.addrow input[type=date]{width:108px;max-width:108px;height:30px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);padding:0 4px;font-size:12px;font-weight:700}
-#active .top-controls{display:flex;align-items:stretch;border-bottom:1px solid var(--bd);background:var(--bg)}
+
+.addrow{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+.addrow label.btn.circle-add{
+  width:40px;
+  height:40px;
+  min-width:40px;
+  padding:0;
+  border-radius:50%;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  font-weight:700;
+  line-height:1;
+  box-shadow:0 2px 6px rgba(0,0,0,.12);
+}
+
+/* PC版（768px以上）: 1行コンパクト配置 [番号 | 地番(詰める) | 写真枚数] [作物名] ... [写真投稿ボタン] */
+@media(min-width:768px){
+  #active .top-controls{
+    padding:8px 14px;
+    gap:12px;
+  }
+  .bar{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    gap:8px;
+  }
+  .bar-row1{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex:0 1 auto;
+    min-width:0;
+  }
+  .bar-row1 .fld-lot{
+    width:136px;
+    max-width:160px;
+    flex:0 1 136px;
+  }
+  .bar-row2{
+    display:flex;
+    align-items:center;
+    flex:1 1 140px;
+    max-width:260px;
+    min-width:110px;
+  }
+  .bar-row2 .fld-crop{
+    width:100%;
+  }
+  .addrow{
+    margin-left:auto;
+    padding-left:6px;
+  }
+}
+
+/* スマホ版（767px以下）: 上下2段コンパクト配置（上段：番号・地番・写真枚数／下段：作物名＋右側に上下中央の投稿ボタン） */
+@media(max-width:767px){
+  #active .top-controls{
+    padding:6px 10px;
+    gap:8px;
+    align-items:center;
+  }
+  .bar{
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+  }
+  .bar-row1{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    width:100%;
+    min-width:0;
+  }
+  .pcode-badge{
+    height:26px;
+    padding:0 7px;
+    font-size:11px;
+  }
+  .bar-row1 .fld-lot{
+    flex:1 1 auto;
+    min-width:0;
+    padding:2px 7px;
+  }
+  .pcount-badge{
+    height:24px;
+    padding:0 8px;
+    font-size:11px;
+  }
+  .bar-row2{
+    display:flex;
+    align-items:center;
+    width:100%;
+    min-width:0;
+  }
+  .bar-row2 .fld-crop{
+    width:100%;
+    padding:2px 7px;
+  }
+  .fld label{
+    font-size:9px;
+    line-height:1.1;
+  }
+  .fld input{
+    font-size:13px;
+    line-height:1.2;
+  }
+  .addrow{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    align-self:center;
+    padding:0 2px;
+  }
+  .addrow label.btn.circle-add{
+    width:40px;
+    height:40px;
+    min-width:40px;
+    font-size:22px;
+  }
+}
+
 #feed{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:max-content;gap:1px;background:rgba(148,163,184,.28);align-content:start}
 .card{position:relative;border:none;border-radius:0;overflow:hidden;background:var(--sf);display:block}
 .card .ch{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:center;padding:4px 6px;gap:4px;background:linear-gradient(to top,rgba(15,23,42,.52),rgba(15,23,42,0));pointer-events:none}
@@ -205,7 +404,7 @@ body.is-touch #zoom button{width:44px;height:44px;font-size:20px}
 body.is-touch .nb{height:34px;padding:0 10px;font-size:13px}
 body.layout-sheet aside{position:fixed;left:0;right:0;top:0;bottom:0;width:100%;height:100%;max-height:100%;border-radius:0;box-shadow:0 -8px 30px rgba(0,0,0,.25);transform:translateY(100%);transition:transform .28s;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);z-index:50}
 body.layout-sheet aside.open{transform:none}
-body.layout-sheet aside::before{content:"";display:block;width:40px;height:5px;background:var(--bd);border-radius:99px;margin:8px auto 2px;flex-shrink:0}
+body.layout-sheet aside::before{content:"";display:block;width:40px;height:5px;background:var(--bd);border-radius:99px;margin:6px auto 2px;flex-shrink:0}
 body.layout-sheet #empty{display:none}
 body.layout-sheet .pill,body.layout-sheet .dsk{display:none!important}
 body.layout-sheet #zoom{display:none!important}
@@ -224,48 +423,8 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
   header h1{font-size:14px}
   header > div{gap:4px!important}
   .hb{padding:0 6px;font-size:11px;height:30px;white-space:nowrap}
-
-  /* スマホでは「前・次・地図」ボタンを非表示 */
-  #n-prev,#n-next,#n-loc{display:none!important}
-
-  .bar{padding:8px 10px;min-width:0}
-  .bar > div:first-child{justify-content:flex-end;align-items:center;gap:6px}
-  .bar > div:first-child > div:first-child{display:none!important}
-
-  #pcount{
-    white-space:nowrap;
-    font-size:12px;
-    padding:4px 10px;
-    line-height:1.1;
-    flex-shrink:0;
-  }
-  #n-close{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:28px;
-    height:28px;
-    padding:0;
-    font-size:12px;
-    flex-shrink:0;
-  }
-
-  /* 地番表示・入力エリアを広く見やすく最適化 */
-  .fields{grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
-  .fld{padding:6px 8px;min-width:0}
-  .fld label{font-size:10px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .fld input{font-size:14px;line-height:1.3;min-width:0;width:100%}
-
-  .addrow{padding:8px 6px;gap:6px}
-  .addrow label.btn.circle-add{width:36px;height:36px;min-width:36px;font-size:20px}
-  .addrow input[type=date]{width:102px;max-width:102px;height:30px;font-size:11px;padding:0 3px}
 }
 @media(min-width:768px){
-  #active .top-controls{display:flex;align-items:stretch;border-bottom:1px solid var(--bd);background:var(--bg)}
-  .bar{flex:1;border-bottom:0;padding:8px 10px}
-  .fields{margin-top:6px;gap:6px}
-  .addrow{flex-direction:column;justify-content:center;border-bottom:0;border-left:1px solid var(--bd);padding:8px 10px;width:auto;gap:6px}
-
   #feed,
   body.sz-lg #feed,
   body.dev-tablet #feed{
@@ -290,7 +449,7 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
   aside.open{transform:none}
   aside::before{
     content:"";display:block;width:40px;height:5px;
-    background:var(--bd);border-radius:99px;margin:8px auto 2px;flex-shrink:0;
+    background:var(--bd);border-radius:99px;margin:6px auto 2px;flex-shrink:0;
   }
   #empty,.pill,.dsk,#zoom{display:none!important}
 }
@@ -357,18 +516,17 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
   <div id="active" class="hidden">
     <div class="top-controls">
       <div class="bar">
-        <div style="display:flex;justify-content:space-between;gap:6px">
-          <div style="display:flex;gap:5px"><button class="nb" id="n-prev">← 前</button><button class="nb" id="n-next">次 →</button><button class="nb" id="n-loc">📍地図</button></div>
-          <div style="display:flex;gap:6px;align-items:center"><b id="pcount" style="font-size:12px;background:var(--g2);color:#fff;padding:3px 10px;border-radius:99px">写真 0枚</b><button class="nb" id="n-close">✕</button></div>
+        <div class="bar-row1">
+          <span id="pcode" class="pcode-badge">F01</span>
+          <div class="fld fld-lot"><label for="lot">地番</label><input id="lot" placeholder="例: 瀬川 350-1"></div>
+          <span id="pcount" class="pcount-badge">写真 0枚</span>
         </div>
-        <div class="fields">
-          <div class="fld"><label for="lot">地番</label><input id="lot" placeholder="例: 瀬川 350-1"></div>
-          <div class="fld"><label for="crop">栽培作物名</label><input id="crop" placeholder="例: キュウリ / 水稲"></div>
+        <div class="bar-row2">
+          <div class="fld fld-crop"><label for="crop">栽培作物名</label><input id="crop" placeholder="例: キュウリ / 水稲"></div>
         </div>
       </div>
       <div class="addrow">
         <label class="btn circle-add" aria-label="写真を追加する">＋<input id="i-photos" type="file" accept="image/*" multiple class="hidden"></label>
-        <input id="pdate" type="date" aria-label="投稿日">
       </div>
     </div>
     <div id="feed"></div>
@@ -788,7 +946,6 @@ function renderAllGrid(){
   wrap.style.background='';
 
   const isMobile=window.innerWidth<768;
-  // スマホは最初の画面（3列×4行＝12枚）のみ即時読み込みし、残りはスクロールに応じて後から読み込み。PCは従来通り。
   const INITIAL_EAGER=isMobile?12:gridPhotos.length;
   const HIGH_PRIORITY=isMobile?6:0;
   const deferred=[];
@@ -852,7 +1009,8 @@ function selectP(id,center){
   sel=id;const p=getP(id);if(!p)return;const r=rec(id);
   $('empty').classList.add('hidden');$('active').classList.remove('hidden');$('hint').classList.add('hidden');
   if(!adjusting)panel.classList.add('open');
-  $('lot').value=r.lotNumber||p.defaultLot;$('crop').value=r.cropName||'';$('pdate').value=todayISO();
+  $('pcode').textContent=p.code||id;
+  $('lot').value=r.lotNumber||p.defaultLot;$('crop').value=r.cropName||'';
   $('cfoot').classList.remove('hidden');
   render();feed();
   if(center)focusP(id,window.USE_SHEET?.22:.5);
@@ -860,7 +1018,8 @@ function selectP(id,center){
 function closeP(){sel=null;panel.classList.remove('open');$('empty').classList.remove('hidden');$('active').classList.add('hidden');$('hint').classList.remove('hidden');render()}
 function feed(){
   if(!sel)return;const ph=photosOf(sel),f=$('feed'),curP=getP(sel);
-  $('pcount').textContent=(curP?curP.code:sel)+'｜写真 '+ph.length+'枚';f.innerHTML='';
+  $('pcode').textContent=curP?curP.code:sel;
+  $('pcount').textContent='写真 '+ph.length+'枚';f.innerHTML='';
   if(!ph.length){f.innerHTML='<div style="grid-column:1/-1;border:2px dashed var(--bd);border-radius:14px;padding:30px;text-align:center;color:var(--mut)"><b>まだ写真がありません</b><br>上の「＋」ボタンから登録できます</div>';return}
   const eagerCount=innerWidth<768?2:4;
   ph.forEach((p,i)=>{
@@ -868,7 +1027,7 @@ function feed(){
     const isoParts=toISO(p.postedAt).split('-');
     const yVal=isoParts[0],mVal=String(Number(isoParts[1])),dVal=String(Number(isoParts[2]));
     const missCls=p.exifMissing?' no-exif':'';
-    const missTitle=p.exifMissing?' title="写真から撮影日を取得できなかったため画面の日付を設定しています"':'';
+    const missTitle=p.exifMissing?' title="写真から撮影日を取得できなかったため投稿日を設定しています"':'';
     const dateUI=p.isStatic
       ? `<span style="font-size:10px;color:#f8fafc;text-shadow:0 1px 2px rgba(0,0,0,.7)">${fmtDate(p.postedAt)}</span>`
       : `<input type="date" class="card-date${missCls}" data-id="${p.id}" value="${toISO(p.postedAt)}" aria-label="投稿日を変更"${missTitle}><span class="card-date-wrap${missCls}" data-id="${p.id}" data-orig="${yVal}-${mVal}-${dVal}"${missTitle}><input type="text" inputmode="numeric" maxlength="4" class="dy" value="${yVal}" aria-label="年"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dm" value="${mVal}" aria-label="月"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dd" value="${dVal}" aria-label="日"></span>`;
@@ -966,7 +1125,7 @@ $('feed').addEventListener('click',async e=>{
 function meta(){if(!sel)return;const r=rec(sel);r.lotNumber=$('lot').value.trim();r.cropName=$('crop').value.trim();render();saveSoon()}
 $('lot').addEventListener('input',meta);$('crop').addEventListener('input',meta);
 $('i-photos').addEventListener('change',async e=>{
-  const files=[...e.target.files];if(!files.length||!sel)return;const r=rec(sel),fallbackISO=$('pdate').value||todayISO();
+  const files=[...e.target.files];if(!files.length||!sel)return;const r=rec(sel),fallbackISO=todayISO();
   toast('写真を処理中... ('+files.length+'枚)');
   try{
     if(!ASS&&DBH){toast('この環境では写真を追加できません（編集権限が必要です）');return}
@@ -985,13 +1144,12 @@ $('i-photos').addEventListener('change',async e=>{
     await saveState();feed();render();
     if(gridMode)renderAllGrid();
     const msg=missCount
-      ? `${files.length}枚追加（撮影日取得：${exifCount}枚／取得不可：${missCount}枚 → 画面の日付を設定）`
+      ? `${files.length}枚追加（撮影日取得：${exifCount}枚／取得不可：${missCount}枚 → 今日の日付を設定）`
       : `${files.length}枚の写真を追加しました（${exifCount}枚すべて撮影日を自動取得）`;
     toast(msg);
   }catch(x){toast('画像の読み込みに失敗しました')}finally{e.target.value=''}
 });
 function step(d){const ps=allParcels(),i=ps.findIndex(p=>p.id===sel);selectP(ps[(i<0?0:(i+d+ps.length)%ps.length)].id,true)}
-$('n-prev').onclick=()=>step(-1);$('n-next').onclick=()=>step(1);$('n-loc').onclick=()=>{if(sel){if(window.USE_SHEET)panel.classList.remove('open');focusP(sel,.5)}};$('n-close').onclick=closeP;
 $('b-delc').onclick=async()=>{
   if(!sel)return;
   if(!await ask('区画の削除','この区画と登録写真を削除しますか？'))return;
