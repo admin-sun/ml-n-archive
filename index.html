@@ -693,7 +693,7 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
     </div>
   </div>
   <div class="stage" id="lb-s"><button class="nv" id="lb-p" style="left:8px">‹</button><img id="lb-i" alt=""><button class="nv" id="lb-n" style="right:8px">›</button></div>
-  <div style="text-align:center;font-size:11px;color:#94a3b8;padding:8px">左右ボタン／スワイプで切替</div>
+  <div id="lb-guide" style="text-align:center;font-size:11px;color:#94a3b8;padding:8px">左右ボタン／スワイプで切替</div>
 </div>
 <div id="toast"></div>
 <div id="confirm" class="hidden"><div><h3 id="c-t" style="margin:0 0 6px"></h3><p id="c-b" class="mut" style="font-size:13px"></p><div style="display:flex;justify-content:flex-end;gap:8px"><button class="nb" id="c-no" style="height:38px">キャンセル</button><button class="btn" id="c-ok" style="background:#dc2626;padding:9px 16px">削除する</button></div></div></div>
@@ -1378,11 +1378,20 @@ function resetLBView(anim){
   else{im.style.transition=''}
   lbS=1;lbX=0;lbY=0;applyLB();
 }
+const isMobGridLB=()=>window.innerWidth<768&&gridMode&&lbIsGrid;
+function syncLbGuide(){
+  const g=$('lb-guide');
+  if(!g)return;
+  g.textContent=isMobGridLB()
+    ?'上スワイプ: 次へ ／ 下スワイプ: 前へ ／ 右スワイプ: グリッドに戻る'
+    :'左右ボタン／スワイプで切替';
+}
 function openLB(i){
   lbPeriod='all';$('lb-pbtn').textContent='全期間 ▾';$('lb-pbtn').classList.remove('active');
   document.querySelectorAll('#lb-pmenu button').forEach(b=>b.classList.toggle('on',b.dataset.p==='all'));
   $('lb-pmenu').classList.add('hidden');
   lbIsGrid=false;
+  syncLbGuide();
   lbP=photosOf(sel);if(!lbP.length)return;lbI=Math.min(i,lbP.length-1);updLB();
   const lb=$('lb');lb.classList.remove('hidden','closing');lb.style.opacity='0';lb.style.transform='';
   requestAnimationFrame(()=>requestAnimationFrame(()=>{lb.style.opacity=''}));
@@ -1391,6 +1400,7 @@ function openGridLB(idx){
   const list=allPhotosLatestFirst();
   if(!list.length)return;
   lbIsGrid=true;
+  syncLbGuide();
   lbPeriod='all';$('lb-pbtn').textContent='全期間 ▾';$('lb-pbtn').classList.remove('active');
   document.querySelectorAll('#lb-pmenu button').forEach(b=>b.classList.toggle('on',b.dataset.p==='all'));
   $('lb-pmenu').classList.add('hidden');
@@ -1499,7 +1509,7 @@ $('lb-s').addEventListener('touchmove',e=>{
     const t0=e.touches.item(0);ldx=t0.clientX-tx0;ldy=t0.clientY-ty0;
     if(lbS>1.01){lbX=lbPos0.x+ldx;lbY=lbPos0.y+ldy;applyLB();return}
     if(!ldir&&(Math.abs(ldx)>12||Math.abs(ldy)>12))ldir=Math.abs(ldx)>Math.abs(ldy)?'x':'y';
-    if(ldir==='y'&&ldy>0){$('lb').style.transform=`translateY(${ldy}px)`;$('lb').style.opacity=String(Math.max(0.35,1-ldy/320))}
+    if(!isMobGridLB()&&ldir==='y'&&ldy>0){$('lb').style.transform=`translateY(${ldy}px)`;$('lb').style.opacity=String(Math.max(0.35,1-ldy/320))}
   }
 },{passive:false});
   $('lb-s').addEventListener('touchend',e=>{
@@ -1509,8 +1519,14 @@ $('lb-s').addEventListener('touchmove',e=>{
   if(e.touches.length>0)return;
   if(lbHadMulti){lbHadMulti=false;$('lb').style.transform='';$('lb').style.opacity='';return}
   if(lbS>1.01){$('lb').style.transform='';$('lb').style.opacity='';if(Math.abs(ldx)<10&&Math.abs(ldy)<10){const now=Date.now();if(now-lbLastTap<300){resetLBView(true);lbLastTap=0}else{lbLastTap=now}}return}
-  if(ldir==='y'&&ldy>95){closeLB(true)}
-  else{$('lb').style.transform='';$('lb').style.opacity='';if(ldir==='x'&&Math.abs(ldx)>55)lbStep(ldx>0?-1:1);else if(Math.abs(ldx)<10&&Math.abs(ldy)<10){const now=Date.now();if(now-lbLastTap<300){resetLBView(true);lbLastTap=0}else{lbLastTap=now}}}
+  $('lb').style.transform='';$('lb').style.opacity='';
+  if(isMobGridLB()){
+    if(ldir==='x'&&ldx>65){closeLB(false);return}
+    if(ldir==='y'&&ldy<-55){lbStep(1);return}
+    if(ldir==='y'&&ldy>55){lbStep(-1);return}
+  }else if(ldir==='y'&&ldy>95){closeLB(true);return}
+  if(ldir==='x'&&Math.abs(ldx)>55)lbStep(ldx>0?-1:1);
+  else if(Math.abs(ldx)<10&&Math.abs(ldy)<10){const now=Date.now();if(now-lbLastTap<300){resetLBView(true);lbLastTap=0}else{lbLastTap=now}}
 });
 
 function setDraw(on){if(on&&gridMode)setGridMode(false);drawing=on;draft=[];renderDraft();$('draw-banner').classList.toggle('hidden',!on);vp.classList.toggle('draw',on);$('b-draw').classList.toggle('on',on)}
