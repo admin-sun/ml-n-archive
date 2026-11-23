@@ -387,6 +387,8 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 #lb .top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;height:68px;min-height:68px;max-height:68px;flex-shrink:0;overflow:visible;position:relative;z-index:30}
 #lb .top > div:first-child{min-width:0;flex:1}
 #lb-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35}
+#lb-t.jumpable{cursor:pointer;border-radius:6px;padding:2px 6px;margin:-2px -6px;transition:background .15s ease,color .15s ease}
+#lb-t.jumpable:hover,#lb-t.jumpable:active{background:rgba(251,191,36,.22);color:#fde68a}
 #lb .stage{flex:1;display:flex;align-items:center;justify-content:center;position:relative;min-height:0;touch-action:none;overscroll-behavior:none;overflow:hidden}
 #lb img{max-width:100%;max-height:100%;object-fit:contain;transform-origin:center center;will-change:transform;user-select:none;-webkit-user-drag:none}
 #lb .nv{position:absolute;top:50%;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.2);color:#fff;font-size:22px;transform:translateY(-50%)}
@@ -1161,7 +1163,37 @@ $('b-delc').onclick=async()=>{
   await saveState();closeP();toast('区画を削除しました');
 };
 
-let lbP=[],lbI=0,lbPeriod='all',lbIsGrid=false;
+let lbP=[],lbI=0,lbPeriod='all',lbIsGrid=false,lbTargetParcelId=null;
+function syncLbTitle(targetId,code,lot,crop){
+  lbTargetParcelId=targetId||null;
+  const el=$('lb-t');
+  const head=[code,lot].filter(Boolean).join(' ');
+  const full=(head||targetId||'')+(crop?'（'+crop+'）':'');
+  el.textContent=full;
+  if(lbTargetParcelId&&getP(lbTargetParcelId)){
+    el.classList.add('jumpable');
+    el.setAttribute('role','button');
+    el.setAttribute('tabindex','0');
+    el.title='タップ／クリックでこの農地のサムネイルに移動';
+  }else{
+    el.classList.remove('jumpable');
+    el.removeAttribute('role');
+    el.removeAttribute('tabindex');
+    el.removeAttribute('title');
+  }
+}
+function jumpFromLbToParcel(){
+  if(!lbTargetParcelId)return;
+  const targetId=lbTargetParcelId;
+  const p=getP(targetId);
+  if(!p)return;
+  const wasGrid=gridMode;
+  closeLB(false);
+  if(wasGrid)setGridMode(false);
+  selectP(targetId,window.USE_SHEET?true:false);
+  const label=(S.records[targetId]&&S.records[targetId].lotNumber)||p.defaultLot||p.code;
+  toast((p.code?p.code+' ':'')+label+' のサムネイルに移動しました');
+}
 const fmtISO=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 function getPeriodRange(mode){
   if(mode==='all')return null;
@@ -1237,16 +1269,26 @@ function openGridLB(idx){
   requestAnimationFrame(()=>requestAnimationFrame(()=>{lb.style.opacity=''}));
 }
 function closeLB(slideDown){const lb=$('lb');if(lb.classList.contains('hidden')||lb.classList.contains('closing'))return;$('lb-pmenu').classList.add('hidden');lb.style.transition='opacity .38s ease,transform .38s ease';if(slideDown)lb.style.transform='translateY(48px)';lb.classList.add('closing');setTimeout(()=>{lb.classList.add('hidden');lb.classList.remove('closing');lb.style.transform='';lb.style.transition=''},390)}
-function updLB(){resetLBView(false);const p=lbP[lbI],r=rec(sel),cp=getP(sel);$('lb-t').textContent=(cp?cp.code+' ':'')+(r.lotNumber||sel)+(r.cropName?'（'+r.cropName+'）':'');$('lb-d').textContent='投稿日: '+fmtDate(p.postedAt);$('lb-c').textContent=(lbI+1)+' / '+lbP.length;$('lb-i').src=p.dataUrl}
+function updLB(){
+  resetLBView(false);
+  const p=lbP[lbI],r=rec(sel),cp=getP(sel);
+  const code=cp?cp.code:'';
+  const lot=r.lotNumber||(cp?cp.defaultLot:sel);
+  syncLbTitle(sel,code,lot,r.cropName||'');
+  $('lb-d').textContent='投稿日: '+fmtDate(p.postedAt);
+  $('lb-c').textContent=(lbI+1)+' / '+lbP.length;
+  $('lb-i').src=p.dataUrl;
+}
 function updGridLB(){
   resetLBView(false);
   const p=lbP[lbI];if(!p)return;
-  const cp=p.parcelId?getP(p.parcelId):null;
-  const r=(p.parcelId&&S.records[p.parcelId])?S.records[p.parcelId]:{};
+  const pid=p.parcelId||null;
+  const cp=pid?getP(pid):null;
+  const r=(pid&&S.records[pid])?S.records[pid]:{};
   const code=cp?cp.code:(p.parcelCode||'');
-  const lot=r.lotNumber||(cp?cp.defaultLot:p.parcelLabel)||p.parcelId||'';
+  const lot=r.lotNumber||(cp?cp.defaultLot:p.parcelLabel)||pid||'';
   const crop=r.cropName!==undefined?r.cropName:(p.cropName||'');
-  $('lb-t').textContent=(code?code+' ':'')+lot+(crop?'（'+crop+'）':'');
+  syncLbTitle(pid,code,lot,crop);
   $('lb-d').textContent='投稿日: '+fmtDate(p.postedAt);
   $('lb-c').textContent=(lbI+1)+' / '+lbP.length;
   $('lb-i').src=p.dataUrl;
@@ -1267,6 +1309,8 @@ const lbStep=d=>{
     if(nph.length){selectP(np.id,false);lbP=nph;lbI=d>0?0:nph.length-1;updLB();return}
   }
 };
+$('lb-t').addEventListener('click',e=>{e.stopPropagation();jumpFromLbToParcel()});
+$('lb-t').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();jumpFromLbToParcel()}});
 $('lb-x').onclick=()=>closeLB(false);$('lb-p').onclick=()=>lbStep(-1);$('lb-n').onclick=()=>lbStep(1);
 addEventListener('keydown',e=>{if($('lb').classList.contains('hidden'))return;if(e.key==='Escape')closeLB(false);if(e.key==='ArrowLeft')lbStep(-1);if(e.key==='ArrowRight')lbStep(1)});
 
