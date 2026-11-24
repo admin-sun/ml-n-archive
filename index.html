@@ -340,7 +340,7 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
   box-shadow:0 2px 8px rgba(27,67,50,.22);
 }
 
-/* PC版（768px以上）: 広い横幅を活かし、左に[番号+枚数][地番]、右に[作物入力＋複数作物タグ一覧]をゆとり配置 */
+/* PC版（768px以上）: 広い横幅を活かし、左に[番号+枚数][公地図地番]、右に[作物入力＋複数作物タグ一覧]をゆとり配置 */
 @media(min-width:768px){
   #active .top-controls{
     padding:10px 14px;
@@ -379,7 +379,7 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
   }
 }
 
-/* スマホ版（767px以下）: 狭い横幅でも地番・複数作物を一目で読める2段＋折り返しチップ設計 */
+/* スマホ版（767px以下）: 狭い横幅でも公地図地番・複数作物を一目で読める2段＋折り返しチップ設計 */
 @media(max-width:767px){
   #active .top-controls{
     padding:7px 10px;
@@ -429,9 +429,11 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
     font-size:9px;
     line-height:1.1;
   }
-  .fld input{
-    font-size:13px;
-    line-height:1.2;
+  .fld input,
+  .cp-input-row input,
+  #adj-panel select{
+    font-size:16px!important;
+    line-height:1.25;
   }
   .crop-chip{
     height:21px;
@@ -873,7 +875,7 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
             <span id="pcode" class="pcode-badge">F01</span>
             <span id="pcount" class="pcount-badge">0枚</span>
           </div>
-          <div class="fld fld-lot"><label for="lot">地番</label><input id="lot" placeholder="例: 瀬川 350-1"></div>
+          <div class="fld fld-lot"><label for="lot">地番（公地図）</label><input id="lot" placeholder="例: 瀬川 350-1"></div>
         </div>
         <div class="bar-row2">
           <div class="fld fld-crop">
