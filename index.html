@@ -27,16 +27,16 @@ main{flex:1;display:flex;position:relative;overflow:hidden;min-height:0}
 #layer{position:absolute;left:0;top:0;width:1281px;height:1117px;transform-origin:0 0;will-change:transform}
 #layer img{width:100%;height:100%;display:block;pointer-events:none;user-select:none}
 #svg{position:absolute;inset:0;width:100%;height:100%}
-.poly{fill:rgba(255,255,255,.42);stroke:rgba(27,67,50,.65);stroke-width:1.8;vector-effect:non-scaling-stroke;cursor:pointer;transition:fill .15s}
-.poly.custom,.poly.custom.has{fill:#ffffff;stroke:#000000;stroke-width:2.2}
+.poly{fill:#ffffff!important;stroke:rgba(27,67,50,.75);stroke-width:1.8;vector-effect:non-scaling-stroke;cursor:pointer;transition:fill .15s}
+.poly.custom,.poly.custom.has{fill:#ffffff!important;stroke:#000000!important;stroke-width:2.2}
 @media(hover:hover) and (pointer:fine){
-  .poly:hover,.poly.has:hover,.poly.custom:hover,.poly.custom.has:hover{fill:rgba(245,158,11,.38);stroke:#d97706;stroke-width:2.6}
+  .poly:hover,.poly.has:hover,.poly.custom:hover,.poly.custom.has:hover{fill:#ffffff!important;stroke:#d97706;stroke-width:2.6}
 }
-.poly.touch-hit,.poly.custom.touch-hit{fill:rgba(245,158,11,.38);stroke:#d97706;stroke-width:2.6}
-.poly.sel,.poly.has.sel,.poly.custom.sel,.poly.custom.has.sel{fill:rgba(217,119,6,.48);stroke:#b45309;stroke-width:3.5}
-.adj .poly,.adj .poly.has{fill:rgba(239,68,68,.1);stroke:#dc2626;stroke-width:1}
-.adj .poly.custom{fill:#ffffff;stroke:#000000;stroke-width:1.6}
-.adj .poly.sel{fill:rgba(250,204,21,.25);stroke:#dc2626;stroke-width:1.5}
+.poly.touch-hit,.poly.custom.touch-hit{fill:#ffffff!important;stroke:#d97706;stroke-width:2.6}
+.poly.sel,.poly.has.sel,.poly.custom.sel,.poly.custom.has.sel{fill:#ffffff!important;stroke:#b45309!important;stroke-width:3.5!important}
+.adj .poly,.adj .poly.has{fill:#ffffff!important;stroke:#dc2626;stroke-width:1}
+.adj .poly.custom{fill:#ffffff!important;stroke:#000000;stroke-width:1.6}
+.adj .poly.sel{fill:#ffffff!important;stroke:#dc2626!important;stroke-width:1.5!important}
 .fl{position:absolute;z-index:10;background:var(--sf);border:1px solid var(--bd);border-radius:12px;box-shadow:0 4px 14px rgba(0,0,0,.15)}
 #hint{top:10px;left:10px;padding:7px 11px;font-size:12px;pointer-events:none}
 #zoom{bottom:14px;left:10px;display:flex;flex-direction:column;padding:4px;gap:2px}
