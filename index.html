@@ -178,50 +178,61 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 #active{flex:1;display:flex;flex-direction:column;min-height:0}
 .nb{height:30px;padding:0 9px;border-radius:8px;border:1px solid var(--bd);background:var(--sf);font-size:12px;font-weight:700}
 
-/* サムネイル上部コントロール（PC/スマホ共通基盤） */
+/* サムネイル上部コントロール（PC/スマホ統一ビジュアル言語＋個別レイアウト最適化） */
 #active .top-controls{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:8px;
-  padding:8px 12px;
+  gap:10px;
+  padding:9px 12px;
   border-bottom:1px solid var(--bd);
   background:var(--bg);
   min-width:0;
+  flex-shrink:0;
 }
 .bar{
   flex:1;
   min-width:0;
   display:flex;
-  align-items:center;
   gap:8px;
+}
+.id-pair{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  flex-shrink:0;
 }
 .pcode-badge{
   display:inline-flex;
   align-items:center;
   justify-content:center;
   height:28px;
-  padding:0 8px;
+  padding:0 9px;
   border-radius:7px;
   background:var(--g);
   color:#fff;
   font-size:12px;
   font-weight:700;
-  letter-spacing:.02em;
+  letter-spacing:.03em;
+  font-variant-numeric:tabular-nums;
   white-space:nowrap;
   flex-shrink:0;
 }
+:root[data-theme=dark] .pcode-badge{color:#0f172a}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .pcode-badge{color:#0f172a}}
 .pcount-badge{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  height:26px;
+  height:28px;
   padding:0 9px;
-  border-radius:99px;
-  background:var(--g2);
-  color:#fff;
+  border-radius:7px;
+  background:var(--sf);
+  border:1px solid var(--bd);
+  color:var(--tx);
   font-size:11px;
   font-weight:700;
+  font-variant-numeric:tabular-nums;
   white-space:nowrap;
   flex-shrink:0;
 }
@@ -229,11 +240,18 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
   border:1px solid var(--bd);
   background:var(--sf);
   border-radius:8px;
-  padding:3px 8px;
+  padding:3px 9px;
   min-width:0;
   display:flex;
   flex-direction:column;
   justify-content:center;
+  transition:border-color .15s ease,box-shadow .15s ease;
+}
+.fld-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px;
 }
 .fld label{
   display:block;
@@ -241,6 +259,15 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
   font-weight:700;
   line-height:1.15;
   color:var(--mut);
+  white-space:nowrap;
+}
+.crop-multi-hint{
+  font-size:9px;
+  font-weight:700;
+  color:var(--g2);
+  background:rgba(45,106,79,.1);
+  padding:1px 5px;
+  border-radius:4px;
   white-space:nowrap;
 }
 .fld input{
@@ -254,7 +281,43 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
   line-height:1.25;
   padding:0;
 }
-.fld:focus-within{border-color:var(--g2)}
+.fld:focus-within{
+  border-color:var(--g2);
+  box-shadow:0 0 0 2px rgba(45,106,79,.12);
+}
+
+/* 複数作物時の独立した一覧・フィルター選択欄（一目で全作物を把握可能） */
+.crop-strip{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:4px;
+  padding-top:2px;
+}
+.crop-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:3px;
+  height:22px;
+  padding:0 8px;
+  border-radius:99px;
+  border:1px solid var(--bd);
+  background:var(--sf);
+  color:var(--tx);
+  font-size:11px;
+  font-weight:700;
+  line-height:1;
+  white-space:nowrap;
+  transition:background .15s,border-color .15s,color .15s;
+}
+.crop-chip:hover{border-color:var(--g2)}
+.crop-chip.on{
+  background:var(--g2);
+  border-color:var(--g2);
+  color:#fff;
+}
+:root[data-theme=dark] .crop-chip.on{color:#0f172a}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .crop-chip.on{color:#0f172a}}
 
 .addrow{
   display:flex;
@@ -263,9 +326,9 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
   flex-shrink:0;
 }
 .addrow label.btn.circle-add{
-  width:40px;
-  height:40px;
-  min-width:40px;
+  width:42px;
+  height:42px;
+  min-width:42px;
   padding:0;
   border-radius:50%;
   display:inline-flex;
@@ -274,71 +337,74 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
   font-size:22px;
   font-weight:700;
   line-height:1;
-  box-shadow:0 2px 6px rgba(0,0,0,.12);
+  box-shadow:0 2px 8px rgba(27,67,50,.22);
 }
 
-/* PC版（768px以上）: 1行コンパクト配置 [番号 | 地番(詰める) | 写真枚数] [作物名] ... [写真投稿ボタン] */
+/* PC版（768px以上）: 広い横幅を活かし、左に[番号+枚数][公地図地番]、右に[作物入力＋複数作物タグ一覧]をゆとり配置 */
 @media(min-width:768px){
   #active .top-controls{
-    padding:8px 14px;
+    padding:10px 14px;
     gap:12px;
+    align-items:flex-start;
   }
   .bar{
-    display:flex;
     flex-direction:row;
-    align-items:center;
-    gap:8px;
+    align-items:flex-start;
+    gap:10px;
   }
   .bar-row1{
     display:flex;
     align-items:center;
-    gap:6px;
-    flex:0 1 auto;
-    min-width:0;
+    gap:8px;
+    flex:0 1 250px;
+    min-width:195px;
   }
   .bar-row1 .fld-lot{
-    width:136px;
-    max-width:160px;
-    flex:0 1 136px;
+    flex:1 1 auto;
+    min-width:96px;
   }
   .bar-row2{
     display:flex;
-    align-items:center;
-    flex:1 1 140px;
-    max-width:260px;
-    min-width:110px;
+    flex-direction:column;
+    gap:5px;
+    flex:1 1 220px;
+    min-width:160px;
   }
   .bar-row2 .fld-crop{
     width:100%;
   }
   .addrow{
     margin-left:auto;
-    padding-left:6px;
+    align-self:center;
   }
 }
 
-/* スマホ版（767px以下）: 上下2段コンパクト配置（上段：番号・地番・写真枚数／下段：作物名＋右側に上下中央の投稿ボタン） */
+/* スマホ版（767px以下）: 狭い横幅でも公地図地番・複数作物を一目で読める2段＋折り返しチップ設計 */
 @media(max-width:767px){
   #active .top-controls{
-    padding:6px 10px;
+    padding:7px 10px;
     gap:8px;
     align-items:center;
   }
   .bar{
     flex:1;
     min-width:0;
-    display:flex;
     flex-direction:column;
     gap:5px;
   }
   .bar-row1{
     display:flex;
     align-items:center;
-    gap:5px;
+    gap:6px;
     width:100%;
     min-width:0;
   }
   .pcode-badge{
+    height:26px;
+    padding:0 7px;
+    font-size:11px;
+  }
+  .pcount-badge{
     height:26px;
     padding:0 7px;
     font-size:11px;
@@ -348,14 +414,10 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
     min-width:0;
     padding:2px 7px;
   }
-  .pcount-badge{
-    height:24px;
-    padding:0 8px;
-    font-size:11px;
-  }
   .bar-row2{
     display:flex;
-    align-items:center;
+    flex-direction:column;
+    gap:4px;
     width:100%;
     min-width:0;
   }
@@ -371,12 +433,14 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
     font-size:13px;
     line-height:1.2;
   }
+  .crop-chip{
+    height:21px;
+    padding:0 7px;
+    font-size:10px;
+  }
   .addrow{
-    display:flex;
-    align-items:center;
-    justify-content:center;
     align-self:center;
-    padding:0 2px;
+    padding:0 1px;
   }
   .addrow label.btn.circle-add{
     width:40px;
@@ -384,6 +448,157 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
     min-width:40px;
     font-size:22px;
   }
+}
+
+/* 写真カード側の作物選択欄・警告バッジ・ポップオーバー */
+.card .ch{
+  flex-wrap:wrap;
+  row-gap:3px;
+}
+.card-crop-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:3px;
+  height:20px;
+  max-width:100%;
+  padding:0 6px;
+  border-radius:4px;
+  border:none;
+  background:rgba(27,67,50,.86);
+  color:#fff;
+  font-size:10px;
+  font-weight:700;
+  line-height:1;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  cursor:pointer;
+}
+.card-crop-btn.unset{
+  background:rgba(255,255,255,.82);
+  color:#334155;
+  font-weight:600;
+}
+.card-crop-btn.warn{
+  background:#dc2626;
+  color:#fff;
+  box-shadow:0 0 0 1.5px #fef08a;
+}
+.card.has-crop-warn{
+  box-shadow:inset 0 0 0 2px #dc2626;
+}
+.card-warn-banner{
+  position:absolute;
+  top:0;left:0;right:0;
+  z-index:4;
+  background:rgba(220,38,38,.92);
+  color:#fff;
+  font-size:10px;
+  font-weight:700;
+  line-height:1.25;
+  padding:3px 6px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:4px;
+  cursor:pointer;
+}
+.card-warn-banner span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+#crop-picker{
+  position:fixed;
+  z-index:85;
+  width:min(300px,calc(100vw - 24px));
+  background:var(--sf);
+  color:var(--tx);
+  border:1px solid var(--bd);
+  border-radius:14px;
+  box-shadow:0 12px 32px rgba(0,0,0,.28);
+  padding:12px;
+  font-size:12px;
+}
+#crop-picker h4{
+  margin:0 0 6px;
+  font-size:13px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.cp-warn-box{
+  background:rgba(220,38,38,.1);
+  border:1px solid rgba(220,38,38,.35);
+  color:#b91c1c;
+  border-radius:8px;
+  padding:7px 9px;
+  margin-bottom:8px;
+  font-size:11px;
+  line-height:1.4;
+}
+:root[data-theme=dark] .cp-warn-box{color:#fca5a5}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .cp-warn-box{color:#fca5a5}}
+.cp-chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin:6px 0 8px;
+}
+.cp-chip{
+  height:28px;
+  padding:0 10px;
+  border-radius:99px;
+  border:1px solid var(--bd);
+  background:var(--bg);
+  font-size:12px;
+  font-weight:700;
+}
+.cp-chip.on{
+  background:var(--g2);
+  border-color:var(--g2);
+  color:#fff;
+}
+.cp-input-row{
+  display:flex;
+  gap:5px;
+  margin-top:6px;
+}
+.cp-input-row input{
+  flex:1;
+  min-width:0;
+  height:32px;
+  border:1px solid var(--bd);
+  border-radius:8px;
+  background:var(--bg);
+  padding:0 8px;
+  font-size:12px;
+  font-weight:700;
+}
+.cp-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:8px;
+  padding-top:8px;
+  border-top:1px solid var(--bd);
+}
+.cp-act{
+  height:28px;
+  padding:0 9px;
+  border-radius:7px;
+  border:1px solid var(--bd);
+  background:var(--bg);
+  font-size:11px;
+  font-weight:700;
+}
+.cp-act.primary{
+  background:var(--g2);
+  border-color:var(--g2);
+  color:#fff;
+}
+.cp-act.danger{
+  color:#dc2626;
 }
 
 #feed{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;overscroll-behavior-y:none;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:max-content;gap:1px;background:rgba(148,163,184,.28);align-content:start}
@@ -654,12 +869,21 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
     <div class="top-controls">
       <div class="bar">
         <div class="bar-row1">
-          <span id="pcode" class="pcode-badge">F01</span>
-          <div class="fld fld-lot"><label for="lot">地番</label><input id="lot" placeholder="例: 瀬川 350-1"></div>
-          <span id="pcount" class="pcount-badge">写真 0枚</span>
+          <div class="id-pair">
+            <span id="pcode" class="pcode-badge">F01</span>
+            <span id="pcount" class="pcount-badge">0枚</span>
+          </div>
+          <div class="fld fld-lot"><label for="lot">地番（公地図）</label><input id="lot" placeholder="例: 瀬川 350-1"></div>
         </div>
         <div class="bar-row2">
-          <div class="fld fld-crop"><label for="crop">栽培作物名</label><input id="crop" placeholder="例: キュウリ / 水稲"></div>
+          <div class="fld fld-crop">
+            <div class="fld-head">
+              <label for="crop">栽培作物名</label>
+              <span id="crop-multi-hint" class="crop-multi-hint hidden"></span>
+            </div>
+            <input id="crop" placeholder="例: 水稲 または キャベツ/ブロッコリー">
+          </div>
+          <div id="crop-strip" class="crop-strip hidden" aria-label="登録作物一覧"></div>
         </div>
       </div>
       <div class="addrow">
@@ -699,6 +923,7 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
 </div>
 <div id="toast"></div>
 <div id="confirm" class="hidden"><div><h3 id="c-t" style="margin:0 0 6px"></h3><p id="c-b" class="mut" style="font-size:13px"></p><div style="display:flex;justify-content:flex-end;gap:8px"><button class="nb" id="c-no" style="height:38px">キャンセル</button><button class="btn" id="c-ok" style="background:#dc2626;padding:9px 16px">削除する</button></div></div></div>
+<div id="crop-picker" class="hidden" role="dialog" aria-label="写真の作物登録"></div>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -761,7 +986,24 @@ let saveT;const saveSoon=()=>{clearTimeout(saveT);saveT=setTimeout(saveState,300
 
 let S={records:{},customParcels:[],deletedParcels:[],customMapDataUrl:null,parcelOverrides:{},globalAdjust:{dx:0,dy:0,sx:1,sy:1}};
 const normState=o=>({records:o.records||{},customParcels:o.customParcels||[],deletedParcels:o.deletedParcels||[],customMapDataUrl:o.customMapDataUrl||null,parcelOverrides:o.parcelOverrides||{},globalAdjust:o.globalAdjust||{dx:0,dy:0,sx:1,sy:1}});
-let sel=null,drawing=false,draft=[],adjusting=false,showNum=false,gridMode=false,gridPhotos=[],gridIO=null,V={s:1,x:0,y:0};
+let sel=null,cropFilter=null,drawing=false,draft=[],adjusting=false,showNum=false,gridMode=false,gridPhotos=[],gridIO=null,V={s:1,x:0,y:0};
+function parseCrops(str){
+  if(!str)return[];
+  const raw=String(str).split(/[/、・]/).map(s=>s.trim()).filter(Boolean);
+  const out=[];
+  raw.forEach(item=>{if(!out.includes(item))out.push(item)});
+  return out;
+}
+function isPhotoCropMissing(parcelCropStr,photoCrop){
+  const pc=String(photoCrop||'').trim();
+  if(!pc)return false;
+  const list=parseCrops(parcelCropStr);
+  return !list.includes(pc);
+}
+function effectivePhotoCrop(ph,parcelCropStr){
+  const pc=String((ph&&ph.cropName)||'').trim();
+  return pc||String(parcelCropStr||'').trim();
+}
 
 const r2=n=>Math.round(n*100)/100;
 const parse=s=>s.trim().split(/\s+/).map(p=>p.split(',').map(Number));
@@ -797,13 +1039,17 @@ function allPhotosLatestFirst(){
   allParcels().forEach(p=>{
     const r=S.records[p.id]||{};
     const label=r.lotNumber||p.defaultLot||p.code;
+    const parcelCrop=r.cropName||'';
     photosOf(p.id).forEach(ph=>{
+      const photoCrop=String(ph.cropName||'').trim();
       list.push({
         ...ph,
         parcelId:p.id,
         parcelCode:p.code,
         parcelLabel:label,
-        cropName:r.cropName||''
+        parcelCropName:parcelCrop,
+        photoCropName:photoCrop,
+        cropName:photoCrop||parcelCrop
       });
     });
   });
@@ -1141,26 +1387,73 @@ function setGridMode(on){
 $('b-grid').onclick=()=>setGridMode(!gridMode);
 
 const panel=$('panel');
+function closeCropPicker(){
+  const cp=$('crop-picker');
+  if(cp)cp.classList.add('hidden');
+}
+function renderCropStrip(){
+  const strip=$('crop-strip'),hint=$('crop-multi-hint');
+  if(!sel){strip.classList.add('hidden');hint.classList.add('hidden');return}
+  const r=rec(sel),crops=parseCrops(r.cropName);
+  if(crops.length<2){
+    cropFilter=null;
+    strip.classList.add('hidden');
+    strip.innerHTML='';
+    hint.classList.add('hidden');
+    return;
+  }
+  if(cropFilter&&!crops.includes(cropFilter))cropFilter=null;
+  hint.textContent=crops.length+'種登録中';
+  hint.classList.remove('hidden');
+  strip.classList.remove('hidden');
+  const allBtn=`<button type="button" class="crop-chip${cropFilter===null?' on':''}" data-crop-chip="">すべて</button>`;
+  const itemBtns=crops.map(c=>`<button type="button" class="crop-chip${cropFilter===c?' on':''}" data-crop-chip="${c.replace(/"/g,'&quot;')}">${c}</button>`).join('');
+  strip.innerHTML=allBtn+itemBtns;
+}
+$('crop-strip').addEventListener('click',e=>{
+  const btn=e.target.closest('button[data-crop-chip]');
+  if(!btn||!sel)return;
+  const val=btn.dataset.cropChip;
+  cropFilter=(!val||cropFilter===val)?null:val;
+  renderCropStrip();
+  feed();
+});
 function selectP(id,center){
   if(gridMode)setGridMode(false);
+  closeCropPicker();
+  if(sel!==id)cropFilter=null;
   sel=id;const p=getP(id);if(!p)return;const r=rec(id);
   $('empty').classList.add('hidden');$('active').classList.remove('hidden');$('hint').classList.add('hidden');
   if(!adjusting)panel.classList.add('open');
   $('pcode').textContent=p.code||id;
   $('lot').value=r.lotNumber||p.defaultLot;$('crop').value=r.cropName||'';
   $('cfoot').classList.remove('hidden');
+  renderCropStrip();
   render();feed();
   if(center)focusP(id,window.USE_SHEET?.22:.5);
 }
-function closeP(){sel=null;panel.classList.remove('open');$('empty').classList.remove('hidden');$('active').classList.add('hidden');$('hint').classList.remove('hidden');render()}
+function closeP(){closeCropPicker();sel=null;cropFilter=null;panel.classList.remove('open');$('empty').classList.remove('hidden');$('active').classList.add('hidden');$('hint').classList.remove('hidden');render()}
 function feed(){
-  if(!sel)return;const ph=photosOf(sel),f=$('feed'),curP=getP(sel);
+  if(!sel)return;
+  const allPh=photosOf(sel),f=$('feed'),curP=getP(sel),r=rec(sel);
+  const parcelCrops=parseCrops(r.cropName);
+  renderCropStrip();
+  const ph=cropFilter
+    ? allPh.filter(p=>String(p.cropName||'').trim()===cropFilter)
+    : allPh;
   $('pcode').textContent=curP?curP.code:sel;
-  $('pcount').textContent='写真 '+ph.length+'枚';f.innerHTML='';
-  if(!ph.length){f.innerHTML='<div style="grid-column:1/-1;border:2px dashed var(--bd);border-radius:14px;padding:30px;text-align:center;color:var(--mut)"><b>まだ写真がありません</b><br>上の「＋」ボタンから登録できます</div>';return}
+  $('pcount').textContent=cropFilter?`${ph.length}/${allPh.length}枚`:`${allPh.length}枚`;
+  f.innerHTML='';
+  if(!allPh.length){f.innerHTML='<div style="grid-column:1/-1;border:2px dashed var(--bd);border-radius:14px;padding:30px;text-align:center;color:var(--mut)"><b>まだ写真がありません</b><br>上の「＋」ボタンから登録できます</div>';return}
+  if(!ph.length){f.innerHTML=`<div style="grid-column:1/-1;border:2px dashed var(--bd);border-radius:14px;padding:24px;text-align:center;color:var(--mut)"><b>「${cropFilter}」が登録された写真はありません</b><br><span style="font-size:12px">各写真の「＋作物」からワンタップで登録できます</span></div>`;return}
   const eagerCount=innerWidth<768?2:4;
   ph.forEach((p,i)=>{
-    const c=document.createElement('article');c.className='card';
+    const realIdx=allPh.findIndex(x=>x.id===p.id);
+    const fsIdx=realIdx>=0?realIdx:i;
+    const photoCrop=String(p.cropName||'').trim();
+    const isWarn=Boolean(photoCrop)&&!parcelCrops.includes(photoCrop);
+    const c=document.createElement('article');
+    c.className='card'+(isWarn?' has-crop-warn':'');
     const isoParts=toISO(p.postedAt).split('-');
     const yVal=isoParts[0],mVal=String(Number(isoParts[1])),dVal=String(Number(isoParts[2]));
     const missCls=p.exifMissing?' no-exif':'';
@@ -1168,8 +1461,16 @@ function feed(){
     const dateUI=p.isStatic
       ? `<span style="font-size:10px;color:#f8fafc;text-shadow:0 1px 2px rgba(0,0,0,.7)">${fmtDate(p.postedAt)}</span>`
       : `<input type="date" class="card-date${missCls}" data-id="${p.id}" value="${toISO(p.postedAt)}" aria-label="投稿日を変更"${missTitle}><span class="card-date-wrap${missCls}" data-id="${p.id}" data-orig="${yVal}-${mVal}-${dVal}"${missTitle}><input type="text" inputmode="numeric" maxlength="4" class="dy" value="${yVal}" aria-label="年"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dm" value="${mVal}" aria-label="月"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dd" value="${dVal}" aria-label="日"></span>`;
+    const cropBtnCls='card-crop-btn'+(isWarn?' warn':(!photoCrop?' unset':''));
+    const cropBtnText=photoCrop?(isWarn?`⚠ ${photoCrop}`:`🌱 ${photoCrop}`):'＋作物';
+    const cropBtnUI=p.isStatic
+      ? (photoCrop?`<span class="card-crop-btn">${photoCrop}</span>`:'')
+      : `<button type="button" class="${cropBtnCls}" data-a="crop" data-id="${p.id}" title="ワンタップで作物を登録・変更">${cropBtnText}</button>`;
+    const warnBanner=isWarn
+      ? `<div class="card-warn-banner" data-a="crop" data-id="${p.id}" title="農地の作物名欄から削除されています。タップして修正"><span>⚠ 作物名欄から削除済: ${photoCrop}</span><span>修正</span></div>`
+      : '';
     const isEager=i<eagerCount;
-    c.innerHTML=`<div class="ch"><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap"><span class="tag ${i?'old':''}">${i?'履歴 #'+(ph.length-i):'最新'}</span>${dateUI}${p.local?' <span style="font-size:11px;color:var(--mut)">📱この端末のみ</span>':''}</div><div style="display:flex;gap:4px"><button class="nb" data-a="fs" data-i="${i}">全画面</button>${p.isStatic?'':`<button class="nb" data-a="del" data-id="${p.id}" aria-label="削除">🗑</button>`}</div></div><img ${isEager?`src="${p.dataUrl}" fetchpriority="high"`:`data-src="${p.dataUrl}"`} alt="農地写真" decoding="async" data-a="fs" data-i="${i}">`;
+    c.innerHTML=`${warnBanner}<div class="ch"><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;min-width:0"><span class="tag ${fsIdx?'old':''}">${fsIdx?'履歴 #'+(allPh.length-fsIdx):'最新'}</span>${dateUI}${cropBtnUI}${p.local?' <span style="font-size:11px;color:var(--mut)">📱この端末のみ</span>':''}</div><div style="display:flex;gap:4px"><button class="nb" data-a="fs" data-i="${fsIdx}">全画面</button>${p.isStatic?'':`<button class="nb" data-a="del" data-id="${p.id}" aria-label="削除">🗑</button>`}</div></div><img ${isEager?`src="${p.dataUrl}" fetchpriority="high"`:`data-src="${p.dataUrl}"`} alt="農地写真" decoding="async" data-a="fs" data-i="${fsIdx}">`;
     const im=c.querySelector('img');
     im.onload=()=>im.classList.add('loaded');
     if(im.complete&&im.naturalWidth)im.classList.add('loaded');
@@ -1184,6 +1485,110 @@ function feed(){
       setTimeout(()=>{if(sel&&im.dataset.src){loadImg(im);io.unobserve(im)}},300+idx*160);
     });
   }
+}
+
+async function applyPhotoCrop(photoId,cropStr,alsoAddToParcel){
+  if(!sel)return;
+  const r=rec(sel);
+  const ph=r.photos.find(p=>p.id===photoId);
+  if(!ph)return;
+  const clean=String(cropStr||'').trim();
+  ph.cropName=clean;
+  if(clean&&alsoAddToParcel){
+    const curList=parseCrops(r.cropName);
+    if(!curList.includes(clean)){
+      const sep=String(r.cropName||'').includes('、')?'、':String(r.cropName||'').includes('・')?'・':'/';
+      r.cropName=curList.length?(String(r.cropName).trim()+sep+clean):clean;
+      $('crop').value=r.cropName;
+    }
+  }
+  closeCropPicker();
+  await saveState();
+  renderCropStrip();
+  feed();
+  render();
+  if(gridMode)renderAllGrid();
+  if(!clean)toast('写真の作物登録を解除しました');
+  else if(alsoAddToParcel)toast(`「${clean}」を写真と農地の作物名に登録しました`);
+  else toast(`「${clean}」を写真に登録しました`);
+}
+
+function openCropPicker(photoId,anchorEl){
+  if(!sel)return;
+  const r=rec(sel);
+  const ph=r.photos.find(p=>p.id===photoId);
+  if(!ph)return;
+  const parcelCrops=parseCrops(r.cropName);
+  const currentPhotoCrop=String(ph.cropName||'').trim();
+  const isWarn=Boolean(currentPhotoCrop)&&!parcelCrops.includes(currentPhotoCrop);
+
+  // Collect quick suggestions from parcel crops + other parcels' crops
+  const otherCrops=[];
+  allParcels().forEach(p=>{
+    const pr=S.records[p.id];
+    if(pr&&pr.cropName)parseCrops(pr.cropName).forEach(c=>{if(!parcelCrops.includes(c)&&!otherCrops.includes(c))otherCrops.push(c)});
+  });
+
+  const cp=$('crop-picker');
+  const warnHtml=isWarn
+    ? `<div class="cp-warn-box">⚠ <b>「${currentPhotoCrop}」</b>は現在、農地の作物名欄から削除されています。<br><button type="button" class="cp-act primary" style="margin-top:5px" data-cp-restore="${currentPhotoCrop.replace(/"/g,'&quot;')}">農地の作物名欄に戻す</button></div>`
+    : '';
+  const parcelChipsHtml=parcelCrops.length
+    ? `<div class="mut">この農地の作物（ワンタップで登録）</div><div class="cp-chips">${parcelCrops.map(c=>`<button type="button" class="cp-chip${currentPhotoCrop===c?' on':''}" data-cp-pick="${c.replace(/"/g,'&quot;')}">${c}</button>`).join('')}</div>`
+    : `<div class="mut">農地の作物名欄は未入力です。下から入力すると農地の作物名にも同時登録できます。</div>`;
+  const otherChipsHtml=otherCrops.length
+    ? `<div class="mut">他の農地の作物</div><div class="cp-chips">${otherCrops.slice(0,8).map(c=>`<button type="button" class="cp-chip${currentPhotoCrop===c?' on':''}" data-cp-pick-other="${c.replace(/"/g,'&quot;')}">${c}</button>`).join('')}</div>`
+    : '';
+
+  cp.innerHTML=`
+    <h4><span>🌱 写真の作物を登録</span><button type="button" class="nb" id="cp-close" style="height:24px;padding:0 7px">✕</button></h4>
+    ${warnHtml}
+    ${parcelChipsHtml}
+    ${otherChipsHtml}
+    <div class="cp-input-row">
+      <input type="text" id="cp-custom" placeholder="新しい作物名を入力" value="${currentPhotoCrop.replace(/"/g,'&quot;')}">
+    </div>
+    <div class="cp-actions">
+      <button type="button" class="cp-act primary" id="cp-save-both">写真＋農地に登録</button>
+      <button type="button" class="cp-act" id="cp-save-photo">写真のみ登録</button>
+      ${currentPhotoCrop?'<button type="button" class="cp-act danger" id="cp-clear">解除</button>':''}
+    </div>
+  `;
+  cp.classList.remove('hidden');
+
+  // Position near anchorEl within viewport
+  const rect=anchorEl.getBoundingClientRect();
+  const pw=cp.offsetWidth||280,phH=cp.offsetHeight||220;
+  let left=Math.min(Math.max(12,rect.left),window.innerWidth-pw-12);
+  let top=rect.bottom+6;
+  if(top+phH>window.innerHeight-12)top=Math.max(12,rect.top-phH-6);
+  cp.style.left=left+'px';
+  cp.style.top=top+'px';
+
+  cp.querySelector('#cp-close').onclick=closeCropPicker;
+  cp.querySelectorAll('[data-cp-pick]').forEach(b=>{
+    b.onclick=()=>applyPhotoCrop(photoId,b.dataset.cpPick,false);
+  });
+  cp.querySelectorAll('[data-cp-pick-other]').forEach(b=>{
+    b.onclick=()=>applyPhotoCrop(photoId,b.dataset.cpPickOther,true);
+  });
+  const restBtn=cp.querySelector('[data-cp-restore]');
+  if(restBtn){
+    restBtn.onclick=()=>applyPhotoCrop(photoId,restBtn.dataset.cpRestore,true);
+  }
+  const inp=cp.querySelector('#cp-custom');
+  cp.querySelector('#cp-save-both').onclick=()=>{
+    const v=inp.value.trim();
+    if(!v)return toast('作物名を入力してください');
+    applyPhotoCrop(photoId,v,true);
+  };
+  cp.querySelector('#cp-save-photo').onclick=()=>{
+    const v=inp.value.trim();
+    if(!v)return toast('作物名を入力してください');
+    applyPhotoCrop(photoId,v,false);
+  };
+  const clrBtn=cp.querySelector('#cp-clear');
+  if(clrBtn)clrBtn.onclick=()=>applyPhotoCrop(photoId,'',false);
 }
 async function commitCardDate(wrap){
   if(!wrap||!sel||wrap.dataset.saving==='1')return;
@@ -1256,10 +1661,26 @@ $('feed').addEventListener('change',async e=>{
 });
 $('feed').addEventListener('click',async e=>{
   const t=e.target.closest('[data-a]');if(!t||!sel)return;
+  if(t.dataset.a==='crop'){e.stopPropagation();return openCropPicker(t.dataset.id,t)}
   if(t.dataset.a==='fs')return openLB(+t.dataset.i);
   if(t.dataset.a==='del'){if(!await ask('写真の削除','この履歴写真を削除してもよろしいですか？'))return;const r=rec(sel),dp=r.photos.find(p=>p.id===t.dataset.id);r.photos=r.photos.filter(p=>p.id!==t.dataset.id);if(dp&&dp.assetId&&ASS){try{await ASS.delete(dp.assetId)}catch(x){}}await saveState();feed();render();toast('写真を削除しました')}
 });
-function meta(){if(!sel)return;const r=rec(sel);r.lotNumber=$('lot').value.trim();r.cropName=$('crop').value.trim();render();saveSoon()}
+document.addEventListener('click',e=>{
+  const cp=$('crop-picker');
+  if(cp&&!cp.classList.contains('hidden')&&!e.target.closest('#crop-picker')&&!e.target.closest('[data-a="crop"]')){
+    closeCropPicker();
+  }
+});
+function meta(){
+  if(!sel)return;
+  const r=rec(sel);
+  r.lotNumber=$('lot').value.trim();
+  r.cropName=$('crop').value.trim();
+  renderCropStrip();
+  feed();
+  render();
+  saveSoon();
+}
 $('lot').addEventListener('input',meta);$('crop').addEventListener('input',meta);
 $('i-photos').addEventListener('change',async e=>{
   const files=[...e.target.files];if(!files.length||!sel)return;const r=rec(sel),fallbackISO=todayISO();
@@ -1419,7 +1840,8 @@ function updLB(){
   const p=lbP[lbI],r=rec(sel),cp=getP(sel);
   const code=cp?cp.code:'';
   const lot=r.lotNumber||(cp?cp.defaultLot:sel);
-  syncLbTitle(sel,code,lot,r.cropName||'');
+  const dispCrop=effectivePhotoCrop(p,r.cropName||'');
+  syncLbTitle(sel,code,lot,dispCrop);
   $('lb-d').textContent='投稿日: '+fmtDate(p.postedAt);
   $('lb-c').textContent=(lbI+1)+' / '+lbP.length;
   $('lb-i').src=p.dataUrl;
@@ -1432,8 +1854,9 @@ function updGridLB(){
   const r=(pid&&S.records[pid])?S.records[pid]:{};
   const code=cp?cp.code:(p.parcelCode||'');
   const lot=r.lotNumber||(cp?cp.defaultLot:p.parcelLabel)||pid||'';
-  const crop=r.cropName!==undefined?r.cropName:(p.cropName||'');
-  syncLbTitle(pid,code,lot,crop);
+  const parcelCrop=r.cropName!==undefined?r.cropName:(p.parcelCropName||'');
+  const dispCrop=effectivePhotoCrop(p,parcelCrop);
+  syncLbTitle(pid,code,lot,dispCrop);
   $('lb-d').textContent='投稿日: '+fmtDate(p.postedAt);
   $('lb-c').textContent=(lbI+1)+' / '+lbP.length;
   $('lb-i').src=p.dataUrl;
