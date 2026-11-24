@@ -27,22 +27,14 @@ main{flex:1;display:flex;position:relative;overflow:hidden;min-height:0}
 #layer{position:absolute;left:0;top:0;width:1281px;height:1117px;transform-origin:0 0;will-change:transform}
 #layer img{width:100%;height:100%;display:block;pointer-events:none;user-select:none}
 #svg{position:absolute;inset:0;width:100%;height:100%}
-.poly,.poly.has,.poly.custom,.poly.custom.has,
+.poly{fill:#ffffff;fill-opacity:1;stroke:rgba(27,67,50,.75);stroke-width:1.8;vector-effect:non-scaling-stroke;cursor:pointer;pointer-events:all;transition:fill .15s,stroke .15s}
+.poly.custom,.poly.custom.has{fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:2.2}
 .poly:hover,.poly.has:hover,.poly.custom:hover,.poly.custom.has:hover,
-.poly.touch-hit,.poly.custom.touch-hit,
-.poly.sel,.poly.has.sel,.poly.custom.sel,.poly.custom.has.sel,
-.adj .poly,.adj .poly.has,.adj .poly.custom,.adj .poly.sel{
-  fill:#ffffff!important;
-  fill-opacity:1!important;
-}
-.poly{stroke:rgba(27,67,50,.75);stroke-width:1.8;vector-effect:non-scaling-stroke;cursor:pointer;pointer-events:all;transition:stroke .15s}
-.poly.custom,.poly.custom.has{stroke:#000000;stroke-width:2.2}
-.poly:hover,.poly.has:hover,.poly.custom:hover,.poly.custom.has:hover,
-.poly.touch-hit,.poly.custom.touch-hit{stroke:#d97706!important;stroke-width:2.6!important}
-.poly.sel,.poly.has.sel,.poly.custom.sel,.poly.custom.has.sel{stroke:#b45309!important;stroke-width:3.5!important}
-.adj .poly,.adj .poly.has{stroke:#dc2626;stroke-width:1}
-.adj .poly.custom{stroke:#000000;stroke-width:1.6}
-.adj .poly.sel{stroke:#dc2626!important;stroke-width:1.5!important}
+.poly.touch-hit,.poly.custom.touch-hit{fill:#fde68a!important;fill-opacity:1!important;stroke:#d97706!important;stroke-width:2.6!important}
+.poly.sel,.poly.has.sel,.poly.custom.sel,.poly.custom.has.sel{fill:#fcd34d!important;fill-opacity:1!important;stroke:#b45309!important;stroke-width:3.5!important}
+.adj .poly,.adj .poly.has{fill:#ffffff;fill-opacity:1;stroke:#dc2626;stroke-width:1}
+.adj .poly.custom{fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.6}
+.adj .poly.sel{fill:#fef08a!important;fill-opacity:1!important;stroke:#dc2626!important;stroke-width:1.5!important}
 .fl{position:absolute;z-index:10;background:var(--sf);border:1px solid var(--bd);border-radius:12px;box-shadow:0 4px 14px rgba(0,0,0,.15)}
 #hint{top:10px;left:10px;padding:7px 11px;font-size:12px;pointer-events:none}
 #zoom{bottom:14px;left:10px;display:flex;flex-direction:column;padding:4px;gap:2px}
