@@ -28,6 +28,8 @@ main{flex:1;display:flex;position:relative;overflow:hidden;min-height:0}
 #layer img{width:100%;height:100%;display:block;pointer-events:none;user-select:none}
 #svg{position:absolute;inset:0;width:100%;height:100%}
 .poly{fill:rgba(255,255,255,.42);stroke:rgba(27,67,50,.65);stroke-width:1.8;vector-effect:non-scaling-stroke;cursor:pointer;transition:fill .15s}
+.poly.custom{fill:#ffffff;stroke:#000000;stroke-width:2.2}
+.poly.custom.has{fill:#ffffff;stroke:#000000;stroke-width:2.2}
 .poly:hover,.poly.has:hover{fill:rgba(245,158,11,.38);stroke:#d97706;stroke-width:2.6}
 .poly.sel,.poly.has.sel{fill:rgba(217,119,6,.48)!important;stroke:#b45309!important;stroke-width:3.5!important}
 .adj .poly,.adj .poly.has{fill:rgba(239,68,68,.1);stroke:#dc2626;stroke-width:1}
@@ -1237,7 +1239,8 @@ function render(){
   ps.forEach(p=>{
     const r=S.records[p.id],n=photosOf(p.id).length;
     if(n>0||(r&&((r.lotNumber&&r.lotNumber!==p.defaultLot)||r.cropName)))reg++;
-    const el=mk('polygon',{points:p.points,'data-id':p.id,class:'poly'+(n?' has':'')+(p.id===sel?' sel':'')});
+    const isCustom=String(p.id||'').startsWith('C_');
+    const el=mk('polygon',{points:p.points,'data-id':p.id,class:'poly'+(isCustom?' custom':'')+(n?' has':'')+(p.id===sel?' sel':'')});
     el.addEventListener('click',e=>{if(drawing||moved)return;e.stopPropagation();selectP(p.id,false)});
     $('parcels').appendChild(el);
     if(showNum)renderBadges(ps);
