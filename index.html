@@ -10,7 +10,7 @@
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f172a;--sf:#1e293b;--bd:#334155;--tx:#e2e8f0;--mut:#94a3b8;--g:#6ee7b7;--g2:#34d399}}
 :root[data-theme=dark]{--bg:#0f172a;--sf:#1e293b;--bd:#334155;--tx:#e2e8f0;--mut:#94a3b8;--g:#6ee7b7;--g2:#34d399}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-family:"Noto Sans JP",system-ui,sans-serif;font-size:14px}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-family:"Noto Sans JP",system-ui,sans-serif;font-size:14px}
 body{display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);user-select:none}
 button{font:inherit;cursor:pointer;color:inherit}
 input,textarea{font:inherit;color:inherit;user-select:text}
@@ -20,7 +20,7 @@ header h1{font-size:16px;margin:0;white-space:nowrap}
 .hb{height:34px;padding:0 10px;border-radius:8px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);color:#fff;font-size:13px}
 .hb.on{background:var(--a);border-color:var(--a)}
 .pill{font-size:12px;background:rgba(0,0,0,.25);padding:4px 10px;border-radius:99px}
-main{flex:1;display:flex;position:relative;overflow:hidden;min-height:0}
+main{flex:1;display:flex;position:relative;overflow:hidden;min-height:0;width:100%}
 #map-section{flex:1;position:relative;overflow:hidden;background:#cbd5e1;min-width:0}
 #map-viewport{position:absolute;inset:0;touch-action:none;cursor:grab;overflow:hidden}
 #map-viewport.draw{cursor:crosshair}
@@ -48,123 +48,32 @@ main{flex:1;display:flex;position:relative;overflow:hidden;min-height:0}
 #adj-panel .adj-fold-btn{display:none}
 
 @media(max-width:767px){
-  body.adj-active main{
-    flex-direction:column;
-  }
-  body.adj-active #map-section{
-    flex:1 1 auto;
-    min-height:0;
-  }
-  body.adj-active #zoom{
-    display:flex!important;
-    bottom:8px;
-    left:8px;
-    transform:scale(0.88);
-    transform-origin:bottom left;
-  }
+  body.adj-active main{flex-direction:column}
+  body.adj-active #map-section{flex:1 1 auto;min-height:0}
+  body.adj-active #zoom{display:flex!important;bottom:8px;left:8px;transform:scale(0.88);transform-origin:bottom left}
   #adj-panel.adj-mobile-dock{
-    position:relative!important;
-    top:auto!important;
-    right:auto!important;
-    left:auto!important;
-    bottom:auto!important;
-    width:100%!important;
-    max-width:100%!important;
-    max-height:none!important;
-    height:auto!important;
-    flex:0 0 auto;
-    z-index:22;
-    border-radius:12px 12px 0 0;
-    border-left:0;
-    border-right:0;
-    border-bottom:0;
-    border-top:1px solid var(--bd);
-    box-shadow:0 -4px 16px rgba(0,0,0,.14);
-    padding:8px 10px 10px;
-    font-size:11px;
-    overflow:visible;
+    position:relative!important;top:auto!important;right:auto!important;left:auto!important;bottom:auto!important;
+    width:100%!important;max-width:100%!important;max-height:none!important;height:auto!important;
+    flex:0 0 auto;z-index:22;border-radius:12px 12px 0 0;border-left:0;border-right:0;border-bottom:0;
+    border-top:1px solid var(--bd);box-shadow:0 -4px 16px rgba(0,0,0,.14);padding:8px 10px 10px;font-size:11px;overflow:visible;
   }
   #adj-panel.adj-mobile-dock .adj-fold-btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    height:24px;
-    padding:0 8px;
-    border-radius:6px;
-    border:1px solid var(--bd);
-    background:var(--sf);
-    font-size:11px;
-    font-weight:700;
-    color:var(--tx);
+    display:inline-flex;align-items:center;justify-content:center;height:24px;padding:0 8px;
+    border-radius:6px;border:1px solid var(--bd);background:var(--sf);font-size:11px;font-weight:700;color:var(--tx);
   }
-  #adj-panel.adj-mobile-dock .adj-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:6px;
-  }
-  #adj-panel.adj-mobile-dock .adj-head h3{
-    margin:0;
-    font-size:12px;
-  }
-  #adj-panel.adj-mobile-dock .adj-subhint{
-    margin-top:3px;
-    font-size:10px;
-    line-height:1.3;
-  }
-  #adj-panel.adj-mobile-dock .adj-ctrl-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:8px;
-    margin-top:5px;
-  }
-  #adj-panel.adj-mobile-dock .adj-sections{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-    margin-top:6px;
-    padding-top:6px;
-    border-top:1px solid var(--bd);
-  }
-  #adj-panel.adj-mobile-dock .sec{
-    border-top:0;
-    padding-top:0;
-    margin-top:0;
-  }
-  #adj-panel.adj-mobile-dock .sec h3{
-    font-size:11px;
-    margin:0 0 3px;
-  }
-  #adj-panel.adj-mobile-dock .row{
-    gap:3px;
-    margin:3px 0;
-  }
-  #adj-panel.adj-mobile-dock .ab{
-    height:28px;
-    font-size:11px;
-    border-radius:6px;
-  }
-  #adj-panel.adj-mobile-dock .adj-sec-copy{
-    grid-column:1/-1;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:8px;
-    padding-top:5px;
-    border-top:1px dashed var(--bd);
-  }
-  #adj-panel.adj-mobile-dock .adj-sec-copy .row{
-    margin:0;
-    flex:0 0 auto;
-  }
-  #adj-panel.adj-mobile-dock .adj-sec-copy .ab.wide{
-    height:26px;
-    padding:0 10px;
-  }
-  #adj-panel.adj-mobile-dock.collapsed .adj-body{
-    display:none!important;
-  }
+  #adj-panel.adj-mobile-dock .adj-head{display:flex;justify-content:space-between;align-items:center;gap:6px}
+  #adj-panel.adj-mobile-dock .adj-head h3{margin:0;font-size:12px}
+  #adj-panel.adj-mobile-dock .adj-subhint{margin-top:3px;font-size:10px;line-height:1.3}
+  #adj-panel.adj-mobile-dock .adj-ctrl-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:5px}
+  #adj-panel.adj-mobile-dock .adj-sections{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;padding-top:6px;border-top:1px solid var(--bd)}
+  #adj-panel.adj-mobile-dock .sec{border-top:0;padding-top:0;margin-top:0}
+  #adj-panel.adj-mobile-dock .sec h3{font-size:11px;margin:0 0 3px}
+  #adj-panel.adj-mobile-dock .row{gap:3px;margin:3px 0}
+  #adj-panel.adj-mobile-dock .ab{height:28px;font-size:11px;border-radius:6px}
+  #adj-panel.adj-mobile-dock .adj-sec-copy{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:5px;border-top:1px dashed var(--bd)}
+  #adj-panel.adj-mobile-dock .adj-sec-copy .row{margin:0;flex:0 0 auto}
+  #adj-panel.adj-mobile-dock .adj-sec-copy .ab.wide{height:26px;padding:0 10px}
+  #adj-panel.adj-mobile-dock.collapsed .adj-body{display:none!important}
 }
 .row{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:5px 0}
 .ab{height:34px;border:1px solid var(--bd);background:var(--bg);border-radius:8px;font-size:12px;font-weight:700;color:var(--tx)}
@@ -181,430 +90,77 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 #active{flex:1;display:flex;flex-direction:column;min-height:0}
 .nb{height:30px;padding:0 9px;border-radius:8px;border:1px solid var(--bd);background:var(--sf);font-size:12px;font-weight:700}
 
-/* サムネイル上部コントロール（PC/スマホ統一ビジュアル言語＋個別レイアウト最適化） */
-#active .top-controls{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  padding:9px 12px;
-  border-bottom:1px solid var(--bd);
-  background:var(--bg);
-  min-width:0;
-  flex-shrink:0;
-}
-.bar{
-  flex:1;
-  min-width:0;
-  display:flex;
-  gap:8px;
-}
-.id-pair{
-  display:inline-flex;
-  align-items:center;
-  gap:4px;
-  flex-shrink:0;
-}
-.pcode-badge{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  height:28px;
-  padding:0 9px;
-  border-radius:7px;
-  background:var(--g);
-  color:#fff;
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:.03em;
-  font-variant-numeric:tabular-nums;
-  white-space:nowrap;
-  flex-shrink:0;
-}
+#active .top-controls{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;border-bottom:1px solid var(--bd);background:var(--bg);min-width:0;flex-shrink:0}
+.bar{flex:1;min-width:0;display:flex;gap:8px}
+.id-pair{display:inline-flex;align-items:center;gap:4px;flex-shrink:0}
+.pcode-badge{display:inline-flex;align-items:center;justify-content:center;height:28px;padding:0 9px;border-radius:7px;background:var(--g);color:#fff;font-size:12px;font-weight:700;letter-spacing:.03em;font-variant-numeric:tabular-nums;white-space:nowrap;flex-shrink:0}
 :root[data-theme=dark] .pcode-badge{color:#0f172a}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]) .pcode-badge{color:#0f172a}}
-.pcount-badge{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  height:28px;
-  padding:0 9px;
-  border-radius:7px;
-  background:var(--sf);
-  border:1px solid var(--bd);
-  color:var(--tx);
-  font-size:11px;
-  font-weight:700;
-  font-variant-numeric:tabular-nums;
-  white-space:nowrap;
-  flex-shrink:0;
-}
-.fld{
-  border:1px solid var(--bd);
-  background:var(--sf);
-  border-radius:8px;
-  padding:3px 9px;
-  min-width:0;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  transition:border-color .15s ease,box-shadow .15s ease;
-}
-.fld-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:6px;
-}
-.fld label{
-  display:block;
-  font-size:10px;
-  font-weight:700;
-  line-height:1.15;
-  color:var(--mut);
-  white-space:nowrap;
-}
-.crop-multi-hint{
-  font-size:9px;
-  font-weight:700;
-  color:var(--g2);
-  background:rgba(45,106,79,.1);
-  padding:1px 5px;
-  border-radius:4px;
-  white-space:nowrap;
-}
-.fld input{
-  width:100%;
-  min-width:0;
-  border:0;
-  outline:0;
-  background:none;
-  font-weight:700;
-  font-size:14px;
-  line-height:1.25;
-  padding:0;
-}
-.fld:focus-within{
-  border-color:var(--g2);
-  box-shadow:0 0 0 2px rgba(45,106,79,.12);
-}
+.pcount-badge{display:inline-flex;align-items:center;justify-content:center;height:28px;padding:0 9px;border-radius:7px;background:var(--sf);border:1px solid var(--bd);color:var(--tx);font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;flex-shrink:0}
+.fld{border:1px solid var(--bd);background:var(--sf);border-radius:8px;padding:3px 9px;min-width:0;display:flex;flex-direction:column;justify-content:center;transition:border-color .15s ease,box-shadow .15s ease}
+.fld-head{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.fld label{display:block;font-size:10px;font-weight:700;line-height:1.15;color:var(--mut);white-space:nowrap}
+.crop-multi-hint{font-size:9px;font-weight:700;color:var(--g2);background:rgba(45,106,79,.1);padding:1px 5px;border-radius:4px;white-space:nowrap}
+.fld input{width:100%;min-width:0;border:0;outline:0;background:none;font-weight:700;font-size:14px;line-height:1.25;padding:0}
+.fld:focus-within{border-color:var(--g2);box-shadow:0 0 0 2px rgba(45,106,79,.12)}
 
-/* 複数作物時の独立した一覧・フィルター選択欄（一目で全作物を把握可能） */
-.crop-strip{
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  gap:4px;
-  padding-top:2px;
-}
-.crop-chip{
-  display:inline-flex;
-  align-items:center;
-  gap:3px;
-  height:22px;
-  padding:0 8px;
-  border-radius:99px;
-  border:1px solid var(--bd);
-  background:var(--sf);
-  color:var(--tx);
-  font-size:11px;
-  font-weight:700;
-  line-height:1;
-  white-space:nowrap;
-  transition:background .15s,border-color .15s,color .15s;
-}
+.crop-strip{display:flex;flex-wrap:wrap;align-items:center;gap:4px;padding-top:2px}
+.crop-chip{display:inline-flex;align-items:center;gap:3px;height:22px;padding:0 8px;border-radius:99px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);font-size:11px;font-weight:700;line-height:1;white-space:nowrap;transition:background .15s,border-color .15s,color .15s}
 .crop-chip:hover{border-color:var(--g2)}
-.crop-chip.on{
-  background:var(--g2);
-  border-color:var(--g2);
-  color:#fff;
-}
+.crop-chip.on{background:var(--g2);border-color:var(--g2);color:#fff}
 :root[data-theme=dark] .crop-chip.on{color:#0f172a}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]) .crop-chip.on{color:#0f172a}}
 
-.addrow{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-shrink:0;
-}
-.addrow label.btn.circle-add{
-  width:42px;
-  height:42px;
-  min-width:42px;
-  padding:0;
-  border-radius:50%;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  font-size:22px;
-  font-weight:700;
-  line-height:1;
-  box-shadow:0 2px 8px rgba(27,67,50,.22);
-}
+.addrow{display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.addrow label.btn.circle-add{width:42px;height:42px;min-width:42px;padding:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;line-height:1;box-shadow:0 2px 8px rgba(27,67,50,.22)}
 
-/* PC版（768px以上）: 広い横幅を活かし、左に[番号+枚数][地番]、右に[作物入力＋複数作物タグ一覧]をゆとり配置 */
 @media(min-width:768px){
-  #active .top-controls{
-    padding:10px 14px;
-    gap:12px;
-    align-items:flex-start;
-  }
-  .bar{
-    flex-direction:row;
-    align-items:flex-start;
-    gap:10px;
-  }
-  .bar-row1{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    flex:0 1 250px;
-    min-width:195px;
-  }
-  .bar-row1 .fld-lot{
-    flex:1 1 auto;
-    min-width:96px;
-  }
-  .bar-row2{
-    display:flex;
-    flex-direction:column;
-    gap:5px;
-    flex:1 1 220px;
-    min-width:160px;
-  }
-  .bar-row2 .fld-crop{
-    width:100%;
-  }
-  .addrow{
-    margin-left:auto;
-    align-self:center;
-  }
+  #active .top-controls{padding:10px 14px;gap:12px;align-items:flex-start}
+  .bar{flex-direction:row;align-items:flex-start;gap:10px}
+  .bar-row1{display:flex;align-items:center;gap:8px;flex:0 1 250px;min-width:195px}
+  .bar-row1 .fld-lot{flex:1 1 auto;min-width:96px}
+  .bar-row2{display:flex;flex-direction:column;gap:5px;flex:1 1 220px;min-width:160px}
+  .bar-row2 .fld-crop{width:100%}
+  .addrow{margin-left:auto;align-self:center}
 }
 
-/* スマホ版（767px以下）: 狭い横幅でも地番・複数作物を一目で読める2段＋折り返しチップ設計 */
 @media(max-width:767px){
-  #active .top-controls{
-    padding:7px 10px;
-    gap:8px;
-    align-items:center;
-  }
-  .bar{
-    flex:1;
-    min-width:0;
-    flex-direction:column;
-    gap:5px;
-  }
-  .bar-row1{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    width:100%;
-    min-width:0;
-  }
-  .pcode-badge{
-    height:26px;
-    padding:0 7px;
-    font-size:11px;
-  }
-  .pcount-badge{
-    height:26px;
-    padding:0 7px;
-    font-size:11px;
-  }
-  .bar-row1 .fld-lot{
-    flex:1 1 auto;
-    min-width:0;
-    padding:2px 7px;
-  }
-  .bar-row2{
-    display:flex;
-    flex-direction:column;
-    gap:4px;
-    width:100%;
-    min-width:0;
-  }
-  .bar-row2 .fld-crop{
-    width:100%;
-    padding:2px 7px;
-  }
-  .fld label{
-    font-size:9px;
-    line-height:1.1;
-  }
-  .fld input,
-  .cp-input-row input,
-  #adj-panel select{
-    font-size:16px!important;
-    line-height:1.25;
-  }
-  .crop-chip{
-    height:21px;
-    padding:0 7px;
-    font-size:10px;
-  }
-  .addrow{
-    align-self:center;
-    padding:0 1px;
-  }
-  .addrow label.btn.circle-add{
-    width:40px;
-    height:40px;
-    min-width:40px;
-    font-size:22px;
-  }
+  #active .top-controls{padding:7px 10px;gap:8px;align-items:center}
+  .bar{flex:1;min-width:0;flex-direction:column;gap:5px}
+  .bar-row1{display:flex;align-items:center;gap:6px;width:100%;min-width:0}
+  .pcode-badge{height:26px;padding:0 7px;font-size:11px}
+  .pcount-badge{height:26px;padding:0 7px;font-size:11px}
+  .bar-row1 .fld-lot{flex:1 1 auto;min-width:0;padding:2px 7px}
+  .bar-row2{display:flex;flex-direction:column;gap:4px;width:100%;min-width:0}
+  .bar-row2 .fld-crop{width:100%;padding:2px 7px}
+  .fld label{font-size:9px;line-height:1.1}
+  .fld input,.cp-input-row input,#adj-panel select{font-size:16px!important;line-height:1.25}
+  .crop-chip{height:21px;padding:0 7px;font-size:10px}
+  .addrow{align-self:center;padding:0 1px}
+  .addrow label.btn.circle-add{width:40px;height:40px;min-width:40px;font-size:22px}
 }
 
-/* 写真カード側の作物選択欄・警告バッジ・ポップオーバー */
-.card .ch{
-  flex-wrap:wrap;
-  row-gap:3px;
-}
-.card-crop-btn{
-  display:inline-flex;
-  align-items:center;
-  gap:3px;
-  height:20px;
-  max-width:100%;
-  padding:0 6px;
-  border-radius:4px;
-  border:none;
-  background:rgba(27,67,50,.86);
-  color:#fff;
-  font-size:10px;
-  font-weight:700;
-  line-height:1;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  cursor:pointer;
-}
-.card-crop-btn.unset{
-  background:rgba(255,255,255,.82);
-  color:#334155;
-  font-weight:600;
-}
-.card-crop-btn.warn{
-  background:#dc2626;
-  color:#fff;
-  box-shadow:0 0 0 1.5px #fef08a;
-}
-.card.has-crop-warn{
-  box-shadow:inset 0 0 0 2px #dc2626;
-}
-.card-warn-banner{
-  position:absolute;
-  top:0;left:0;right:0;
-  z-index:4;
-  background:rgba(220,38,38,.92);
-  color:#fff;
-  font-size:10px;
-  font-weight:700;
-  line-height:1.25;
-  padding:3px 6px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:4px;
-  cursor:pointer;
-}
-.card-warn-banner span{
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-#crop-picker{
-  position:fixed;
-  z-index:85;
-  width:min(300px,calc(100vw - 24px));
-  background:var(--sf);
-  color:var(--tx);
-  border:1px solid var(--bd);
-  border-radius:14px;
-  box-shadow:0 12px 32px rgba(0,0,0,.28);
-  padding:12px;
-  font-size:12px;
-}
-#crop-picker h4{
-  margin:0 0 6px;
-  font-size:13px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-.cp-warn-box{
-  background:rgba(220,38,38,.1);
-  border:1px solid rgba(220,38,38,.35);
-  color:#b91c1c;
-  border-radius:8px;
-  padding:7px 9px;
-  margin-bottom:8px;
-  font-size:11px;
-  line-height:1.4;
-}
+.card .ch{flex-wrap:wrap;row-gap:3px}
+.card-crop-btn{display:inline-flex;align-items:center;gap:3px;height:20px;max-width:100%;padding:0 6px;border-radius:4px;border:none;background:rgba(27,67,50,.86);color:#fff;font-size:10px;font-weight:700;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.card-crop-btn.unset{background:rgba(255,255,255,.82);color:#334155;font-weight:600}
+.card-crop-btn.warn{background:#dc2626;color:#fff;box-shadow:0 0 0 1.5px #fef08a}
+.card.has-crop-warn{box-shadow:inset 0 0 0 2px #dc2626}
+.card-warn-banner{position:absolute;top:0;left:0;right:0;z-index:4;background:rgba(220,38,38,.92);color:#fff;font-size:10px;font-weight:700;line-height:1.25;padding:3px 6px;display:flex;align-items:center;justify-content:space-between;gap:4px;cursor:pointer}
+.card-warn-banner span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#crop-picker{position:fixed;z-index:85;width:min(300px,calc(100vw - 24px));background:var(--sf);color:var(--tx);border:1px solid var(--bd);border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,.28);padding:12px;font-size:12px}
+#crop-picker h4{margin:0 0 6px;font-size:13px;display:flex;align-items:center;justify-content:space-between}
+.cp-warn-box{background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.35);color:#b91c1c;border-radius:8px;padding:7px 9px;margin-bottom:8px;font-size:11px;line-height:1.4}
 :root[data-theme=dark] .cp-warn-box{color:#fca5a5}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]) .cp-warn-box{color:#fca5a5}}
-.cp-chips{
-  display:flex;
-  flex-wrap:wrap;
-  gap:5px;
-  margin:6px 0 8px;
-}
-.cp-chip{
-  height:28px;
-  padding:0 10px;
-  border-radius:99px;
-  border:1px solid var(--bd);
-  background:var(--bg);
-  font-size:12px;
-  font-weight:700;
-}
-.cp-chip.on{
-  background:var(--g2);
-  border-color:var(--g2);
-  color:#fff;
-}
-.cp-input-row{
-  display:flex;
-  gap:5px;
-  margin-top:6px;
-}
-.cp-input-row input{
-  flex:1;
-  min-width:0;
-  height:32px;
-  border:1px solid var(--bd);
-  border-radius:8px;
-  background:var(--bg);
-  padding:0 8px;
-  font-size:12px;
-  font-weight:700;
-}
-.cp-actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:5px;
-  margin-top:8px;
-  padding-top:8px;
-  border-top:1px solid var(--bd);
-}
-.cp-act{
-  height:28px;
-  padding:0 9px;
-  border-radius:7px;
-  border:1px solid var(--bd);
-  background:var(--bg);
-  font-size:11px;
-  font-weight:700;
-}
-.cp-act.primary{
-  background:var(--g2);
-  border-color:var(--g2);
-  color:#fff;
-}
-.cp-act.danger{
-  color:#dc2626;
-}
+.cp-chips{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0 8px}
+.cp-chip{height:28px;padding:0 10px;border-radius:99px;border:1px solid var(--bd);background:var(--bg);font-size:12px;font-weight:700}
+.cp-chip.on{background:var(--g2);border-color:var(--g2);color:#fff}
+.cp-input-row{display:flex;gap:5px;margin-top:6px}
+.cp-input-row input{flex:1;min-width:0;height:32px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);padding:0 8px;font-size:12px;font-weight:700}
+.cp-actions{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;padding-top:8px;border-top:1px solid var(--bd)}
+.cp-act{height:28px;padding:0 9px;border-radius:7px;border:1px solid var(--bd);background:var(--bg);font-size:11px;font-weight:700}
+.cp-act.primary{background:var(--g2);border-color:var(--g2);color:#fff}
+.cp-act.danger{color:#dc2626}
 
 #feed{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;overscroll-behavior-y:none;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:max-content;gap:1px;background:rgba(148,163,184,.28);align-content:start}
 .card{position:relative;border:none;border-radius:0;overflow:hidden;background:var(--sf);display:block}
@@ -614,307 +170,76 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 .tag.old{background:rgba(15,23,42,.45);color:#f1f5f9}
 .card img{width:100%;aspect-ratio:1 / 1;object-fit:cover;min-height:0;display:block;cursor:zoom-in;background:rgba(148,163,184,.12);opacity:0;transition:opacity .25s ease}
 .card img.loaded{opacity:1}
-.card-date{
-  border:none;
-  background:rgba(255,255,255,.82);
-  color:#1e293b;
-  border-radius:4px;
-  padding:0 5px;
-  font-family:"Noto Sans JP",system-ui,sans-serif;
-  font-size:10px!important;
-  font-weight:600!important;
-  line-height:20px!important;
-  height:20px;
-  min-height:20px;
-  max-height:20px;
-  font-variant-numeric:tabular-nums;
-  -webkit-text-size-adjust:100%;
-  box-sizing:border-box;
-}
-.card-date::-webkit-datetime-edit,
-.card-date::-webkit-datetime-edit-fields-wrapper,
-.card-date::-webkit-datetime-edit-year-field,
-.card-date::-webkit-datetime-edit-month-field,
-.card-date::-webkit-datetime-edit-day-field,
-.card-date::-webkit-datetime-edit-text{
-  font-family:"Noto Sans JP",system-ui,sans-serif!important;
-  font-size:10px!important;
-  font-weight:600!important;
-  line-height:1!important;
-  padding:0!important;
-  margin:0!important;
-  color:#1e293b!important;
-}
-@media(max-width:767px){
-  .card-date-wrap{display:none!important}
-}
+.card-date{border:none;background:rgba(255,255,255,.82);color:#1e293b;border-radius:4px;padding:0 5px;font-family:"Noto Sans JP",system-ui,sans-serif;font-size:10px!important;font-weight:600!important;line-height:20px!important;height:20px;min-height:20px;max-height:20px;font-variant-numeric:tabular-nums;-webkit-text-size-adjust:100%;box-sizing:border-box}
+@media(max-width:767px){.card-date-wrap{display:none!important}}
 @media(min-width:768px){
   .card-date{display:none!important}
-  .card-date-wrap{
-    display:inline-flex;
-    align-items:center;
-    background:rgba(255,255,255,.85);
-    color:#1e293b;
-    border-radius:4px;
-    padding:0 5px;
-    height:20px;
-    font-family:"Noto Sans JP",system-ui,sans-serif;
-    font-size:10px;
-    font-weight:600;
-    line-height:1;
-    font-variant-numeric:tabular-nums;
-    gap:1px;
-  }
-  .card-date-wrap span,
-  .card-date-wrap input{
-    font-family:"Noto Sans JP",system-ui,sans-serif!important;
-    font-size:10px!important;
-    font-weight:600!important;
-    line-height:16px!important;
-    font-variant-numeric:tabular-nums;
-    color:#1e293b;
-  }
-  .card-date-wrap input{
-    border:none;
-    background:transparent;
-    padding:0;
-    text-align:center;
-    outline:none;
-    height:16px;
-    border-radius:2px;
-  }
+  .card-date-wrap{display:inline-flex;align-items:center;background:rgba(255,255,255,.85);color:#1e293b;border-radius:4px;padding:0 4px;height:20px;font-family:"Noto Sans JP",system-ui,sans-serif;font-size:10px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums;gap:0}
+  .card-date-wrap span,.card-date-wrap input{font-family:"Noto Sans JP",system-ui,sans-serif!important;font-size:10px!important;font-weight:600!important;line-height:16px!important;font-variant-numeric:tabular-nums;color:#1e293b}
+  .card-date-wrap input{border:none;background:transparent;padding:0;text-align:center;outline:none;height:16px;border-radius:2px}
   .card-date-wrap input:focus{background:#fef08a;color:#0f172a}
-  .card-date-wrap{gap:0;padding:0 4px}
   .card-date-wrap span{display:inline-flex;align-items:center;justify-content:center;width:6px;opacity:.75}
   .card-date-wrap input.dy{width:26px;padding:0;margin:0}
   .card-date-wrap input.dm,.card-date-wrap input.dd{width:11px;padding:0;margin:0}
 }
-.card-date.no-exif,.card-date-wrap.no-exif{
-  box-shadow:0 0 0 1.5px #ea580c;
-  background:rgba(255,247,237,.95);
-}
+.card-date.no-exif,.card-date-wrap.no-exif{box-shadow:0 0 0 1.5px #ea580c;background:rgba(255,247,237,.95)}
 .card .ch .nb{height:20px;padding:0 5px;font-size:10px;font-weight:500;background:rgba(255,255,255,.78);color:#1e293b;border:none;border-radius:4px}
 
-/* 全区画グリッド表示（PCは従来の4列・正方形スタイル） */
 #all-grid-view{position:absolute;inset:0;z-index:25;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;overscroll-behavior-y:none;padding:0}
-.insta-grid{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  grid-auto-rows:max-content;
-  gap:1px;
-  background:rgba(148,163,184,.28);
-  align-content:start;
-}
+.insta-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:max-content;gap:1px;background:rgba(148,163,184,.28);align-content:start}
 .g-tile{position:relative;width:100%;aspect-ratio:1 / 1;overflow:hidden;background:rgba(148,163,184,.12);cursor:zoom-in}
 .g-tile img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .22s ease}
 .g-tile img.loaded{opacity:1}
 .g-meta{position:absolute;left:0;right:0;bottom:0;padding:4px 6px;font-size:10px;line-height:1.25;color:#fff;background:linear-gradient(to top,rgba(15,23,42,.65),rgba(15,23,42,0));display:flex;justify-content:space-between;gap:4px;pointer-events:none}
 .g-meta span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* スマホ（768px未満）のみ：3列・1画面あたり3〜4行表示 */
 @media(max-width:767px){
-  .insta-grid{
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    grid-auto-rows:minmax(110px,calc((100dvh - 50px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)) / 3.5));
-  }
-  .g-tile{
-    aspect-ratio:auto;
-    height:100%;
-  }
+  .insta-grid{grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(110px,calc((100dvh - 50px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)) / 3.5))}
+  .g-tile{aspect-ratio:auto;height:100%}
 }
 
-/* インスタグラム風1枚ずつ縦スクロール表示 */
+/* インスタグラム風シームレス縦スクロール表示 */
 #insta-feed-view{
-  position:absolute;
-  inset:0;
-  z-index:25;
-  background:var(--bg);
-  overflow-y:auto;
-  -webkit-overflow-scrolling:touch;
-  overscroll-behavior:none;
-  overscroll-behavior-y:none;
-  padding:14px 12px 36px;
+  position:absolute;inset:0;z-index:25;background:var(--sf);
+  overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;overscroll-behavior-y:none;
+  padding:0 0 calc(28px + env(safe-area-inset-bottom,0px));
 }
 .ig-stream{
-  max-width:540px;
-  margin:0 auto;
-  display:flex;
-  flex-direction:column;
-  gap:18px;
+  width:100%;max-width:540px;margin:0 auto;
+  display:flex;flex-direction:column;background:var(--sf);
 }
-.ig-post{
-  background:var(--sf);
-  border:1px solid var(--bd);
-  border-radius:14px;
-  overflow:hidden;
-  box-shadow:0 2px 10px rgba(15,23,42,.06);
+@media(min-width:541px){
+  #insta-feed-view{background:var(--bg)}
+  .ig-stream{border-left:1px solid var(--bd);border-right:1px solid var(--bd)}
 }
-.ig-post-hd{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  padding:10px 12px;
-  border-bottom:1px solid var(--bd);
-}
-.ig-author{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  min-width:0;
-  flex:1;
-  cursor:pointer;
-}
+.ig-post{width:100%;background:var(--sf);border-bottom:1px solid var(--bd)}
+.ig-post:last-child{border-bottom:0}
+.ig-post-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:var(--sf)}
+.ig-author{display:flex;align-items:center;gap:10px;min-width:0;flex:1;cursor:pointer}
 .ig-avatar{
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--g),var(--g2));
-  color:#fff;
-  font-size:12px;
-  font-weight:700;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  flex-shrink:0;
-  font-variant-numeric:tabular-nums;
+  width:32px;height:32px;border-radius:50%;background:var(--g);color:#fff;
+  font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-variant-numeric:tabular-nums;
 }
 :root[data-theme=dark] .ig-avatar{color:#0f172a}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]) .ig-avatar{color:#0f172a}}
-.ig-author-meta{
-  min-width:0;
-  flex:1;
-}
-.ig-author-main{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  flex-wrap:wrap;
-  line-height:1.3;
-}
-.ig-code-tag{
-  display:inline-flex;
-  align-items:center;
-  padding:1px 6px;
-  border-radius:5px;
-  background:rgba(45,106,79,.14);
-  color:var(--g2);
-  font-size:11px;
-  font-weight:700;
-  font-variant-numeric:tabular-nums;
-}
-.ig-lot{
-  font-size:14px;
-  font-weight:700;
-  color:var(--tx);
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-.ig-crop-sub{
-  margin-top:2px;
-  font-size:12px;
-  font-weight:500;
-  color:var(--mut);
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-.ig-post-date{
-  font-size:11px;
-  color:var(--mut);
-  font-variant-numeric:tabular-nums;
-  white-space:nowrap;
-  flex-shrink:0;
-}
-.ig-photo-wrap{
-  width:100%;
-  background:#0f172a;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:zoom-in;
-}
-.ig-photo-wrap img{
-  width:100%;
-  aspect-ratio:1 / 1;
-  object-fit:cover;
-  display:block;
-  opacity:0;
-  transition:opacity .22s ease;
-}
-.ig-photo-wrap img.loaded{
-  opacity:1;
-}
-.ig-comment-box{
-  padding:10px 12px 12px;
-  border-top:1px solid var(--bd);
-  background:var(--sf);
-}
-.ig-comment-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  margin-bottom:6px;
-}
-.ig-comment-label{
-  font-size:11px;
-  font-weight:700;
-  color:var(--mut);
-}
-.ig-more-btn{
-  border:0;
-  background:none;
-  color:var(--g2);
-  font-size:12px;
-  font-weight:700;
-  padding:2px 4px;
-  border-radius:4px;
-}
-.ig-more-btn:hover{
-  background:rgba(45,106,79,.08);
-}
-.ig-comment-editor{
-  width:100%;
-  min-height:40px;
-  max-height:220px;
-  border:1px solid var(--bd);
-  border-radius:8px;
-  background:var(--bg);
-  color:var(--tx);
-  padding:7px 9px;
-  font-size:13px;
-  line-height:1.5;
-  resize:vertical;
-  display:block;
-  overflow-y:auto;
-  transition:border-color .15s ease,box-shadow .15s ease;
-}
-.ig-comment-editor.collapsed{
-  max-height:54px;
-  overflow:hidden;
-  resize:none;
-}
-.ig-comment-editor:focus{
-  outline:0;
-  border-color:var(--g2);
-  box-shadow:0 0 0 2px rgba(45,106,79,.12);
-  max-height:260px;
-  overflow-y:auto;
-}
-.ig-comment-foot{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  margin-top:6px;
-  min-height:18px;
-}
-.ig-comment-status{
-  font-size:11px;
-  color:var(--mut);
-}
+.ig-author-meta{min-width:0;flex:1}
+.ig-author-line1{display:flex;align-items:center;gap:6px;min-width:0;line-height:1.25}
+.ig-code-inline{font-size:12px;font-weight:700;color:var(--g2);font-variant-numeric:tabular-nums;flex-shrink:0}
+.ig-lot{font-size:13px;font-weight:700;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ig-crop-line2{margin-top:1px;font-size:11px;font-weight:500;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ig-post-date{font-size:11px;color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap;flex-shrink:0}
+.ig-photo-wrap{width:100%;margin:0;padding:0;background:#0f172a;display:block;cursor:zoom-in}
+.ig-photo-wrap img{width:100%;aspect-ratio:1 / 1;object-fit:cover;display:block;opacity:0;transition:opacity .22s ease}
+.ig-photo-wrap img.loaded{opacity:1}
+.ig-caption-area{padding:10px 12px 13px;background:var(--sf)}
+.ig-caption-view{font-size:13.5px;line-height:1.5;color:var(--tx);word-break:break-word;overflow-wrap:anywhere;white-space:pre-wrap;cursor:text}
+.ig-caption-view.is-empty{color:var(--mut);font-size:13px}
+.ig-caption-view.is-readonly{cursor:default}
+.ig-more-link{display:inline;border:0;background:none;padding:0;margin:0;color:var(--mut);font-size:13px;font-weight:500;cursor:pointer}
+.ig-more-link:hover,.ig-more-link:active{color:var(--tx)}
+.ig-caption-input{width:100%;min-height:42px;border:0;outline:0;background:transparent;color:var(--tx);padding:0;margin:0;font-size:13.5px;line-height:1.5;resize:none;display:block;overflow:hidden}
+@media(max-width:767px){.ig-caption-input{font-size:16px}}
 
 #lb{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.95);display:flex;flex-direction:column;color:#fff;opacity:1;transition:opacity .38s ease,transform .38s ease}
 #lb.closing{opacity:0!important;pointer-events:none!important}
@@ -961,34 +286,13 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
   .hb{padding:0 6px;font-size:11px;height:30px;white-space:nowrap}
 }
 @media(min-width:768px){
-  #feed,
-  body.sz-lg #feed,
-  body.dev-tablet #feed{
-    display:grid!important;
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
-    grid-auto-rows:max-content;
-    gap:12px;
-    padding:14px!important;
-    align-content:start;
-  }
+  #feed,body.sz-lg #feed,body.dev-tablet #feed{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-rows:max-content;gap:12px;padding:14px!important;align-content:start}
 }
 @media(max-width:767px){
   html,body{overscroll-behavior:none;overscroll-behavior-y:none}
-  aside{
-    position:fixed;left:0;right:0;top:0;bottom:0;
-    width:100%;height:100%;max-height:100%;
-    border-radius:0;box-shadow:0 -8px 30px rgba(0,0,0,.25);
-    transform:translateY(100%);transition:transform .28s;
-    padding-top:env(safe-area-inset-top,0px);
-    padding-bottom:env(safe-area-inset-bottom,0px);
-    overscroll-behavior:none;overscroll-behavior-y:none;
-    z-index:50;
-  }
+  aside{position:fixed;left:0;right:0;top:0;bottom:0;width:100%;height:100%;max-height:100%;border-radius:0;box-shadow:0 -8px 30px rgba(0,0,0,.25);transform:translateY(100%);transition:transform .28s;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);overscroll-behavior:none;overscroll-behavior-y:none;z-index:50}
   aside.open{transform:none}
-  aside::before{
-    content:"";display:block;width:40px;height:5px;
-    background:var(--bd);border-radius:99px;margin:6px auto 2px;flex-shrink:0;
-  }
+  aside::before{content:"";display:block;width:40px;height:5px;background:var(--bd);border-radius:99px;margin:6px auto 2px;flex-shrink:0}
   #empty,.pill,.dsk,#zoom{display:none!important}
 }
 </style>
@@ -1016,7 +320,6 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
 <section id="map-section">
   <div id="map-viewport">
     <div id="layer">
-      <!-- 元のHTMLにある data:image/jpeg;base64,... をそのまま貼り付けてください -->
       <img id="mapimg" src="ここに元のBase64を貼る" alt="農地地図">
       <svg id="svg" viewBox="0 0 1281 1117">
         <g id="parcels"></g><g id="badges" style="pointer-events:none"></g><g id="drawp" style="pointer-events:none"></g><g id="adjl"></g>
@@ -1171,7 +474,7 @@ async function loadState(){
   if(SB_OK){DBH=sbDb();ASS=sbAssets()}
   if(!DBH){try{const db=await openDB();return await new Promise((res,rej)=>{const q=db.transaction('appState').objectStore('appState').get('main');q.onsuccess=()=>res(q.result||null);q.onerror=()=>rej(q.error)})}catch(e){return null}}
   try{const m=await DBH.doc('app/main').get(),q=await DBH.collection('parcels').get(),records={};
-    q.docs.forEach(d=>{records[d.id]=d.data();lastSaved[d.id]=JSON.stringify(d.data())});
+    if(Array.isArray(q.docs))q.docs.forEach(d=>{records[d.id]=d.data();lastSaved[d.id]=JSON.stringify(d.data())});
     const md=m.exists?m.data():{};lastSaved.__meta=JSON.stringify(md);return{...md,records}
   }catch(e){console.error(e);return null}
 }
@@ -1198,12 +501,6 @@ function parseCrops(str){
   raw.forEach(item=>{if(!out.includes(item))out.push(item)});
   return out;
 }
-function isPhotoCropMissing(parcelCropStr,photoCrop){
-  const pc=String(photoCrop||'').trim();
-  if(!pc)return false;
-  const list=parseCrops(parcelCropStr);
-  return !list.includes(pc);
-}
 function effectivePhotoCrop(ph,parcelCropStr){
   const pc=String((ph&&ph.cropName)||'').trim();
   return pc||String(parcelCropStr||'').trim();
@@ -1213,18 +510,9 @@ const r2=n=>Math.round(n*100)/100;
 const parse=s=>s.trim().split(/\s+/).map(p=>p.split(',').map(Number));
 const str=a=>a.map(([x,y])=>r2(x)+','+r2(y)).join(' ');
 function gTransform(s){const g=S.globalAdjust;return str(parse(s).map(([x,y])=>[CX+(x-CX)*g.sx+g.dx,CY+(y-CY)*g.sy+g.dy]))}
-function parcelTopLeft(ptsStr){
-  const a=parse(ptsStr);
-  const minX=Math.min(...a.map(p=>p[0]));
-  const minY=Math.min(...a.map(p=>p[1]));
-  return{x:minX,y:minY};
-}
 function parcelSortPos(ptsStr){
   const a=parse(ptsStr);
-  return{
-    x:Math.min(...a.map(p=>p[0])),
-    y:Math.max(...a.map(p=>p[1]))
-  };
+  return{x:Math.min(...a.map(p=>p[0])),y:Math.max(...a.map(p=>p[1]))};
 }
 function allParcels(){
   const del=S.deletedParcels||[];
@@ -1292,7 +580,6 @@ function extractExifDateISO(file){
       try{
         const view=new DataView(e.target.result);
         if(view.byteLength<12||view.getUint16(0,false)!==0xFFD8){res(null);return}
-
         const readAscii=(start,len)=>{
           let s='';
           for(let i=0;i<len;i++){
@@ -1303,7 +590,6 @@ function extractExifDateISO(file){
           }
           return s;
         };
-
         const toISOFromExifStr=str=>{
           if(!str)return null;
           const m=str.match(/(\d{4})\s*[:\-/]\s*(\d{1,2})\s*[:\-/]\s*(\d{1,2})/);
@@ -1314,19 +600,15 @@ function extractExifDateISO(file){
           if(d>maxD)return null;
           return `${String(y).padStart(4,'0')}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         };
-
         const parseExifAtTiff=(tiff,limitEnd)=>{
           if(tiff+8>limitEnd||tiff+8>view.byteLength)return null;
           const end=Math.min(limitEnd,view.byteLength);
           const bo=view.getUint16(tiff,false);
-          const le=(bo===0x4949);
-          const be=(bo===0x4D4D);
+          const le=(bo===0x4949),be=(bo===0x4D4D);
           if(!le&&!be)return null;
-
           const u16=p=>(p+2<=end)?view.getUint16(p,le):0;
           const u32=p=>(p+4<=end)?view.getUint32(p,le):0;
           const ifd0Off=u32(tiff+4);
-
           const parseIFD=(relOff,visited=new Set())=>{
             if(!relOff||visited.has(relOff))return{};
             visited.add(relOff);
@@ -1338,74 +620,44 @@ function extractExifDateISO(file){
             for(let i=0;i<n;i++){
               const ep=pos+2+i*12;
               if(ep+12>end)break;
-              const tag=u16(ep);
-              const type=u16(ep+2);
-              const cnt=u32(ep+4);
-              const valField=ep+8;
+              const tag=u16(ep),type=u16(ep+2),cnt=u32(ep+4),valField=ep+8;
               const unit=(type===1||type===2||type===6||type===7)?1:(type===3||type===8)?2:4;
-              const totalBytes=cnt*unit;
-              const dataPos=(totalBytes<=4)?valField:(tiff+u32(valField));
+              const dataPos=(cnt*unit<=4)?valField:(tiff+u32(valField));
               if(tag===0x9003||tag===0x9004||tag===0x0132){
                 if(dataPos>=tiff&&dataPos+10<=end){
                   const iso=toISOFromExifStr(readAscii(dataPos,Math.min(28,end-dataPos)));
                   if(iso)found[tag]=iso;
                 }
               }
-              if(tag===0x8769){
-                found.exifPtr=u32(valField);
-              }
+              if(tag===0x8769)found.exifPtr=u32(valField);
             }
             return found;
           };
-
           const d0=parseIFD(ifd0Off);
           if(d0.exifPtr){
             const sub=parseIFD(d0.exifPtr);
             if(sub[0x9003])return sub[0x9003];
             if(sub[0x9004])return sub[0x9004];
           }
-          if(d0[0x0132])return d0[0x0132];
-          return null;
+          return d0[0x0132]||null;
         };
-
         let offset=2;
         while(offset+4<=view.byteLength){
           const marker=view.getUint16(offset,false);
           offset+=2;
           if(marker===0xFFE1){
-            const segLen=view.getUint16(offset,false);
-            const segStart=offset+2;
-            const segEnd=Math.min(view.byteLength,offset+segLen);
+            const segLen=view.getUint16(offset,false),segStart=offset+2,segEnd=Math.min(view.byteLength,offset+segLen);
             if(segStart+12<=segEnd&&readAscii(segStart,6)==='Exif'){
               const iso=parseExifAtTiff(segStart+6,segEnd);
               if(iso){res(iso);return}
             }
             offset+=segLen;
-          }else if(marker===0xFFDA){
-            break;
-          }else if((marker&0xFF00)===0xFF00){
+          }else if(marker===0xFFDA){break}
+          else if((marker&0xFF00)===0xFF00){
             if(offset+2>view.byteLength)break;
             offset+=view.getUint16(offset,false);
-          }else{
-            break;
-          }
+          }else{break}
         }
-
-        const maxScan=Math.min(view.byteLength-14,4194304);
-        for(let i=2;i<maxScan;i++){
-          if(
-            view.getUint8(i)===0x45&&
-            view.getUint8(i+1)===0x78&&
-            view.getUint8(i+2)===0x69&&
-            view.getUint8(i+3)===0x66&&
-            view.getUint8(i+4)===0x00&&
-            view.getUint8(i+5)===0x00
-          ){
-            const iso=parseExifAtTiff(i+6,Math.min(view.byteLength,i+65536));
-            if(iso){res(iso);return}
-          }
-        }
-
         res(null);
       }catch(_){res(null)}
     };
@@ -1413,6 +665,7 @@ function extractExifDateISO(file){
     fr.readAsArrayBuffer(file.slice(0,4194304));
   });
 }
+
 const vp=$('map-viewport'),layer=$('layer');
 function applyT(){layer.style.transform=`translate3d(${V.x}px,${V.y}px,0) scale(${V.s})`;if(adjusting)requestAnimationFrame(renderHandles)}
 function fit(anim){const r=vp.getBoundingClientRect();if(!r.width||!r.height)return;const s=Math.min(r.width/W,r.height/H)*.96;if(anim){layer.style.transition='transform .25s';setTimeout(()=>layer.style.transition='',260)}V={s,x:(r.width-W*s)/2,y:(r.height-H*s)/2};applyT()}
@@ -1470,8 +723,8 @@ function render(){
     el.addEventListener('pointercancel',clearHit);
     el.addEventListener('click',e=>{if(drawing||moved)return;e.stopPropagation();selectP(p.id,false)});
     $('parcels').appendChild(el);
-    if(showNum)renderBadges(ps);
   });
+  if(showNum)renderBadges(ps);
   $('reg').textContent=reg;$('tot').textContent=ps.length;renderHandles();updAdj();
   if(gridMode)renderAllGrid();
   if(instaMode)renderInstaFeed();
@@ -1500,7 +753,7 @@ function anchorPoint(pts){
   return best;
 }
 function renderBadges(ps){
-  const minW=24,minH=14,placed=[];
+  const minW=24,minH=14;
   const items=ps.map(p=>{
     const pts=parse(p.points),a=anchorPoint(pts);
     return{code:p.code,x:a.x,y:a.y,ax:a.x,ay:a.y};
@@ -1542,7 +795,6 @@ function renderBadges(ps){
     });
     lt.textContent=it.code;
     $('badges').appendChild(lt);
-    placed.push(it);
   });
 }
 function renderDraft(){const l=$('drawp');l.innerHTML='';if(!draft.length)return;if(draft.length>1)l.appendChild(mk('polygon',{points:str(draft),fill:'rgba(217,119,6,.35)',stroke:'#d97706','stroke-width':2,'stroke-dasharray':'5,3'}));draft.forEach(([x,y])=>l.appendChild(mk('circle',{cx:x,cy:y,r:4,fill:'#d97706',stroke:'#fff','stroke-width':1.5})))}
@@ -1613,13 +865,6 @@ function escapeHtml(s){
     .replace(/"/g,'&quot;');
 }
 
-function isLongComment(txt){
-  const s=String(txt||'');
-  if(!s)return false;
-  const lines=s.split(/\r?\n/);
-  return lines.length>2 || s.length>56;
-}
-
 function setPhotoComment(parcelId,photoId,newText){
   const r=S.records[parcelId];
   if(!r||!Array.isArray(r.photos))return false;
@@ -1630,17 +875,91 @@ function setPhotoComment(parcelId,photoId,newText){
   return true;
 }
 
-function autoResizeTextarea(ta,forceFull){
-  if(!ta)return;
-  const isExpanded=forceFull || expandedComments.has(ta.dataset.photoId);
-  if(!isExpanded && isLongComment(ta.value)){
-    ta.classList.add('collapsed');
-    ta.style.height='54px';
+function truncateToThreeLines(txt){
+  const s=String(txt||'');
+  if(!s)return{truncated:false,preview:''};
+  const lines=s.split(/\r?\n/);
+  const MAX_CHARS_PER_LINE=25;
+  let usedLines=0;
+  const outLines=[];
+  for(let i=0;i<lines.length;i++){
+    const line=lines[i];
+    const lineCost=Math.max(1,Math.ceil(line.length/MAX_CHARS_PER_LINE));
+    if(usedLines+lineCost<=3){
+      outLines.push(line);
+      usedLines+=lineCost;
+      if(usedLines===3 && i<lines.length-1){
+        const last=outLines[outLines.length-1];
+        const trimLen=Math.max(0,MAX_CHARS_PER_LINE-6);
+        outLines[outLines.length-1]=last.length>trimLen?last.slice(0,trimLen):last;
+        return{truncated:true,preview:outLines.join('\n')};
+      }
+    }else{
+      const remLines=3-usedLines;
+      if(remLines>0){
+        const maxTake=Math.max(0,remLines*MAX_CHARS_PER_LINE-6);
+        outLines.push(line.slice(0,maxTake));
+      }else if(outLines.length){
+        const last=outLines[outLines.length-1];
+        const trimLen=Math.max(0,last.length-6);
+        outLines[outLines.length-1]=last.slice(0,trimLen);
+      }
+      return{truncated:true,preview:outLines.join('\n')};
+    }
+  }
+  return{truncated:false,preview:s};
+}
+
+function renderCaptionDisplay(viewEl,text,isStatic){
+  if(!viewEl)return;
+  const raw=String(text||'');
+  const photoId=viewEl.dataset.photoId;
+  if(!raw){
+    viewEl.classList.add('is-empty');
+    viewEl.textContent=isStatic?'':'キャプションを追加...';
     return;
   }
-  ta.classList.remove('collapsed');
+  viewEl.classList.remove('is-empty');
+  const isExpanded=expandedComments.has(photoId);
+  const info=truncateToThreeLines(raw);
+  if(!info.truncated){
+    viewEl.textContent=raw;
+    return;
+  }
+  if(isExpanded){
+    viewEl.innerHTML=`${escapeHtml(raw)} <button type="button" class="ig-more-link" data-ig-toggle="${escapeHtml(photoId)}">閉じる</button>`;
+  }else{
+    viewEl.innerHTML=`${escapeHtml(info.preview)}… <button type="button" class="ig-more-link" data-ig-toggle="${escapeHtml(photoId)}">続きを読む</button>`;
+  }
+}
+
+function autoResizeCaptionInput(ta){
+  if(!ta)return;
   ta.style.height='auto';
-  ta.style.height=Math.max(40,Math.min(260,ta.scrollHeight))+'px';
+  ta.style.height=Math.max(42,ta.scrollHeight)+'px';
+}
+
+function openCaptionEditor(areaEl){
+  if(!areaEl)return;
+  const viewEl=areaEl.querySelector('.ig-caption-view');
+  const ta=areaEl.querySelector('.ig-caption-input');
+  if(!viewEl||!ta||ta.readOnly)return;
+  viewEl.classList.add('hidden');
+  ta.classList.remove('hidden');
+  autoResizeCaptionInput(ta);
+  ta.focus();
+  const len=ta.value.length;
+  ta.setSelectionRange(len,len);
+}
+
+function closeCaptionEditor(areaEl){
+  if(!areaEl)return;
+  const viewEl=areaEl.querySelector('.ig-caption-view');
+  const ta=areaEl.querySelector('.ig-caption-input');
+  if(!viewEl||!ta)return;
+  renderCaptionDisplay(viewEl,ta.value,ta.readOnly);
+  ta.classList.add('hidden');
+  viewEl.classList.remove('hidden');
 }
 
 function renderInstaFeed(){
@@ -1666,13 +985,7 @@ function renderInstaFeed(){
 
     const cropDisp=p.cropName||'作物未登録';
     const commentVal=p.comment||'';
-    const longFlag=isLongComment(commentVal);
-    const isExp=expandedComments.has(p.id);
     const isEditable=!p.isStatic;
-
-    const moreBtnHtml=longFlag
-      ? `<button type="button" class="ig-more-btn" data-ig-more="${escapeHtml(p.id)}">${isExp?'折りたたむ':'続きを読む'}</button>`
-      : '';
 
     const isInitial=idx<INITIAL_EAGER;
     const imgAttr=isInitial
@@ -1684,11 +997,11 @@ function renderInstaFeed(){
         <div class="ig-author" data-ig-jump="${escapeHtml(p.parcelId)}" title="タップしてこの農地を表示">
           <span class="ig-avatar">${escapeHtml(p.parcelCode)}</span>
           <div class="ig-author-meta">
-            <div class="ig-author-main">
-              <span class="ig-code-tag">${escapeHtml(p.parcelCode)}</span>
+            <div class="ig-author-line1">
+              <span class="ig-code-inline">${escapeHtml(p.parcelCode)}</span>
               <span class="ig-lot">${escapeHtml(p.parcelLabel)}</span>
             </div>
-            <div class="ig-crop-sub">🌱 ${escapeHtml(cropDisp)}</div>
+            <div class="ig-crop-line2">${escapeHtml(cropDisp)}</div>
           </div>
         </div>
         <span class="ig-post-date">${escapeHtml(fmtDate(p.postedAt))}</span>
@@ -1696,15 +1009,9 @@ function renderInstaFeed(){
       <div class="ig-photo-wrap" data-ig-lb="${idx}">
         <img ${imgAttr} alt="${escapeHtml(p.parcelCode+' '+p.parcelLabel)}" decoding="async">
       </div>
-      <div class="ig-comment-box">
-        <div class="ig-comment-top">
-          <span class="ig-comment-label">📝 メモ・コメント</span>
-          ${moreBtnHtml}
-        </div>
-        <textarea class="ig-comment-editor${(longFlag&&!isExp)?' collapsed':''}" data-parcel-id="${escapeHtml(p.parcelId)}" data-photo-id="${escapeHtml(p.id)}" placeholder="${isEditable?'この写真についての文章を入力...':'サンプル写真のため編集できません'}" ${isEditable?'':'readonly'}>${escapeHtml(commentVal)}</textarea>
-        <div class="ig-comment-foot">
-          <span class="ig-comment-status" data-ig-status="${escapeHtml(p.id)}">${isEditable?(commentVal?'自動保存されます':'タップして文章を入力'):'表示専用'}</span>
-        </div>
+      <div class="ig-caption-area">
+        <div class="ig-caption-view${isEditable?'':' is-readonly'}" data-parcel-id="${escapeHtml(p.parcelId)}" data-photo-id="${escapeHtml(p.id)}"></div>
+        <textarea class="ig-caption-input hidden" data-parcel-id="${escapeHtml(p.parcelId)}" data-photo-id="${escapeHtml(p.id)}" placeholder="文章を入力..." ${isEditable?'':'readonly'}>${escapeHtml(commentVal)}</textarea>
       </div>
     `;
 
@@ -1713,8 +1020,8 @@ function renderInstaFeed(){
     if(im.complete&&im.naturalWidth)im.classList.add('loaded');
     if(!isInitial)deferred.push(im);
 
-    const ta=post.querySelector('.ig-comment-editor');
-    autoResizeTextarea(ta,isExp);
+    const viewEl=post.querySelector('.ig-caption-view');
+    renderCaptionDisplay(viewEl,commentVal,p.isStatic);
 
     stream.appendChild(post);
   });
@@ -1738,6 +1045,18 @@ function renderInstaFeed(){
 }
 
 $('insta-stream').addEventListener('click',e=>{
+  const toggleBtn=e.target.closest('[data-ig-toggle]');
+  if(toggleBtn){
+    e.stopPropagation();
+    const pid=toggleBtn.dataset.igToggle;
+    const area=toggleBtn.closest('.ig-caption-area');
+    const viewEl=area&&area.querySelector('.ig-caption-view');
+    const ta=area&&area.querySelector('.ig-caption-input');
+    if(expandedComments.has(pid))expandedComments.delete(pid);
+    else expandedComments.add(pid);
+    if(viewEl&&ta)renderCaptionDisplay(viewEl,ta.value,ta.readOnly);
+    return;
+  }
   const jumpEl=e.target.closest('[data-ig-jump]');
   if(jumpEl){
     const pid=jumpEl.dataset.igJump;
@@ -1750,60 +1069,26 @@ $('insta-stream').addEventListener('click',e=>{
   const lbEl=e.target.closest('[data-ig-lb]');
   if(lbEl){
     const idx=Number(lbEl.dataset.igLb);
-    if(!Number.isNaN(idx))openInstaLB(idx);
+    if(!Number.isNaN(idx))openGridLB(idx);
     return;
   }
-  const moreBtn=e.target.closest('[data-ig-more]');
-  if(moreBtn){
-    const pid=moreBtn.dataset.igMore;
-    const post=moreBtn.closest('.ig-post');
-    const ta=post&&post.querySelector('.ig-comment-editor');
-    if(expandedComments.has(pid)){
-      expandedComments.delete(pid);
-      moreBtn.textContent='続きを読む';
-      autoResizeTextarea(ta,false);
-    }else{
-      expandedComments.add(pid);
-      moreBtn.textContent='折りたたむ';
-      autoResizeTextarea(ta,true);
-    }
+  const capView=e.target.closest('.ig-caption-view');
+  if(capView&&!capView.classList.contains('is-readonly')){
+    openCaptionEditor(capView.closest('.ig-caption-area'));
   }
 });
 
 $('insta-stream').addEventListener('input',e=>{
-  const ta=e.target.closest('.ig-comment-editor');
+  const ta=e.target.closest('.ig-caption-input');
   if(!ta||ta.readOnly)return;
-  const parcelId=ta.dataset.parcelId;
-  const photoId=ta.dataset.photoId;
-  setPhotoComment(parcelId,photoId,ta.value);
-  autoResizeTextarea(ta,true);
-  const post=ta.closest('.ig-post');
-  const st=post&&post.querySelector('[data-ig-status]');
-  if(st)st.textContent='保存中...';
-  clearTimeout(ta._stTimer);
-  ta._stTimer=setTimeout(()=>{
-    if(st)st.textContent=ta.value.trim()?'保存済み':'タップして文章を入力';
-  },450);
-});
-
-$('insta-stream').addEventListener('focusin',e=>{
-  const ta=e.target.closest('.ig-comment-editor');
-  if(!ta)return;
-  autoResizeTextarea(ta,true);
+  setPhotoComment(ta.dataset.parcelId,ta.dataset.photoId,ta.value);
+  autoResizeCaptionInput(ta);
 });
 
 $('insta-stream').addEventListener('focusout',e=>{
-  const ta=e.target.closest('.ig-comment-editor');
+  const ta=e.target.closest('.ig-caption-input');
   if(!ta)return;
-  const photoId=ta.dataset.photoId;
-  const post=ta.closest('.ig-post');
-  const moreBtn=post&&post.querySelector('[data-ig-more]');
-  const nowLong=isLongComment(ta.value);
-  if(moreBtn){
-    moreBtn.style.display=nowLong?'':'none';
-    moreBtn.textContent=expandedComments.has(photoId)?'折りたたむ':'続きを読む';
-  }
-  autoResizeTextarea(ta,expandedComments.has(photoId));
+  closeCaptionEditor(ta.closest('.ig-caption-area'));
 });
 
 function setGridMode(on){
@@ -1971,8 +1256,6 @@ async function applyPhotoCrop(photoId,cropStr,alsoAddToParcel){
   renderCropStrip();
   feed();
   render();
-  if(gridMode)renderAllGrid();
-  if(instaMode)renderInstaFeed();
   if(!clean)toast('写真の作物登録を解除しました');
   else if(alsoAddToParcel)toast(`「${clean}」を写真と農地の作物名に登録しました`);
   else toast(`「${clean}」を写真に登録しました`);
@@ -2029,47 +1312,26 @@ function openCropPicker(photoId,anchorEl){
   cp.style.top=top+'px';
 
   cp.querySelector('#cp-close').onclick=closeCropPicker;
-  cp.querySelectorAll('[data-cp-pick]').forEach(b=>{
-    b.onclick=()=>applyPhotoCrop(photoId,b.dataset.cpPick,false);
-  });
-  cp.querySelectorAll('[data-cp-pick-other]').forEach(b=>{
-    b.onclick=()=>applyPhotoCrop(photoId,b.dataset.cpPickOther,true);
-  });
+  cp.querySelectorAll('[data-cp-pick]').forEach(b=>b.onclick=()=>applyPhotoCrop(photoId,b.dataset.cpPick,false));
+  cp.querySelectorAll('[data-cp-pick-other]').forEach(b=>b.onclick=()=>applyPhotoCrop(photoId,b.dataset.cpPickOther,true));
   const restBtn=cp.querySelector('[data-cp-restore]');
-  if(restBtn){
-    restBtn.onclick=()=>applyPhotoCrop(photoId,restBtn.dataset.cpRestore,true);
-  }
+  if(restBtn)restBtn.onclick=()=>applyPhotoCrop(photoId,restBtn.dataset.cpRestore,true);
   const inp=cp.querySelector('#cp-custom');
-  cp.querySelector('#cp-save-both').onclick=()=>{
-    const v=inp.value.trim();
-    if(!v)return toast('作物名を入力してください');
-    applyPhotoCrop(photoId,v,true);
-  };
-  cp.querySelector('#cp-save-photo').onclick=()=>{
-    const v=inp.value.trim();
-    if(!v)return toast('作物名を入力してください');
-    applyPhotoCrop(photoId,v,false);
-  };
+  cp.querySelector('#cp-save-both').onclick=()=>{const v=inp.value.trim();if(!v)return toast('作物名を入力してください');applyPhotoCrop(photoId,v,true)};
+  cp.querySelector('#cp-save-photo').onclick=()=>{const v=inp.value.trim();if(!v)return toast('作物名を入力してください');applyPhotoCrop(photoId,v,false)};
   const clrBtn=cp.querySelector('#cp-clear');
   if(clrBtn)clrBtn.onclick=()=>applyPhotoCrop(photoId,'',false);
 }
+
 async function commitCardDate(wrap){
   if(!wrap||!sel||wrap.dataset.saving==='1')return;
   const yIn=wrap.querySelector('.dy'),mIn=wrap.querySelector('.dm'),dIn=wrap.querySelector('.dd');
   const yRaw=yIn.value.replace(/\D/g,''),mRaw=mIn.value.replace(/\D/g,''),dRaw=dIn.value.replace(/\D/g,'');
   const orig=(wrap.dataset.orig||'').split('-');
-  if(yRaw.length!==4){
-    toast('年は数字4文字で入力してください');
-    if(orig.length===3){yIn.value=orig[0];mIn.value=orig[1];dIn.value=orig[2]}
-    return;
-  }
+  if(yRaw.length!==4){toast('年は数字4文字で入力してください');if(orig.length===3){yIn.value=orig[0];mIn.value=orig[1];dIn.value=orig[2]}return}
   const yNum=Number(yRaw),mNum=Number(mRaw),dNum=Number(dRaw);
   const maxDay=(yNum&&mNum>=1&&mNum<=12)?new Date(yNum,mNum,0).getDate():31;
-  if(!mRaw||mNum<1||mNum>12||!dRaw||dNum<1||dNum>maxDay){
-    toast('正しい月日を入力してください');
-    if(orig.length===3){yIn.value=orig[0];mIn.value=orig[1];dIn.value=orig[2]}
-    return;
-  }
+  if(!mRaw||mNum<1||mNum>12||!dRaw||dNum<1||dNum>maxDay){toast('正しい月日を入力してください');if(orig.length===3){yIn.value=orig[0];mIn.value=orig[1];dIn.value=orig[2]}return}
   const normKey=`${yNum}-${mNum}-${dNum}`;
   yIn.value=String(yNum);mIn.value=String(mNum);dIn.value=String(dNum);
   if(normKey===wrap.dataset.orig)return;
@@ -2081,13 +1343,9 @@ async function commitCardDate(wrap){
       ph.exifMissing=false;
       await saveState();
       feed();
-      if(gridMode)renderAllGrid();
-      if(instaMode)renderInstaFeed();
       toast('投稿日を変更しました');
     }
-  }finally{
-    wrap.dataset.saving='0';
-  }
+  }finally{wrap.dataset.saving='0'}
 }
 
 $('feed').addEventListener('input',e=>{
@@ -2096,32 +1354,21 @@ $('feed').addEventListener('input',e=>{
   const clean=inp.value.replace(/\D/g,'').slice(0,max);
   if(inp.value!==clean)inp.value=clean;
 });
-
-$('feed').addEventListener('focusin',e=>{
-  const inp=e.target.closest('.card-date-wrap input');
-  if(inp)requestAnimationFrame(()=>inp.select());
-});
-
+$('feed').addEventListener('focusin',e=>{const inp=e.target.closest('.card-date-wrap input');if(inp)requestAnimationFrame(()=>inp.select())});
 $('feed').addEventListener('keydown',async e=>{
   const inp=e.target.closest('.card-date-wrap input');if(!inp)return;
   if(e.key==='Enter'){
     e.preventDefault();
     const wrap=inp.closest('.card-date-wrap');
-    if(inp.classList.contains('dy')){
-      const m=wrap.querySelector('.dm');m.focus();m.select();
-    }else if(inp.classList.contains('dm')){
-      const d=wrap.querySelector('.dd');d.focus();d.select();
-    }else if(inp.classList.contains('dd')){
-      await commitCardDate(wrap);
-      inp.blur();
-    }
+    if(inp.classList.contains('dy')){const m=wrap.querySelector('.dm');m.focus();m.select()}
+    else if(inp.classList.contains('dm')){const d=wrap.querySelector('.dd');d.focus();d.select()}
+    else if(inp.classList.contains('dd')){await commitCardDate(wrap);inp.blur()}
   }
 });
-
 $('feed').addEventListener('change',async e=>{
   const t=e.target.closest('.card-date');if(!t||!sel||!t.value)return;
   const r=rec(sel),ph=r.photos.find(p=>p.id===t.dataset.id);
-  if(ph){ph.postedAt=jpDate(t.value);ph.exifMissing=false;await saveState();feed();if(gridMode)renderAllGrid();if(instaMode)renderInstaFeed();toast('投稿日を変更しました')}
+  if(ph){ph.postedAt=jpDate(t.value);ph.exifMissing=false;await saveState();feed();toast('投稿日を変更しました')}
 });
 $('feed').addEventListener('click',async e=>{
   const t=e.target.closest('[data-a]');if(!t||!sel)return;
@@ -2131,19 +1378,14 @@ $('feed').addEventListener('click',async e=>{
 });
 document.addEventListener('click',e=>{
   const cp=$('crop-picker');
-  if(cp&&!cp.classList.contains('hidden')&&!e.target.closest('#crop-picker')&&!e.target.closest('[data-a="crop"]')){
-    closeCropPicker();
-  }
+  if(cp&&!cp.classList.contains('hidden')&&!e.target.closest('#crop-picker')&&!e.target.closest('[data-a="crop"]'))closeCropPicker();
 });
 function meta(){
   if(!sel)return;
   const r=rec(sel);
   r.lotNumber=$('lot').value.trim();
   r.cropName=$('crop').value.trim();
-  renderCropStrip();
-  feed();
-  render();
-  saveSoon();
+  renderCropStrip();feed();render();saveSoon();
 }
 $('lot').addEventListener('input',meta);$('crop').addEventListener('input',meta);
 $('i-photos').addEventListener('change',async e=>{
@@ -2164,12 +1406,7 @@ $('i-photos').addEventListener('change',async e=>{
       r.photos.unshift({id:'PH_'+Date.now()+Math.random().toString(36).slice(2,7),dataUrl:url,assetId:aid,local:loc,postedAt:when,exifMissing:!hasExif,comment:'',timestamp:Date.now()});
     }
     await saveState();feed();render();
-    if(gridMode)renderAllGrid();
-    if(instaMode)renderInstaFeed();
-    const msg=missCount
-      ? `${files.length}枚追加（撮影日取得：${exifCount}枚／取得不可：${missCount}枚 → 今日の日付を設定）`
-      : `${files.length}枚の写真を追加しました（${exifCount}枚すべて撮影日を自動取得）`;
-    toast(msg);
+    toast(missCount?`${files.length}枚追加（撮影日取得：${exifCount}枚／取得不可：${missCount}枚）`:`${files.length}枚の写真を追加しました`);
   }catch(x){toast('画像の読み込みに失敗しました')}finally{e.target.value=''}
 });
 function step(d){const ps=allParcels(),i=ps.findIndex(p=>p.id===sel);selectP(ps[(i<0?0:(i+d+ps.length)%ps.length)].id,true)}
@@ -2189,33 +1426,21 @@ function syncLbTitle(targetId,code,lot,crop){
   lbTargetParcelId=targetId||null;
   const el=$('lb-t');
   const head=[code,lot].filter(Boolean).join(' ');
-  const full=(head||targetId||'')+(crop?'（'+crop+'）':'');
-  el.textContent=full;
+  el.textContent=(head||targetId||'')+(crop?'（'+crop+'）':'');
   if(lbTargetParcelId&&getP(lbTargetParcelId)){
-    el.classList.add('jumpable');
-    el.setAttribute('role','button');
-    el.setAttribute('tabindex','0');
-    el.title='タップ／クリックでこの農地のサムネイルに移動';
+    el.classList.add('jumpable');el.setAttribute('role','button');el.setAttribute('tabindex','0');
   }else{
-    el.classList.remove('jumpable');
-    el.removeAttribute('role');
-    el.removeAttribute('tabindex');
-    el.removeAttribute('title');
+    el.classList.remove('jumpable');el.removeAttribute('role');el.removeAttribute('tabindex');
   }
 }
 function jumpFromLbToParcel(){
   if(!lbTargetParcelId)return;
-  const targetId=lbTargetParcelId;
-  const p=getP(targetId);
-  if(!p)return;
-  const wasGrid=gridMode;
-  const wasInsta=instaMode;
+  const targetId=lbTargetParcelId,p=getP(targetId);if(!p)return;
+  const wasGrid=gridMode,wasInsta=instaMode;
   closeLB(false);
   if(wasGrid)setGridMode(false);
   if(wasInsta)setInstaMode(false);
   selectP(targetId,window.USE_SHEET?true:false);
-  const label=(S.records[targetId]&&S.records[targetId].lotNumber)||p.defaultLot||p.code;
-  toast((p.code?p.code+' ':'')+label+' のサムネイルに移動しました');
 }
 const fmtISO=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 function getPeriodRange(mode){
@@ -2238,12 +1463,10 @@ function setLBPeriod(mode,label){
   document.querySelectorAll('#lb-pmenu button').forEach(b=>b.classList.toggle('on',b.dataset.p===mode));
   $('lb-pmenu').classList.add('hidden');
   if((gridMode||instaMode)&&lbIsGrid){
-    const rng=getPeriodRange(mode);
-    const all=allPhotosLatestFirst();
+    const rng=getPeriodRange(mode),all=allPhotosLatestFirst();
     const list=!rng?all:all.filter(p=>{const d=toISO(p.postedAt);return d>=rng.from&&d<=rng.to});
     if(list.length){lbP=list;lbI=0;updGridLB();return}
-    toast(label+'に該当する写真がありません');
-    return;
+    return toast(label+'に該当する写真がありません');
   }
   if(!sel)return toast(label+'に該当する写真がありません');
   let cur=filteredPhotos(sel);
@@ -2272,47 +1495,24 @@ const isMobGridLB=()=>window.innerWidth<768&&(gridMode||instaMode)&&lbIsGrid;
 function syncLbGuide(){
   const g=$('lb-guide');
   if(!g)return;
-  g.textContent=isMobGridLB()
-    ?'上スワイプ: 次へ ／ 下スワイプ: 前へ ／ 右スワイプ: 一覧に戻る'
-    :'左右ボタン／スワイプで切替';
+  g.textContent=isMobGridLB()?'上スワイプ: 次へ ／ 下スワイプ: 前へ ／ 右スワイプ: 一覧に戻る':'左右ボタン／スワイプで切替';
 }
 function openLB(i){
   lbPeriod='all';$('lb-pbtn').textContent='全期間 ▾';$('lb-pbtn').classList.remove('active');
   document.querySelectorAll('#lb-pmenu button').forEach(b=>b.classList.toggle('on',b.dataset.p==='all'));
   $('lb-pmenu').classList.add('hidden');
-  lbIsGrid=false;
-  syncLbGuide();
+  lbIsGrid=false;syncLbGuide();
   lbP=photosOf(sel);if(!lbP.length)return;lbI=Math.min(i,lbP.length-1);updLB();
   const lb=$('lb');lb.classList.remove('hidden','closing');lb.style.opacity='0';lb.style.transform='';
   requestAnimationFrame(()=>requestAnimationFrame(()=>{lb.style.opacity=''}));
 }
 function openGridLB(idx){
-  const list=allPhotosLatestFirst();
-  if(!list.length)return;
-  lbIsGrid=true;
-  syncLbGuide();
+  const list=allPhotosLatestFirst();if(!list.length)return;
+  lbIsGrid=true;syncLbGuide();
   lbPeriod='all';$('lb-pbtn').textContent='全期間 ▾';$('lb-pbtn').classList.remove('active');
   document.querySelectorAll('#lb-pmenu button').forEach(b=>b.classList.toggle('on',b.dataset.p==='all'));
   $('lb-pmenu').classList.add('hidden');
-  gridPhotos=list;
-  lbP=list;
-  lbI=Math.max(0,Math.min(idx,list.length-1));
-  updGridLB();
-  const lb=$('lb');lb.classList.remove('hidden','closing');lb.style.opacity='0';lb.style.transform='';
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{lb.style.opacity=''}));
-}
-function openInstaLB(idx){
-  const list=allPhotosLatestFirst();
-  if(!list.length)return;
-  lbIsGrid=true;
-  syncLbGuide();
-  lbPeriod='all';$('lb-pbtn').textContent='全期間 ▾';$('lb-pbtn').classList.remove('active');
-  document.querySelectorAll('#lb-pmenu button').forEach(b=>b.classList.toggle('on',b.dataset.p==='all'));
-  $('lb-pmenu').classList.add('hidden');
-  instaPhotos=list;
-  lbP=list;
-  lbI=Math.max(0,Math.min(idx,list.length-1));
-  updGridLB();
+  gridPhotos=list;instaPhotos=list;lbP=list;lbI=Math.max(0,Math.min(idx,list.length-1));updGridLB();
   const lb=$('lb');lb.classList.remove('hidden','closing');lb.style.opacity='0';lb.style.transform='';
   requestAnimationFrame(()=>requestAnimationFrame(()=>{lb.style.opacity=''}));
 }
@@ -2320,40 +1520,20 @@ function closeLB(slideDown){const lb=$('lb');if(lb.classList.contains('hidden')|
 function updLB(){
   resetLBView(false);
   const p=lbP[lbI],r=rec(sel),cp=getP(sel);
-  const code=cp?cp.code:'';
-  const lot=r.lotNumber||(cp?cp.defaultLot:sel);
-  const dispCrop=effectivePhotoCrop(p,r.cropName||'');
-  syncLbTitle(sel,code,lot,dispCrop);
-  $('lb-d').textContent='投稿日: '+fmtDate(p.postedAt);
-  $('lb-c').textContent=(lbI+1)+' / '+lbP.length;
-  $('lb-i').src=p.dataUrl;
+  syncLbTitle(sel,cp?cp.code:'',r.lotNumber||(cp?cp.defaultLot:sel),effectivePhotoCrop(p,r.cropName||''));
+  $('lb-d').textContent='投稿日: '+fmtDate(p.postedAt);$('lb-c').textContent=(lbI+1)+' / '+lbP.length;$('lb-i').src=p.dataUrl;
 }
 function updGridLB(){
   resetLBView(false);
   const p=lbP[lbI];if(!p)return;
-  const pid=p.parcelId||null;
-  const cp=pid?getP(pid):null;
-  const r=(pid&&S.records[pid])?S.records[pid]:{};
-  const code=cp?cp.code:(p.parcelCode||'');
-  const lot=r.lotNumber||(cp?cp.defaultLot:p.parcelLabel)||pid||'';
-  const parcelCrop=r.cropName!==undefined?r.cropName:(p.parcelCropName||'');
-  const dispCrop=effectivePhotoCrop(p,parcelCrop);
-  syncLbTitle(pid,code,lot,dispCrop);
-  $('lb-d').textContent='投稿日: '+fmtDate(p.postedAt);
-  $('lb-c').textContent=(lbI+1)+' / '+lbP.length;
-  $('lb-i').src=p.dataUrl;
+  const pid=p.parcelId||null,cp=pid?getP(pid):null,r=(pid&&S.records[pid])?S.records[pid]:{};
+  syncLbTitle(pid,cp?cp.code:(p.parcelCode||''),r.lotNumber||(cp?cp.defaultLot:p.parcelLabel)||pid||'',effectivePhotoCrop(p,r.cropName!==undefined?r.cropName:(p.parcelCropName||'')));
+  $('lb-d').textContent='投稿日: '+fmtDate(p.postedAt);$('lb-c').textContent=(lbI+1)+' / '+lbP.length;$('lb-i').src=p.dataUrl;
 }
 const lbStep=d=>{
-  if((gridMode||instaMode)&&lbIsGrid){
-    if(!lbP.length)return;
-    lbI=(lbI+d+lbP.length)%lbP.length;
-    updGridLB();
-    return;
-  }
-  const ni=lbI+d;
-  if(ni>=0&&ni<lbP.length){lbI=ni;updLB();return}
-  const ps=allParcels(),ci=ps.findIndex(p=>p.id===sel);
-  if(ci<0)return;
+  if((gridMode||instaMode)&&lbIsGrid){if(!lbP.length)return;lbI=(lbI+d+lbP.length)%lbP.length;updGridLB();return}
+  const ni=lbI+d;if(ni>=0&&ni<lbP.length){lbI=ni;updLB();return}
+  const ps=allParcels(),ci=ps.findIndex(p=>p.id===sel);if(ci<0)return;
   for(let k=1;k<=ps.length;k++){
     const np=ps[(ci+d*k+ps.length*k)%ps.length],nph=filteredPhotos(np.id);
     if(nph.length){selectP(np.id,false);lbP=nph;lbI=d>0?0:nph.length-1;updLB();return}
@@ -2370,68 +1550,32 @@ $('lb-s').addEventListener('wheel',e=>{
   const r=$('lb-s').getBoundingClientRect(),cx=e.clientX-(r.left+r.width/2),cy=e.clientY-(r.top+r.height/2);
   const f=Math.pow(1.0025,-Math.max(-200,Math.min(200,e.deltaY)));
   const ns=Math.min(Math.max(lbS*f,1),5);
-  if(ns<=1.01){lbS=1;lbX=0;lbY=0}
-  else{const k=ns/lbS;lbX=cx-(cx-lbX)*k;lbY=cy-(cy-lbY)*k;lbS=ns}
+  if(ns<=1.01){lbS=1;lbX=0;lbY=0}else{const k=ns/lbS;lbX=cx-(cx-lbX)*k;lbY=cy-(cy-lbY)*k;lbS=ns}
   applyLB();
 },{passive:false});
-$('lb-i').addEventListener('mousedown',e=>{
-  if(e.button!==0||lbS<=1.01)return;
-  e.preventDefault();lbDrag=true;tx0=e.clientX;ty0=e.clientY;lbPos0={x:lbX,y:lbY};
-});
-addEventListener('mousemove',e=>{
-  if(!lbDrag)return;
-  lbX=lbPos0.x+(e.clientX-tx0);lbY=lbPos0.y+(e.clientY-ty0);applyLB();
-});
+$('lb-i').addEventListener('mousedown',e=>{if(e.button!==0||lbS<=1.01)return;e.preventDefault();lbDrag=true;tx0=e.clientX;ty0=e.clientY;lbPos0={x:lbX,y:lbY}});
+addEventListener('mousemove',e=>{if(!lbDrag)return;lbX=lbPos0.x+(e.clientX-tx0);lbY=lbPos0.y+(e.clientY-ty0);applyLB()});
 addEventListener('mouseup',()=>{lbDrag=false});
-$('lb-s').addEventListener('dblclick',e=>{
-  if(e.target.closest('button'))return;
-  e.preventDefault();e.stopPropagation();resetLBView(true);
-});
+$('lb-s').addEventListener('dblclick',e=>{if(e.target.closest('button'))return;e.preventDefault();e.stopPropagation();resetLBView(true)});
 $('lb-s').addEventListener('touchstart',e=>{
-  if(e.target.closest('button'))return;
-  $('lb-i').style.transition='';
-  if(e.touches.length>=2){
-    lbHadMulti=true;
-    const a=e.touches.item(0),b=e.touches.item(1);
-    lbPinchD=Math.hypot(b.clientX-a.clientX,b.clientY-a.clientY);lbPinchS=lbS;
-    lbPan0={x:(a.clientX+b.clientX)/2,y:(a.clientY+b.clientY)/2};lbPos0={x:lbX,y:lbY};return;
-  }
-  if(e.touches.length===1){
-    const t0=e.touches.item(0);tx0=t0.clientX;ty0=t0.clientY;ldx=0;ldy=0;ldir=null;lbPos0={x:lbX,y:lbY};
-    if(lbS<=1.01&&!lbHadMulti)$('lb').style.transition='none';
-  }
+  if(e.target.closest('button'))return;$('lb-i').style.transition='';
+  if(e.touches.length>=2){lbHadMulti=true;const a=e.touches.item(0),b=e.touches.item(1);lbPinchD=Math.hypot(b.clientX-a.clientX,b.clientY-a.clientY);lbPinchS=lbS;lbPan0={x:(a.clientX+b.clientX)/2,y:(a.clientY+b.clientY)/2};lbPos0={x:lbX,y:lbY};return}
+  if(e.touches.length===1){const t0=e.touches.item(0);tx0=t0.clientX;ty0=t0.clientY;ldx=0;ldy=0;ldir=null;lbPos0={x:lbX,y:lbY};if(lbS<=1.01&&!lbHadMulti)$('lb').style.transition='none'}
 },{passive:true});
 $('lb-s').addEventListener('touchmove',e=>{
   if(e.target.closest('button'))return;
-  if(e.touches.length>=2){
-    lbHadMulti=true;
-    const a=e.touches.item(0),b=e.touches.item(1);
-    const d=Math.hypot(b.clientX-a.clientX,b.clientY-a.clientY);
-    if(lbPinchD>0)lbS=Math.min(Math.max(lbPinchS*(d/lbPinchD),1),5);
-    const cx=(a.clientX+b.clientX)/2,cy=(a.clientY+b.clientY)/2;
-    if(lbS<=1.01){lbX=0;lbY=0}else{lbX=lbPos0.x+(cx-lbPan0.x);lbY=lbPos0.y+(cy-lbPan0.y)}
-    applyLB();return;
-  }
-  if(e.touches.length===1&&!lbHadMulti){
-    const t0=e.touches.item(0);ldx=t0.clientX-tx0;ldy=t0.clientY-ty0;
-    if(lbS>1.01){lbX=lbPos0.x+ldx;lbY=lbPos0.y+ldy;applyLB();return}
-    if(!ldir&&(Math.abs(ldx)>12||Math.abs(ldy)>12))ldir=Math.abs(ldx)>Math.abs(ldy)?'x':'y';
-    if(!isMobGridLB()&&ldir==='y'&&ldy>0){$('lb').style.transform=`translateY(${ldy}px)`;$('lb').style.opacity=String(Math.max(0.35,1-ldy/320))}
-  }
+  if(e.touches.length>=2){lbHadMulti=true;const a=e.touches.item(0),b=e.touches.item(1);const d=Math.hypot(b.clientX-a.clientX,b.clientY-a.clientY);if(lbPinchD>0)lbS=Math.min(Math.max(lbPinchS*(d/lbPinchD),1),5);const cx=(a.clientX+b.clientX)/2,cy=(a.clientY+b.clientY)/2;if(lbS<=1.01){lbX=0;lbY=0}else{lbX=lbPos0.x+(cx-lbPan0.x);lbY=lbPos0.y+(cy-lbPan0.y)}applyLB();return}
+  if(e.touches.length===1&&!lbHadMulti){const t0=e.touches.item(0);ldx=t0.clientX-tx0;ldy=t0.clientY-ty0;if(lbS>1.01){lbX=lbPos0.x+ldx;lbY=lbPos0.y+ldy;applyLB();return}if(!ldir&&(Math.abs(ldx)>12||Math.abs(ldy)>12))ldir=Math.abs(ldx)>Math.abs(ldy)?'x':'y';if(!isMobGridLB()&&ldir==='y'&&ldy>0){$('lb').style.transform=`translateY(${ldy}px)`;$('lb').style.opacity=String(Math.max(0.35,1-ldy/320))}}
 },{passive:false});
-  $('lb-s').addEventListener('touchend',e=>{
-  if(e.target.closest('button'))return;
-  $('lb').style.transition='';
+$('lb-s').addEventListener('touchend',e=>{
+  if(e.target.closest('button'))return;$('lb').style.transition='';
   if(lbS<=1.02){lbS=1;lbX=0;lbY=0;applyLB()}
   if(e.touches.length>0)return;
   if(lbHadMulti){lbHadMulti=false;$('lb').style.transform='';$('lb').style.opacity='';return}
   if(lbS>1.01){$('lb').style.transform='';$('lb').style.opacity='';if(Math.abs(ldx)<10&&Math.abs(ldy)<10){const now=Date.now();if(now-lbLastTap<300){resetLBView(true);lbLastTap=0}else{lbLastTap=now}}return}
   $('lb').style.transform='';$('lb').style.opacity='';
-  if(isMobGridLB()){
-    if(ldir==='x'&&ldx>65){closeLB(false);return}
-    if(ldir==='y'&&ldy<-55){lbStep(1);return}
-    if(ldir==='y'&&ldy>55){lbStep(-1);return}
-  }else if(ldir==='y'&&ldy>95){closeLB(true);return}
+  if(isMobGridLB()){if(ldir==='x'&&ldx>65){closeLB(false);return}if(ldir==='y'&&ldy<-55){lbStep(1);return}if(ldir==='y'&&ldy>55){lbStep(-1);return}}
+  else if(ldir==='y'&&ldy>95){closeLB(true);return}
   if(ldir==='x'&&Math.abs(ldx)>55)lbStep(ldx>0?-1:1);
   else if(Math.abs(ldx)<10&&Math.abs(ldy)<10){const now=Date.now();if(now-lbLastTap<300){resetLBView(true);lbLastTap=0}else{lbLastTap=now}}
 });
@@ -2443,24 +1587,10 @@ $('d-undo').onclick=()=>{draft.pop();renderDraft()};
 $('d-ok').onclick=async()=>{if(draft.length<3)return toast('3点以上タップして囲んでください');const id='C_'+Date.now(),pts=str(draft);S.customParcels.push({id,defaultLot:'区画 #00',points:pts});await saveState();setDraw(false);selectP(id,false);const added=getP(id);toast('新しい農地区画（'+(added?added.code:'')+'）を追加しました')};
 
 function syncAdjLayout(){
-  const ap=$('adj-panel');
-  const mapSec=$('map-section');
-  const mainEl=document.querySelector('main');
-  const isMob=window.innerWidth<768;
+  const ap=$('adj-panel'),mapSec=$('map-section'),mainEl=document.querySelector('main'),isMob=window.innerWidth<768;
   document.body.classList.toggle('adj-active',adjusting&&isMob);
-  if(adjusting&&isMob){
-    if(ap.parentElement!==mainEl){
-      mainEl.insertBefore(ap,panel);
-    }
-    ap.classList.add('adj-mobile-dock');
-  }else{
-    ap.classList.remove('adj-mobile-dock','collapsed');
-    const foldBtn=$('adj-fold');
-    if(foldBtn)foldBtn.textContent='たたむ';
-    if(ap.parentElement!==mapSec){
-      mapSec.appendChild(ap);
-    }
-  }
+  if(adjusting&&isMob){if(ap.parentElement!==mainEl)mainEl.insertBefore(ap,panel);ap.classList.add('adj-mobile-dock')}
+  else{ap.classList.remove('adj-mobile-dock','collapsed');const foldBtn=$('adj-fold');if(foldBtn)foldBtn.textContent='たたむ';if(ap.parentElement!==mapSec)mapSec.appendChild(ap)}
 }
 function setAdj(on){
   if(on&&(gridMode||instaMode)){setGridMode(false);setInstaMode(false)}
@@ -2468,16 +1598,9 @@ function setAdj(on){
   $('adj-panel').classList.toggle('hidden',!on);$('layer').parentElement.classList.toggle('adj',on);$('b-adj').classList.toggle('on',on);
   if(on){panel.classList.remove('open');$('hint').classList.add('hidden');if(innerWidth>=768)panel.classList.add('hidden')}
   else{panel.classList.remove('hidden');if(!sel)$('hint').classList.remove('hidden')}
-  syncAdjLayout();
-  setTimeout(()=>{fit(false);render()},40);
+  syncAdjLayout();setTimeout(()=>{fit(false);render()},40);
 }
-$('adj-fold').addEventListener('click',e=>{
-  e.stopPropagation();
-  const ap=$('adj-panel'),btn=$('adj-fold');
-  const isCol=ap.classList.toggle('collapsed');
-  btn.textContent=isCol?'開く':'たたむ';
-  setTimeout(()=>{fit(false);renderHandles()},30);
-});
+$('adj-fold').addEventListener('click',e=>{e.stopPropagation();const ap=$('adj-panel'),btn=$('adj-fold');const isCol=ap.classList.toggle('collapsed');btn.textContent=isCol?'開く':'たたむ';setTimeout(()=>{fit(false);renderHandles()},30)});
 $('b-adj').onclick=()=>setAdj(!adjusting);
 $('b-num').onclick=()=>{showNum=!showNum;$('b-num').classList.toggle('on',showNum);render()};
 function updAdj(){
@@ -2527,15 +1650,9 @@ $('i-import').addEventListener('change',async e=>{
 });
 const pickMap=()=>$('i-map').click();$('b-remap').onclick=pickMap;$('b-upload').onclick=pickMap;
 $('i-map').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;if(!ASS){toast('地図の保存には編集権限が必要です');return}(async()=>{try{const u=(await ASS.upload(f)).url;S.customMapDataUrl=u;$('mapimg').src=u;await saveState();toast('地図を保存しました（以後は自動表示）')}catch(x){toast('地図の保存に失敗しました')}})()});
-$('mapimg').addEventListener('error',()=>{
-  if(window._appLoaded && !S.customMapDataUrl && !$('mapimg').naturalWidth){
-    $('upload').classList.remove('hidden');
-  }
-});
-$('mapimg').addEventListener('load',()=>{
-  $('upload').classList.add('hidden');
-  updAdj();
-});
+$('mapimg').addEventListener('error',()=>{if(window._appLoaded&&!S.customMapDataUrl&&!$('mapimg').naturalWidth)$('upload').classList.remove('hidden')});
+$('mapimg').addEventListener('load',()=>{$('upload').classList.add('hidden');updAdj()});
+
 function detectDevice(){
   const w=window.innerWidth,h=window.innerHeight;
   const isTouch=('ontouchstart' in window)||(navigator.maxTouchPoints>0)||window.matchMedia('(pointer:coarse)').matches;
@@ -2543,17 +1660,12 @@ function detectDevice(){
   const isIpad=/iPad/.test(ua)||(/Macintosh/.test(ua)&&isTouch);
   const isAndroidTab=/Android/.test(ua)&&!/Mobile/.test(ua);
   const isMobPhone=/iPhone|iPod|BlackBerry|IEMobile|Opera Mini/.test(ua)||(/Android/.test(ua)&&/Mobile/.test(ua));
-
   let dev='pc';
   if(isMobPhone||(isTouch&&Math.min(w,h)<600))dev='mobile';
   else if(isIpad||isAndroidTab||(isTouch&&Math.min(w,h)>=600))dev='tablet';
-
   const useSheet=(dev==='mobile')||(dev==='tablet'&&w<h)||(w<768);
   let sz='md';
-  if(w<380)sz='xs';
-  else if(w<768)sz='sm';
-  else if(w>=1440)sz='lg';
-
+  if(w<380)sz='xs';else if(w<768)sz='sm';else if(w>=1440)sz='lg';
   const b=document.body;
   b.classList.remove('dev-mobile','dev-tablet','dev-pc','is-touch','layout-sheet','layout-split','sz-xs','sz-sm','sz-md','sz-lg');
   b.classList.add('dev-'+dev,useSheet?'layout-sheet':'layout-split','sz-'+sz);
@@ -2564,60 +1676,14 @@ detectDevice();
 window.addEventListener('resize',()=>{detectDevice();syncAdjLayout();fit(false)});
 window.addEventListener('orientationchange',()=>setTimeout(()=>{detectDevice();syncAdjLayout();fit(false)},100));
 
-let fStartY=0,fStartX=0;
-$('feed').addEventListener('touchstart',e=>{
-  if(innerWidth>=768||e.touches.length!==1)return;
-  fStartX=e.touches[0].clientX;
-  fStartY=e.touches[0].clientY;
-},{passive:true});
-$('feed').addEventListener('touchmove',e=>{
-  if(innerWidth>=768||e.touches.length!==1)return;
-  const dy=e.touches[0].clientY-fStartY;
-  const dx=e.touches[0].clientX-fStartX;
-  if($('feed').scrollTop<=0&&dy>0&&Math.abs(dy)>Math.abs(dx)&&e.cancelable){
-    e.preventDefault();
-  }
-},{passive:false});
-$('all-grid-view').addEventListener('touchstart',e=>{
-  if(innerWidth>=768||e.touches.length!==1)return;
-  fStartX=e.touches[0].clientX;
-  fStartY=e.touches[0].clientY;
-},{passive:true});
-$('all-grid-view').addEventListener('touchmove',e=>{
-  if(innerWidth>=768||e.touches.length!==1)return;
-  const dy=e.touches[0].clientY-fStartY;
-  const dx=e.touches[0].clientX-fStartX;
-  if($('all-grid-view').scrollTop<=0&&dy>0&&Math.abs(dy)>Math.abs(dx)&&e.cancelable){
-    e.preventDefault();
-  }
-},{passive:false});
-$('insta-feed-view').addEventListener('touchstart',e=>{
-  if(innerWidth>=768||e.touches.length!==1)return;
-  fStartX=e.touches[0].clientX;
-  fStartY=e.touches[0].clientY;
-},{passive:true});
-$('insta-feed-view').addEventListener('touchmove',e=>{
-  if(innerWidth>=768||e.touches.length!==1||e.target.closest('textarea'))return;
-  const dy=e.touches[0].clientY-fStartY;
-  const dx=e.touches[0].clientX-fStartX;
-  if($('insta-feed-view').scrollTop<=0&&dy>0&&Math.abs(dy)>Math.abs(dx)&&e.cancelable){
-    e.preventDefault();
-  }
-},{passive:false});
-
 let px0=0,py0=0,pdx=0,pdy=0,pswipe=false,pdir=null;
 panel.addEventListener('touchstart',e=>{
   if(innerWidth>=768||e.touches.length!==1||e.target.closest('input'))return;
-  px0=e.touches[0].clientX;py0=e.touches[0].clientY;pdx=0;pdy=0;pswipe=true;pdir=null;
-  panel.style.transition='none';
+  px0=e.touches[0].clientX;py0=e.touches[0].clientY;pdx=0;pdy=0;pswipe=true;pdir=null;panel.style.transition='none';
 },{passive:true});
 panel.addEventListener('touchmove',e=>{
-  if(!pswipe)return;
-  pdx=e.touches[0].clientX-px0;pdy=e.touches[0].clientY-py0;
-  if(!pdir&&(Math.abs(pdx)>10||Math.abs(pdy)>10)){
-    pdir=Math.abs(pdx)>Math.abs(pdy)?'x':'y';
-    if(pdir==='y'&&e.target.closest('#feed')&&$('feed').scrollTop>0){pswipe=false;return}
-  }
+  if(!pswipe)return;pdx=e.touches[0].clientX-px0;pdy=e.touches[0].clientY-py0;
+  if(!pdir&&(Math.abs(pdx)>10||Math.abs(pdy)>10)){pdir=Math.abs(pdx)>Math.abs(pdy)?'x':'y';if(pdir==='y'&&e.target.closest('#feed')&&$('feed').scrollTop>0){pswipe=false;return}}
   if(pdir==='y'&&pdy>0)panel.style.transform=`translateY(${pdy}px)`;
 },{passive:true});
 panel.addEventListener('touchend',()=>{
@@ -2629,9 +1695,7 @@ panel.addEventListener('touchend',()=>{
 let lastTap=0;
 vp.addEventListener('touchend',e=>{
   if(innerWidth>=768||drawing||moved||e.touches.length>0)return;
-  const now=Date.now();
-  if(now-lastTap<300){e.preventDefault();fit(true);lastTap=0}
-  else{lastTap=now}
+  const now=Date.now();if(now-lastTap<300){e.preventDefault();fit(true);lastTap=0}else{lastTap=now}
 });
 
 addEventListener('keydown',e=>{
@@ -2643,22 +1707,20 @@ addEventListener('keydown',e=>{
 });
 
 addEventListener('DOMContentLoaded',async()=>{
-  detectDevice();
-  const s=await loadState();
-  if(s){
-    S=normState(s);
-    if(S.customMapDataUrl)$('mapimg').src=S.customMapDataUrl;
-  }
+  try{
+    detectDevice();
+    const s=await loadState();
+    if(s){
+      S=normState(s);
+      if(S.customMapDataUrl)$('mapimg').src=S.customMapDataUrl;
+    }
+  }catch(err){console.error(err)}
   window._appLoaded=true;
   const im=$('mapimg');
-  if(im.complete&&im.naturalWidth>0){
-    $('upload').classList.add('hidden');
-  }else if(!im.src||im.src===location.href){
-    $('upload').classList.remove('hidden');
-  }
+  if(im.complete&&im.naturalWidth>0)$('upload').classList.add('hidden');
+  else if(!im.src||im.src===location.href)$('upload').classList.remove('hidden');
   render();fit(false);
 });
 </script>
 </body>
 </html>
-```[cite: 1]
