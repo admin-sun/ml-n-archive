@@ -1014,9 +1014,20 @@ const r2=n=>Math.round(n*100)/100;
 const parse=s=>s.trim().split(/\s+/).map(p=>p.split(',').map(Number));
 const str=a=>a.map(([x,y])=>r2(x)+','+r2(y)).join(' ');
 function gTransform(s){const g=S.globalAdjust;return str(parse(s).map(([x,y])=>[CX+(x-CX)*g.sx+g.dx,CY+(y-CY)*g.sy+g.dy]))}
+function parcelTopLeft(ptsStr){
+  const a=parse(ptsStr);
+  const minX=Math.min(...a.map(p=>p[0]));
+  const minY=Math.min(...a.map(p=>p[1]));
+  return{x:minX,y:minY};
+}
 function allParcels(){
   const del=S.deletedParcels||[];
   const list=[...P.filter(p=>!del.includes(p.id)).map(p=>({...p,points:S.parcelOverrides[p.id]||gTransform(p.points)})),...S.customParcels.map(p=>({...p,points:S.parcelOverrides[p.id]||p.points}))];
+  list.sort((a,b)=>{
+    const ta=parcelTopLeft(a.points),tb=parcelTopLeft(b.points);
+    if(Math.abs(ta.x-tb.x)>12)return ta.x-tb.x;
+    return ta.y-tb.y;
+  });
   return list.map((p,i)=>{const code='F'+String(i+1).padStart(2,'0');return{...p,code,defaultLot:'区画 #'+String(i+1).padStart(2,'0')}});
 }
 const getP=id=>allParcels().find(p=>p.id===id)||null;
@@ -1974,7 +1985,7 @@ function setDraw(on){if(on&&gridMode)setGridMode(false);drawing=on;draft=[];rend
 $('b-draw').onclick=()=>{if(adjusting)setAdj(false);setDraw(!drawing)};
 $('d-cancel').onclick=()=>setDraw(false);
 $('d-undo').onclick=()=>{draft.pop();renderDraft()};
-$('d-ok').onclick=async()=>{if(draft.length<3)return toast('3点以上タップして囲んでください');const id='C_'+Date.now(),n=String(allParcels().length+1).padStart(2,'0');S.customParcels.push({id,defaultLot:'区画 #'+n,points:str(draft)});await saveState();setDraw(false);selectP(id,false);toast('新しい農地区画（F'+n+'）を追加しました')};
+$('d-ok').onclick=async()=>{if(draft.length<3)return toast('3点以上タップして囲んでください');const id='C_'+Date.now(),pts=str(draft);S.customParcels.push({id,defaultLot:'区画 #00',points:pts});await saveState();setDraw(false);selectP(id,false);const added=getP(id);toast('新しい農地区画（'+(added?added.code:'')+'）を追加しました')};
 
 function syncAdjLayout(){
   const ap=$('adj-panel');
