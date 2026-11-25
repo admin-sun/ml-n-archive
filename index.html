@@ -13,7 +13,7 @@
 html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-family:"Noto Sans JP",system-ui,sans-serif;font-size:14px}
 body{display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);user-select:none}
 button{font:inherit;cursor:pointer;color:inherit}
-input{font:inherit;color:inherit;user-select:text}
+input,textarea{font:inherit;color:inherit;user-select:text}
 .hidden{display:none!important}
 header{height:50px;min-height:50px;background:var(--hd);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 12px;gap:8px;z-index:30}
 header h1{font-size:16px;margin:0;white-space:nowrap}
@@ -723,6 +723,199 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
   }
 }
 
+/* インスタグラム風1枚ずつ縦スクロール表示 */
+#insta-feed-view{
+  position:absolute;
+  inset:0;
+  z-index:25;
+  background:var(--bg);
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:none;
+  overscroll-behavior-y:none;
+  padding:14px 12px 36px;
+}
+.ig-stream{
+  max-width:540px;
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+.ig-post{
+  background:var(--sf);
+  border:1px solid var(--bd);
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 2px 10px rgba(15,23,42,.06);
+}
+.ig-post-hd{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:10px 12px;
+  border-bottom:1px solid var(--bd);
+}
+.ig-author{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+  flex:1;
+  cursor:pointer;
+}
+.ig-avatar{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--g),var(--g2));
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  font-variant-numeric:tabular-nums;
+}
+:root[data-theme=dark] .ig-avatar{color:#0f172a}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .ig-avatar{color:#0f172a}}
+.ig-author-meta{
+  min-width:0;
+  flex:1;
+}
+.ig-author-main{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+  line-height:1.3;
+}
+.ig-code-tag{
+  display:inline-flex;
+  align-items:center;
+  padding:1px 6px;
+  border-radius:5px;
+  background:rgba(45,106,79,.14);
+  color:var(--g2);
+  font-size:11px;
+  font-weight:700;
+  font-variant-numeric:tabular-nums;
+}
+.ig-lot{
+  font-size:14px;
+  font-weight:700;
+  color:var(--tx);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.ig-crop-sub{
+  margin-top:2px;
+  font-size:12px;
+  font-weight:500;
+  color:var(--mut);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.ig-post-date{
+  font-size:11px;
+  color:var(--mut);
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.ig-photo-wrap{
+  width:100%;
+  background:#0f172a;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:zoom-in;
+}
+.ig-photo-wrap img{
+  width:100%;
+  aspect-ratio:1 / 1;
+  object-fit:cover;
+  display:block;
+  opacity:0;
+  transition:opacity .22s ease;
+}
+.ig-photo-wrap img.loaded{
+  opacity:1;
+}
+.ig-comment-box{
+  padding:10px 12px 12px;
+  border-top:1px solid var(--bd);
+  background:var(--sf);
+}
+.ig-comment-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:6px;
+}
+.ig-comment-label{
+  font-size:11px;
+  font-weight:700;
+  color:var(--mut);
+}
+.ig-more-btn{
+  border:0;
+  background:none;
+  color:var(--g2);
+  font-size:12px;
+  font-weight:700;
+  padding:2px 4px;
+  border-radius:4px;
+}
+.ig-more-btn:hover{
+  background:rgba(45,106,79,.08);
+}
+.ig-comment-editor{
+  width:100%;
+  min-height:40px;
+  max-height:220px;
+  border:1px solid var(--bd);
+  border-radius:8px;
+  background:var(--bg);
+  color:var(--tx);
+  padding:7px 9px;
+  font-size:13px;
+  line-height:1.5;
+  resize:vertical;
+  display:block;
+  overflow-y:auto;
+  transition:border-color .15s ease,box-shadow .15s ease;
+}
+.ig-comment-editor.collapsed{
+  max-height:54px;
+  overflow:hidden;
+  resize:none;
+}
+.ig-comment-editor:focus{
+  outline:0;
+  border-color:var(--g2);
+  box-shadow:0 0 0 2px rgba(45,106,79,.12);
+  max-height:260px;
+  overflow-y:auto;
+}
+.ig-comment-foot{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-top:6px;
+  min-height:18px;
+}
+.ig-comment-status{
+  font-size:11px;
+  color:var(--mut);
+}
+
 #lb{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.95);display:flex;flex-direction:column;color:#fff;opacity:1;transition:opacity .38s ease,transform .38s ease}
 #lb.closing{opacity:0!important;pointer-events:none!important}
 #lb .top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;height:68px;min-height:68px;max-height:68px;flex-shrink:0;overflow:visible;position:relative;z-index:30}
@@ -809,6 +1002,7 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
     <button class="hb" id="b-num">番号</button>
     <button class="hb" id="b-adj">位置調整</button>
     <button class="hb" id="b-grid">グリッド</button>
+    <button class="hb" id="b-insta">インスタ</button>
     <button class="hb" id="b-menu" aria-label="メニュー">⋮</button>
     <div id="menu" class="fl hidden">
       <button id="b-export">⬇ データを書き出し (JSON)</button>
@@ -902,6 +1096,9 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
 <section id="all-grid-view" class="hidden" aria-label="全農地写真グリッド">
   <div id="insta-grid" class="insta-grid"></div>
 </section>
+<section id="insta-feed-view" class="hidden" aria-label="インスタグラム風フィード">
+  <div id="insta-stream" class="ig-stream"></div>
+</section>
 <script>if(window.innerWidth<768)document.body.classList.add('layout-sheet');</script>
 </main>
 
@@ -991,7 +1188,9 @@ let saveT;const saveSoon=()=>{clearTimeout(saveT);saveT=setTimeout(saveState,300
 
 let S={records:{},customParcels:[],deletedParcels:[],customMapDataUrl:null,parcelOverrides:{},globalAdjust:{dx:0,dy:0,sx:1,sy:1}};
 const normState=o=>({records:o.records||{},customParcels:o.customParcels||[],deletedParcels:o.deletedParcels||[],customMapDataUrl:o.customMapDataUrl||null,parcelOverrides:o.parcelOverrides||{},globalAdjust:o.globalAdjust||{dx:0,dy:0,sx:1,sy:1}});
-let sel=null,cropFilter=null,drawing=false,draft=[],adjusting=false,showNum=false,gridMode=false,gridPhotos=[],gridIO=null,V={s:1,x:0,y:0};
+let sel=null,cropFilter=null,drawing=false,draft=[],adjusting=false,showNum=false,gridMode=false,instaMode=false,gridPhotos=[],instaPhotos=[],gridIO=null,instaIO=null,V={s:1,x:0,y:0};
+const expandedComments=new Set();
+
 function parseCrops(str){
   if(!str)return[];
   const raw=String(str).split(/[/、・]/).map(s=>s.trim()).filter(Boolean);
@@ -1192,7 +1391,6 @@ function extractExifDateISO(file){
           }
         }
 
-        // フォールバック：先頭4MB内から "Exif\0\0" シグネチャを直接探索
         const maxScan=Math.min(view.byteLength-14,4194304);
         for(let i=2;i<maxScan;i++){
           if(
@@ -1276,6 +1474,7 @@ function render(){
   });
   $('reg').textContent=reg;$('tot').textContent=ps.length;renderHandles();updAdj();
   if(gridMode)renderAllGrid();
+  if(instaMode)renderInstaFeed();
 }
 function insidePoly(x,y,pts){
   let inside=false;
@@ -1405,8 +1604,216 @@ function renderAllGrid(){
     deferred.forEach(im=>gridIO.observe(im));
   }
 }
+
+function escapeHtml(s){
+  return String(s||'')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+function isLongComment(txt){
+  const s=String(txt||'');
+  if(!s)return false;
+  const lines=s.split(/\r?\n/);
+  return lines.length>2 || s.length>56;
+}
+
+function setPhotoComment(parcelId,photoId,newText){
+  const r=S.records[parcelId];
+  if(!r||!Array.isArray(r.photos))return false;
+  const ph=r.photos.find(p=>p.id===photoId);
+  if(!ph)return false;
+  ph.comment=newText;
+  saveSoon();
+  return true;
+}
+
+function autoResizeTextarea(ta,forceFull){
+  if(!ta)return;
+  const isExpanded=forceFull || expandedComments.has(ta.dataset.photoId);
+  if(!isExpanded && isLongComment(ta.value)){
+    ta.classList.add('collapsed');
+    ta.style.height='54px';
+    return;
+  }
+  ta.classList.remove('collapsed');
+  ta.style.height='auto';
+  ta.style.height=Math.max(40,Math.min(260,ta.scrollHeight))+'px';
+}
+
+function renderInstaFeed(){
+  const view=$('insta-feed-view');
+  const stream=$('insta-stream');
+  if(instaIO){instaIO.disconnect();instaIO=null}
+  view.scrollTop=0;
+  instaPhotos=allPhotosLatestFirst();
+  stream.innerHTML='';
+  if(!instaPhotos.length){
+    stream.innerHTML='<div style="padding:48px 16px;text-align:center;color:var(--mut)">登録された写真がまだありません</div>';
+    return;
+  }
+
+  const isMobile=window.innerWidth<768;
+  const INITIAL_EAGER=isMobile?3:4;
+  const deferred=[];
+
+  instaPhotos.forEach((p,idx)=>{
+    const post=document.createElement('article');
+    post.className='ig-post';
+    post.dataset.idx=idx;
+
+    const cropDisp=p.cropName||'作物未登録';
+    const commentVal=p.comment||'';
+    const longFlag=isLongComment(commentVal);
+    const isExp=expandedComments.has(p.id);
+    const isEditable=!p.isStatic;
+
+    const moreBtnHtml=longFlag
+      ? `<button type="button" class="ig-more-btn" data-ig-more="${escapeHtml(p.id)}">${isExp?'折りたたむ':'続きを読む'}</button>`
+      : '';
+
+    const isInitial=idx<INITIAL_EAGER;
+    const imgAttr=isInitial
+      ? `src="${p.dataUrl}" ${idx===0?'fetchpriority="high"':''}`
+      : `data-src="${p.dataUrl}" loading="lazy"`;
+
+    post.innerHTML=`
+      <div class="ig-post-hd">
+        <div class="ig-author" data-ig-jump="${escapeHtml(p.parcelId)}" title="タップしてこの農地を表示">
+          <span class="ig-avatar">${escapeHtml(p.parcelCode)}</span>
+          <div class="ig-author-meta">
+            <div class="ig-author-main">
+              <span class="ig-code-tag">${escapeHtml(p.parcelCode)}</span>
+              <span class="ig-lot">${escapeHtml(p.parcelLabel)}</span>
+            </div>
+            <div class="ig-crop-sub">🌱 ${escapeHtml(cropDisp)}</div>
+          </div>
+        </div>
+        <span class="ig-post-date">${escapeHtml(fmtDate(p.postedAt))}</span>
+      </div>
+      <div class="ig-photo-wrap" data-ig-lb="${idx}">
+        <img ${imgAttr} alt="${escapeHtml(p.parcelCode+' '+p.parcelLabel)}" decoding="async">
+      </div>
+      <div class="ig-comment-box">
+        <div class="ig-comment-top">
+          <span class="ig-comment-label">📝 メモ・コメント</span>
+          ${moreBtnHtml}
+        </div>
+        <textarea class="ig-comment-editor${(longFlag&&!isExp)?' collapsed':''}" data-parcel-id="${escapeHtml(p.parcelId)}" data-photo-id="${escapeHtml(p.id)}" placeholder="${isEditable?'この写真についての文章を入力...':'サンプル写真のため編集できません'}" ${isEditable?'':'readonly'}>${escapeHtml(commentVal)}</textarea>
+        <div class="ig-comment-foot">
+          <span class="ig-comment-status" data-ig-status="${escapeHtml(p.id)}">${isEditable?(commentVal?'自動保存されます':'タップして文章を入力'):'表示専用'}</span>
+        </div>
+      </div>
+    `;
+
+    const im=post.querySelector('.ig-photo-wrap img');
+    im.onload=()=>im.classList.add('loaded');
+    if(im.complete&&im.naturalWidth)im.classList.add('loaded');
+    if(!isInitial)deferred.push(im);
+
+    const ta=post.querySelector('.ig-comment-editor');
+    autoResizeTextarea(ta,isExp);
+
+    stream.appendChild(post);
+  });
+
+  if(deferred.length){
+    const loadDeferred=im=>{
+      if(!im.dataset.src)return;
+      im.src=im.dataset.src;
+      im.removeAttribute('data-src');
+    };
+    instaIO=new IntersectionObserver((entries,obs)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          loadDeferred(entry.target);
+          obs.unobserve(entry.target);
+        }
+      });
+    },{root:view,rootMargin:'240px 0px'});
+    deferred.forEach(im=>instaIO.observe(im));
+  }
+}
+
+$('insta-stream').addEventListener('click',e=>{
+  const jumpEl=e.target.closest('[data-ig-jump]');
+  if(jumpEl){
+    const pid=jumpEl.dataset.igJump;
+    if(pid&&getP(pid)){
+      setInstaMode(false);
+      selectP(pid,window.USE_SHEET?true:false);
+    }
+    return;
+  }
+  const lbEl=e.target.closest('[data-ig-lb]');
+  if(lbEl){
+    const idx=Number(lbEl.dataset.igLb);
+    if(!Number.isNaN(idx))openInstaLB(idx);
+    return;
+  }
+  const moreBtn=e.target.closest('[data-ig-more]');
+  if(moreBtn){
+    const pid=moreBtn.dataset.igMore;
+    const post=moreBtn.closest('.ig-post');
+    const ta=post&&post.querySelector('.ig-comment-editor');
+    if(expandedComments.has(pid)){
+      expandedComments.delete(pid);
+      moreBtn.textContent='続きを読む';
+      autoResizeTextarea(ta,false);
+    }else{
+      expandedComments.add(pid);
+      moreBtn.textContent='折りたたむ';
+      autoResizeTextarea(ta,true);
+    }
+  }
+});
+
+$('insta-stream').addEventListener('input',e=>{
+  const ta=e.target.closest('.ig-comment-editor');
+  if(!ta||ta.readOnly)return;
+  const parcelId=ta.dataset.parcelId;
+  const photoId=ta.dataset.photoId;
+  setPhotoComment(parcelId,photoId,ta.value);
+  autoResizeTextarea(ta,true);
+  const post=ta.closest('.ig-post');
+  const st=post&&post.querySelector('[data-ig-status]');
+  if(st)st.textContent='保存中...';
+  clearTimeout(ta._stTimer);
+  ta._stTimer=setTimeout(()=>{
+    if(st)st.textContent=ta.value.trim()?'保存済み':'タップして文章を入力';
+  },450);
+});
+
+$('insta-stream').addEventListener('focusin',e=>{
+  const ta=e.target.closest('.ig-comment-editor');
+  if(!ta)return;
+  autoResizeTextarea(ta,true);
+});
+
+$('insta-stream').addEventListener('focusout',e=>{
+  const ta=e.target.closest('.ig-comment-editor');
+  if(!ta)return;
+  const photoId=ta.dataset.photoId;
+  const post=ta.closest('.ig-post');
+  const moreBtn=post&&post.querySelector('[data-ig-more]');
+  const nowLong=isLongComment(ta.value);
+  if(moreBtn){
+    moreBtn.style.display=nowLong?'':'none';
+    moreBtn.textContent=expandedComments.has(photoId)?'折りたたむ':'続きを読む';
+  }
+  autoResizeTextarea(ta,expandedComments.has(photoId));
+});
+
 function setGridMode(on){
   gridMode=!!on;
+  if(gridMode&&instaMode){
+    instaMode=false;
+    $('b-insta').classList.remove('on');
+    $('insta-feed-view').classList.add('hidden');
+    if(instaIO){instaIO.disconnect();instaIO=null}
+  }
   $('b-grid').classList.toggle('on',gridMode);
   $('all-grid-view').classList.toggle('hidden',!gridMode);
   if(gridMode){
@@ -1418,7 +1825,29 @@ function setGridMode(on){
     gridIO=null;
   }
 }
+
+function setInstaMode(on){
+  instaMode=!!on;
+  if(instaMode&&gridMode){
+    gridMode=false;
+    $('b-grid').classList.remove('on');
+    $('all-grid-view').classList.add('hidden');
+    if(gridIO){gridIO.disconnect();gridIO=null}
+  }
+  $('b-insta').classList.toggle('on',instaMode);
+  $('insta-feed-view').classList.toggle('hidden',!instaMode);
+  if(instaMode){
+    if(drawing)setDraw(false);
+    if(adjusting)setAdj(false);
+    renderInstaFeed();
+  }else if(instaIO){
+    instaIO.disconnect();
+    instaIO=null;
+  }
+}
+
 $('b-grid').onclick=()=>setGridMode(!gridMode);
+$('b-insta').onclick=()=>setInstaMode(!instaMode);
 
 const panel=$('panel');
 function closeCropPicker(){
@@ -1454,6 +1883,7 @@ $('crop-strip').addEventListener('click',e=>{
 });
 function selectP(id,center){
   if(gridMode)setGridMode(false);
+  if(instaMode)setInstaMode(false);
   closeCropPicker();
   if(sel!==id)cropFilter=null;
   sel=id;const p=getP(id);if(!p)return;const r=rec(id);
@@ -1542,6 +1972,7 @@ async function applyPhotoCrop(photoId,cropStr,alsoAddToParcel){
   feed();
   render();
   if(gridMode)renderAllGrid();
+  if(instaMode)renderInstaFeed();
   if(!clean)toast('写真の作物登録を解除しました');
   else if(alsoAddToParcel)toast(`「${clean}」を写真と農地の作物名に登録しました`);
   else toast(`「${clean}」を写真に登録しました`);
@@ -1556,7 +1987,6 @@ function openCropPicker(photoId,anchorEl){
   const currentPhotoCrop=String(ph.cropName||'').trim();
   const isWarn=Boolean(currentPhotoCrop)&&!parcelCrops.includes(currentPhotoCrop);
 
-  // Collect quick suggestions from parcel crops + other parcels' crops
   const otherCrops=[];
   allParcels().forEach(p=>{
     const pr=S.records[p.id];
@@ -1590,7 +2020,6 @@ function openCropPicker(photoId,anchorEl){
   `;
   cp.classList.remove('hidden');
 
-  // Position near anchorEl within viewport
   const rect=anchorEl.getBoundingClientRect();
   const pw=cp.offsetWidth||280,phH=cp.offsetHeight||220;
   let left=Math.min(Math.max(12,rect.left),window.innerWidth-pw-12);
@@ -1653,6 +2082,7 @@ async function commitCardDate(wrap){
       await saveState();
       feed();
       if(gridMode)renderAllGrid();
+      if(instaMode)renderInstaFeed();
       toast('投稿日を変更しました');
     }
   }finally{
@@ -1691,7 +2121,7 @@ $('feed').addEventListener('keydown',async e=>{
 $('feed').addEventListener('change',async e=>{
   const t=e.target.closest('.card-date');if(!t||!sel||!t.value)return;
   const r=rec(sel),ph=r.photos.find(p=>p.id===t.dataset.id);
-  if(ph){ph.postedAt=jpDate(t.value);ph.exifMissing=false;await saveState();feed();if(gridMode)renderAllGrid();toast('投稿日を変更しました')}
+  if(ph){ph.postedAt=jpDate(t.value);ph.exifMissing=false;await saveState();feed();if(gridMode)renderAllGrid();if(instaMode)renderInstaFeed();toast('投稿日を変更しました')}
 });
 $('feed').addEventListener('click',async e=>{
   const t=e.target.closest('[data-a]');if(!t||!sel)return;
@@ -1731,10 +2161,11 @@ $('i-photos').addEventListener('change',async e=>{
       const bl=await compress(f);let url,aid,loc=false;
       if(ASS){try{const a=await ASS.upload(bl);url=a.url;aid=a.id}catch(x){}}
       if(!url){if(DBH)throw new Error('upload');url=await new Promise((ok,ng)=>{const fr=new FileReader();fr.onload=()=>ok(fr.result);fr.onerror=ng;fr.readAsDataURL(bl)});loc=true}
-      r.photos.unshift({id:'PH_'+Date.now()+Math.random().toString(36).slice(2,7),dataUrl:url,assetId:aid,local:loc,postedAt:when,exifMissing:!hasExif,timestamp:Date.now()});
+      r.photos.unshift({id:'PH_'+Date.now()+Math.random().toString(36).slice(2,7),dataUrl:url,assetId:aid,local:loc,postedAt:when,exifMissing:!hasExif,comment:'',timestamp:Date.now()});
     }
     await saveState();feed();render();
     if(gridMode)renderAllGrid();
+    if(instaMode)renderInstaFeed();
     const msg=missCount
       ? `${files.length}枚追加（撮影日取得：${exifCount}枚／取得不可：${missCount}枚 → 今日の日付を設定）`
       : `${files.length}枚の写真を追加しました（${exifCount}枚すべて撮影日を自動取得）`;
@@ -1778,8 +2209,10 @@ function jumpFromLbToParcel(){
   const p=getP(targetId);
   if(!p)return;
   const wasGrid=gridMode;
+  const wasInsta=instaMode;
   closeLB(false);
   if(wasGrid)setGridMode(false);
+  if(wasInsta)setInstaMode(false);
   selectP(targetId,window.USE_SHEET?true:false);
   const label=(S.records[targetId]&&S.records[targetId].lotNumber)||p.defaultLot||p.code;
   toast((p.code?p.code+' ':'')+label+' のサムネイルに移動しました');
@@ -1804,7 +2237,7 @@ function setLBPeriod(mode,label){
   const btn=$('lb-pbtn');btn.textContent=label+' ▾';btn.classList.toggle('active',mode!=='all');
   document.querySelectorAll('#lb-pmenu button').forEach(b=>b.classList.toggle('on',b.dataset.p===mode));
   $('lb-pmenu').classList.add('hidden');
-  if(gridMode&&lbIsGrid){
+  if((gridMode||instaMode)&&lbIsGrid){
     const rng=getPeriodRange(mode);
     const all=allPhotosLatestFirst();
     const list=!rng?all:all.filter(p=>{const d=toISO(p.postedAt);return d>=rng.from&&d<=rng.to});
@@ -1835,12 +2268,12 @@ function resetLBView(anim){
   else{im.style.transition=''}
   lbS=1;lbX=0;lbY=0;applyLB();
 }
-const isMobGridLB=()=>window.innerWidth<768&&gridMode&&lbIsGrid;
+const isMobGridLB=()=>window.innerWidth<768&&(gridMode||instaMode)&&lbIsGrid;
 function syncLbGuide(){
   const g=$('lb-guide');
   if(!g)return;
   g.textContent=isMobGridLB()
-    ?'上スワイプ: 次へ ／ 下スワイプ: 前へ ／ 右スワイプ: グリッドに戻る'
+    ?'上スワイプ: 次へ ／ 下スワイプ: 前へ ／ 右スワイプ: 一覧に戻る'
     :'左右ボタン／スワイプで切替';
 }
 function openLB(i){
@@ -1862,6 +2295,21 @@ function openGridLB(idx){
   document.querySelectorAll('#lb-pmenu button').forEach(b=>b.classList.toggle('on',b.dataset.p==='all'));
   $('lb-pmenu').classList.add('hidden');
   gridPhotos=list;
+  lbP=list;
+  lbI=Math.max(0,Math.min(idx,list.length-1));
+  updGridLB();
+  const lb=$('lb');lb.classList.remove('hidden','closing');lb.style.opacity='0';lb.style.transform='';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{lb.style.opacity=''}));
+}
+function openInstaLB(idx){
+  const list=allPhotosLatestFirst();
+  if(!list.length)return;
+  lbIsGrid=true;
+  syncLbGuide();
+  lbPeriod='all';$('lb-pbtn').textContent='全期間 ▾';$('lb-pbtn').classList.remove('active');
+  document.querySelectorAll('#lb-pmenu button').forEach(b=>b.classList.toggle('on',b.dataset.p==='all'));
+  $('lb-pmenu').classList.add('hidden');
+  instaPhotos=list;
   lbP=list;
   lbI=Math.max(0,Math.min(idx,list.length-1));
   updGridLB();
@@ -1896,7 +2344,7 @@ function updGridLB(){
   $('lb-i').src=p.dataUrl;
 }
 const lbStep=d=>{
-  if(gridMode&&lbIsGrid){
+  if((gridMode||instaMode)&&lbIsGrid){
     if(!lbP.length)return;
     lbI=(lbI+d+lbP.length)%lbP.length;
     updGridLB();
@@ -1988,7 +2436,7 @@ $('lb-s').addEventListener('touchmove',e=>{
   else if(Math.abs(ldx)<10&&Math.abs(ldy)<10){const now=Date.now();if(now-lbLastTap<300){resetLBView(true);lbLastTap=0}else{lbLastTap=now}}
 });
 
-function setDraw(on){if(on&&gridMode)setGridMode(false);drawing=on;draft=[];renderDraft();$('draw-banner').classList.toggle('hidden',!on);vp.classList.toggle('draw',on);$('b-draw').classList.toggle('on',on)}
+function setDraw(on){if(on&&(gridMode||instaMode)){setGridMode(false);setInstaMode(false)}drawing=on;draft=[];renderDraft();$('draw-banner').classList.toggle('hidden',!on);vp.classList.toggle('draw',on);$('b-draw').classList.toggle('on',on)}
 $('b-draw').onclick=()=>{if(adjusting)setAdj(false);setDraw(!drawing)};
 $('d-cancel').onclick=()=>setDraw(false);
 $('d-undo').onclick=()=>{draft.pop();renderDraft()};
@@ -2015,7 +2463,7 @@ function syncAdjLayout(){
   }
 }
 function setAdj(on){
-  if(on&&gridMode)setGridMode(false);
+  if(on&&(gridMode||instaMode)){setGridMode(false);setInstaMode(false)}
   adjusting=on;if(on&&drawing)setDraw(false);
   $('adj-panel').classList.toggle('hidden',!on);$('layer').parentElement.classList.toggle('adj',on);$('b-adj').classList.toggle('on',on);
   if(on){panel.classList.remove('open');$('hint').classList.add('hidden');if(innerWidth>=768)panel.classList.add('hidden')}
@@ -2143,6 +2591,19 @@ $('all-grid-view').addEventListener('touchmove',e=>{
     e.preventDefault();
   }
 },{passive:false});
+$('insta-feed-view').addEventListener('touchstart',e=>{
+  if(innerWidth>=768||e.touches.length!==1)return;
+  fStartX=e.touches[0].clientX;
+  fStartY=e.touches[0].clientY;
+},{passive:true});
+$('insta-feed-view').addEventListener('touchmove',e=>{
+  if(innerWidth>=768||e.touches.length!==1||e.target.closest('textarea'))return;
+  const dy=e.touches[0].clientY-fStartY;
+  const dx=e.touches[0].clientX-fStartX;
+  if($('insta-feed-view').scrollTop<=0&&dy>0&&Math.abs(dy)>Math.abs(dx)&&e.cancelable){
+    e.preventDefault();
+  }
+},{passive:false});
 
 let px0=0,py0=0,pdx=0,pdy=0,pswipe=false,pdir=null;
 panel.addEventListener('touchstart',e=>{
@@ -2200,3 +2661,4 @@ addEventListener('DOMContentLoaded',async()=>{
 </script>
 </body>
 </html>
+```[cite: 1]
