@@ -1020,13 +1020,20 @@ function parcelTopLeft(ptsStr){
   const minY=Math.min(...a.map(p=>p[1]));
   return{x:minX,y:minY};
 }
+function parcelSortPos(ptsStr){
+  const a=parse(ptsStr);
+  return{
+    x:Math.min(...a.map(p=>p[0])),
+    y:Math.max(...a.map(p=>p[1]))
+  };
+}
 function allParcels(){
   const del=S.deletedParcels||[];
   const list=[...P.filter(p=>!del.includes(p.id)).map(p=>({...p,points:S.parcelOverrides[p.id]||gTransform(p.points)})),...S.customParcels.map(p=>({...p,points:S.parcelOverrides[p.id]||p.points}))];
   list.sort((a,b)=>{
-    const ta=parcelTopLeft(a.points),tb=parcelTopLeft(b.points);
-    if(Math.abs(ta.x-tb.x)>12)return ta.x-tb.x;
-    return ta.y-tb.y;
+    const pa=parcelSortPos(a.points),pb=parcelSortPos(b.points);
+    if(Math.abs(pb.y-pa.y)>12)return pb.y-pa.y;
+    return pa.x-pb.x;
   });
   return list.map((p,i)=>{const code='F'+String(i+1).padStart(2,'0');return{...p,code,defaultLot:'区画 #'+String(i+1).padStart(2,'0')}});
 }
