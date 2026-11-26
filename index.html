@@ -166,7 +166,6 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .cp-act.primary{background:var(--g2);border-color:var(--g2);color:#fff}
 .cp-act.danger{color:#dc2626}
 
-/* 区画サムネイル: スマホは1列・詳細/全画面ボタン非表示、PCは2列 */
 #feed{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;overscroll-behavior-y:none;padding:10px;display:grid;grid-template-columns:1fr;grid-auto-rows:max-content;gap:12px;background:var(--bg);align-content:start}
 .card{position:relative;overflow:hidden;background:var(--sf);display:block;border-radius:10px;border:1px solid var(--bd)}
 .card img{width:100%;aspect-ratio:4 / 3;object-fit:cover;min-height:0;display:block;cursor:zoom-in;background:rgba(148,163,184,.12);opacity:0;transition:opacity .22s ease}
@@ -174,8 +173,8 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
   .card .mob-hide-btn{display:none!important}
 }
 @media(min-width:768px){
-  #feed{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:14px}
-  .card{border-radius:8px}
+  #feed{grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;padding:0}
+  .card{border-radius:0;border:0}
   .card img{aspect-ratio:1 / 1}
 }
 .card .ch{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:center;padding:6px;gap:4px;background:linear-gradient(to top,rgba(15,23,42,.68),rgba(15,23,42,0));pointer-events:none}
@@ -198,31 +197,70 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .card-date.no-exif,.card-date-wrap.no-exif{box-shadow:0 0 0 1.5px #ea580c;background:rgba(255,247,237,.95)}
 .card .ch .nb{height:22px;padding:0 6px;font-size:10px;font-weight:700;background:rgba(255,255,255,.9);color:#0f172a;border:none;border-radius:4px}
 
-/* フィード: タイムラインとグリッドのシームレス表示（スマホ3列 / PC4列） */
+/* フィード: PCはグリッド/フィード切替式、スマホはグリッド→タップでフィード（左スワイプでグリッドへ戻る） */
 #insta-feed-view{
   position:absolute;inset:0;z-index:25;background:var(--bg);
   overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;overscroll-behavior-y:none;
-  padding:12px 12px 32px;
+  padding:0 0 32px;
 }
-.feed-seamless-wrap{width:100%;max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
-.seamless-block-hd{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 2px;border-bottom:1px solid var(--bd)}
-.seamless-block-hd h2{margin:0;font-size:13px;font-weight:700;color:var(--tx)}
-.seamless-jump-link{border:0;background:none;color:var(--g2);font-size:12px;font-weight:700;padding:2px 4px}
+.feed-pc-bar{
+  position:sticky;top:0;z-index:12;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:8px 12px;background:var(--sf);border-bottom:1px solid var(--bd);
+}
+.feed-mode-btn{
+  height:30px;padding:0 16px;border-radius:99px;
+  border:1px solid var(--bd);background:var(--bg);color:var(--tx);
+  font-size:12px;font-weight:700;
+}
+.feed-mode-btn.on{
+  background:var(--g2);border-color:var(--g2);color:#fff;
+}
+:root[data-theme=dark] .feed-mode-btn.on{color:#0f172a}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .feed-mode-btn.on{color:#0f172a}}
 
-.ig-grid{
-  width:100%;
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;
+.feed-mob-bar{
+  position:sticky;top:0;z-index:12;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:8px 12px;background:var(--sf);border-bottom:1px solid var(--bd);
+  font-size:12px;font-weight:700;
+}
+.feed-mob-back{
+  border:1px solid var(--bd);background:var(--bg);color:var(--tx);
+  border-radius:8px;padding:5px 10px;font-size:12px;font-weight:700;
+}
+
+@media(max-width:767px){
+  .feed-pc-bar{display:none!important}
 }
 @media(min-width:768px){
-  .ig-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+  .feed-mob-bar{display:none!important}
 }
-.ig-grid-item{position:relative;overflow:hidden;background:#0f172a;cursor:pointer;aspect-ratio:1 / 1;border-radius:8px;border:1px solid var(--bd)}
+
+.ig-grid{
+  width:100%;max-width:none;margin:0;
+  display:grid;gap:2px;
+}
+@media(max-width:767px){
+  .ig-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:1.5px}
+  .ig-grid-item{aspect-ratio:3 / 4}
+}
+@media(min-width:768px){
+  .ig-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:2px}
+  .ig-grid-item{aspect-ratio:1 / 1}
+}
+.ig-grid-item{position:relative;overflow:hidden;background:#0f172a;cursor:pointer;border-radius:0}
 .ig-grid-item img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .2s ease}
 .ig-grid-item img.loaded{opacity:1}
-.ig-grid-cap{position:absolute;left:0;right:0;bottom:0;padding:4px 6px;background:linear-gradient(to top,rgba(0,0,0,.75),transparent);color:#fff;font-size:10px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
 
-.ig-stream{width:100%;max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
-.ig-post{width:100%;background:var(--sf);border:1px solid var(--bd);border-radius:12px;overflow:hidden}
+.ig-stream{width:100%;max-width:540px;margin:12px auto 0;display:flex;flex-direction:column;gap:14px}
+@media(max-width:767px){
+  .ig-stream{max-width:100%;margin:0;gap:0}
+}
+.ig-post{width:100%;background:var(--sf);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);overflow:hidden}
+@media(min-width:768px){
+  .ig-post{border:1px solid var(--bd);border-radius:12px}
+}
 .ig-post-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:var(--sf)}
 .ig-author{display:flex;align-items:center;gap:10px;min-width:0;flex:1;cursor:pointer}
 .ig-avatar{width:32px;height:32px;border-radius:50%;background:var(--g);color:#fff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;font-variant-numeric:tabular-nums}
@@ -237,7 +275,10 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .ig-post-date{font-size:11px;color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap}
 .ig-detail-btn{border:1px solid var(--bd);background:var(--bg);color:var(--tx);border-radius:6px;padding:4px 8px;font-size:11px;font-weight:700;white-space:nowrap}
 .ig-photo-wrap{width:100%;margin:0;padding:0;background:#0f172a;display:block;cursor:zoom-in}
-.ig-photo-wrap img{width:100%;aspect-ratio:4 / 3;object-fit:cover;display:block;opacity:0;transition:opacity .22s ease}
+.ig-photo-wrap img{width:100%;aspect-ratio:4 / 5;object-fit:cover;display:block;opacity:0;transition:opacity .22s ease}
+@media(min-width:768px){
+  .ig-photo-wrap img{aspect-ratio:4 / 3}
+}
 .ig-photo-wrap img.loaded{opacity:1}
 .ig-caption-area{padding:10px 12px 13px;background:var(--sf)}
 .ig-caption-view{font-size:13.5px;line-height:1.5;color:var(--tx);word-break:break-word;overflow-wrap:anywhere;white-space:pre-wrap;cursor:text}
@@ -247,21 +288,19 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .ig-caption-input{width:100%;min-height:42px;border:0;outline:0;background:transparent;color:var(--tx);padding:0;margin:0;font-size:13.5px;line-height:1.5;resize:none;display:block;overflow:hidden}
 @media(max-width:767px){.ig-caption-input{font-size:16px}}
 
-/* ◯ 統合最新ストリーム（日誌・写真投稿・更新などを最新順に表示） */
+/* ◯ 最新情報・写真・作業日誌一覧（叩き台: 大きめのパネルで日付・内容・写真を簡潔に表示） */
 #circle-view{position:absolute;inset:0;z-index:25;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 32px}
-.c-wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
-.c-card{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:11px 13px;display:flex;gap:11px;align-items:flex-start}
-.c-thumb{width:68px;height:68px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#0f172a;opacity:0;transition:opacity .2s ease}
-.c-thumb.loaded{opacity:1}
-.c-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
-.c-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-.c-kind{font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;background:rgba(45,106,79,.14);color:var(--g2)}
-.c-kind.photo{background:rgba(217,119,6,.16);color:#b45309}
-.c-title{font-size:13px;font-weight:700;line-height:1.4;word-break:break-word}
-.c-sub{font-size:12px;color:var(--mut);line-height:1.45;white-space:pre-wrap;word-break:break-word}
-.c-acts{display:flex;gap:6px;flex-wrap:wrap;padding-top:2px}
+.c-wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.c-panel{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 2px 10px rgba(15,23,42,.05)}
+.c-panel-hd{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.c-panel-date{font-size:13px;font-weight:700;color:var(--g2);font-variant-numeric:tabular-nums}
+.c-panel-tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--bg);border:1px solid var(--bd);color:var(--mut)}
+.c-panel-content{font-size:14px;font-weight:700;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.c-panel-photo{width:100%;max-height:300px;object-fit:cover;border-radius:12px;background:#0f172a;display:block;cursor:zoom-in;opacity:0;transition:opacity .2s ease}
+.c-panel-photo.loaded{opacity:1}
+.c-panel-ft{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:2px}
 
-/* 日誌（工夫した表記） */
+/* 日誌 */
 #journal-view{position:absolute;inset:0;z-index:25;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 32px}
 .j-wrap{max-width:740px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
 .j-filter{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:8px 10px}
@@ -275,7 +314,7 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .j-cap{font-size:12.5px;color:var(--mut);line-height:1.5;white-space:pre-wrap}
 .j-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;padding-top:2px}
 
-/* 計画・資料（固定枠なし・自由追加＆その場プレビュー） */
+/* 計画・資料 */
 #plans-view{position:absolute;inset:0;z-index:25;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 32px}
 .pl-wrap{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
 .pl-card{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
@@ -478,28 +517,26 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
   </div>
 </aside>
 
-<!-- フィード: グリッド（スマホ3列 / PC4列）とタイムラインをシームレスに連続表示 -->
+<!-- フィード: PCはグリッド/フィード切替式、スマホはグリッド→タップでフィード（左スワイプでグリッドへ戻る） -->
 <section id="insta-feed-view" class="hidden" aria-label="フィード">
-  <div class="feed-seamless-wrap">
-    <div class="seamless-block-hd">
-      <h2>写真一覧（グリッド）</h2>
-      <button type="button" class="seamless-jump-link" id="jump-to-timeline">タイムラインへ ↓</button>
-    </div>
-    <div id="insta-grid" class="ig-grid"></div>
-    <div class="seamless-block-hd" id="timeline-anchor">
-      <h2>タイムライン</h2>
-      <button type="button" class="seamless-jump-link" id="jump-to-grid">グリッドへ ↑</button>
-    </div>
-    <div id="insta-stream" class="ig-stream"></div>
+  <div class="feed-pc-bar">
+    <button type="button" class="feed-mode-btn on" id="pc-mode-grid">グリッド</button>
+    <button type="button" class="feed-mode-btn" id="pc-mode-feed">フィード</button>
   </div>
+  <div class="feed-mob-bar hidden" id="mob-feed-bar">
+    <button type="button" class="feed-mob-back" id="mob-back-grid">‹ グリッドに戻る</button>
+    <span style="color:var(--mut);font-size:11px">← 左スワイプでグリッド</span>
+  </div>
+  <div id="insta-grid" class="ig-grid"></div>
+  <div id="insta-stream" class="ig-stream hidden"></div>
 </section>
 
-<!-- ◯ 統合最新ストリーム: 日誌や写真投稿などを最新順に表示 -->
-<section id="circle-view" class="hidden" aria-label="最新ストリーム">
+<!-- ◯ 最新情報・写真・作業日誌一覧（叩き台: 大きめのパネルで日付・内容・写真を簡潔に表示） -->
+<section id="circle-view" class="hidden" aria-label="◯ 最新情報・写真・作業日誌一覧">
   <div class="c-wrap" id="c-list"></div>
 </section>
 
-<!-- 作業日誌: 視認性を高めたタイムライン表記 -->
+<!-- 作業日誌 -->
 <section id="journal-view" class="hidden" aria-label="作業日誌">
   <div class="j-wrap">
     <div class="j-filter">
@@ -510,21 +547,21 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
   </div>
 </section>
 
-<!-- 計画・資料: 決められた枠なし・自由追加＆Excel/PDFその場プレビュー -->
+<!-- 計画・資料 -->
 <section id="plans-view" class="hidden" aria-label="計画・資料">
   <div class="pl-wrap">
     <div class="pl-card edit-only" id="pl-editor-card">
-      <h3><span>資料・計画を追加</span></h3>
+      <h3><span>資料を追加</span></h3>
       <div class="pl-form">
         <div><input id="pl-title" type="text" placeholder="タイトル（空欄ならファイル名を使用）"></div>
         <div class="pl-file-row">
           <label class="pl-file-btn">Excel / PDF ファイルを選択<input id="pl-file" type="file" accept=".pdf,.xlsx,.xls,.csv,application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv" class="hidden"></label>
           <span id="pl-file-name" class="mut">未選択</span>
         </div>
-        <div class="full"><input id="pl-ref" type="text" placeholder="外部リンクURL（Drive / Sheets 等・任意）"></div>
-        <div class="full"><textarea id="pl-body" placeholder="メモ・概要（任意）"></textarea></div>
+        <div class="full"><input id="pl-ref" type="text" placeholder="外部リンクURL（任意）"></div>
+        <div class="full"><textarea id="pl-body" placeholder="メモ・内容（任意）"></textarea></div>
         <div class="full" style="display:flex;justify-content:flex-end;gap:8px">
-          <button type="button" class="btn" id="pl-add" style="padding:8px 14px;font-size:12px">登録・保存する</button>
+          <button type="button" class="btn" id="pl-add" style="padding:8px 14px;font-size:12px">追加する</button>
         </div>
       </div>
     </div>
@@ -540,7 +577,7 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
   <button type="button" class="bnav-btn" data-nav="feed" data-label="フィード" aria-label="フィード">
     <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
   </button>
-  <button type="button" class="bnav-btn" data-nav="circle" data-label="最新" aria-label="最新">
+  <button type="button" class="bnav-btn" data-nav="circle" data-label="最新" aria-label="◯ 最新情報・写真・作業日誌一覧">
     <span class="circle-mark" aria-hidden="true"></span>
   </button>
   <button type="button" class="bnav-btn" data-nav="journal" data-label="日誌" aria-label="日誌">
@@ -673,7 +710,6 @@ const normState=o=>({
 });
 const isEditor=()=>S.role==='editor';
 
-/* 順次読み込みキュー: 写真は上から順番に読み込み、その他は段階的に描画 */
 function loadImagesSequentially(imgs,rootEl){
   const list=[...imgs].filter(im=>im&&(im.dataset.src||!im.complete));
   if(!list.length)return;
@@ -729,6 +765,7 @@ function renderBatched(items,container,buildEl,batchSize=8,onDone){
 }
 
 let sel=null,cropFilter=null,drawing=false,draft=[],adjusting=false,showNum=false,activeNav='home',instaPhotos=[],V={s:1,x:0,y:0};
+let pcFeedMode='grid',mobFeedMode='grid';
 let currentDetailTarget=null,pendingPlanFile=null;
 const expandedComments=new Set();
 
@@ -742,7 +779,6 @@ function goHomeMap(){
   }
 }
 
-/* 閲覧/編集の切替: 現在の画面や選択状態を一切変えず、編集可否と編集UIだけを切り替える */
 function applyRoleUI(){
   const ed=isEditor();
   document.body.classList.toggle('role-viewer',!ed);
@@ -953,10 +989,48 @@ function zoomAt(f,cx,cy,smooth){
   }
 }
 function focusP(id,off){stopZ();const p=getP(id);if(!p)return;const c=centroid(p.points),r=vp.getBoundingClientRect(),s=Math.max(V.s,1.35);layer.style.transition='transform .3s';setTimeout(()=>layer.style.transition='',320);V.s=s;V.x=r.width/2-c.x*s;V.y=r.height*(off||.5)-c.y*s;applyT()}
-const ptrs=new Map();let drag=false,ds={x:0,y:0},moved=false,pd=0,ps=1,pm={x:0,y:0};
-vp.addEventListener('pointerdown',e=>{stopZ();ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=false;if(ptrs.size===1){drag=true;ds={x:e.clientX-V.x,y:e.clientY-V.y}}else if(ptrs.size===2){drag=false;const a=[...ptrs.values()];pd=Math.hypot(a[1].x-a[0].x,a[1].y-a[0].y);ps=V.s;pm={x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2}}});
-vp.addEventListener('pointermove',e=>{const p=ptrs.get(e.pointerId);if(!p)return;if(Math.hypot(e.clientX-p.x,e.clientY-p.y)>4)moved=true;ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});if(ptrs.size===2){const a=[...ptrs.values()],d=Math.hypot(a[1].x-a[0].x,a[1].y-a[0].y);if(pd>0)zoomAt(ps*d/pd/V.s,pm.x,pm.y,false)}else if(drag&&ptrs.size===1){V.x=e.clientX-ds.x;V.y=e.clientY-ds.y;applyT()}});
-function pend(e){ptrs.delete(e.pointerId);if(!ptrs.size)drag=false;if(drawing&&isEditor()&&!moved&&e.type==='pointerup'){const p=toSvg(e.clientX,e.clientY);if(p.x>=0&&p.x<=W&&p.y>=0&&p.y<=H){draft.push([p.x,p.y]);renderDraft()}}}
+
+const ptrs=new Map();let drag=false,ds={x:0,y:0},moved=false,pd=0,ps=1,pm={x:0,y:0},hadMultiTouch=false,lastMapTapTime=0,lastMapTapPos={x:0,y:0};
+vp.addEventListener('pointerdown',e=>{
+  stopZ();
+  if(e.pointerType==='touch')hadMultiTouch=ptrs.size>=1;
+  ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  moved=false;
+  if(ptrs.size===1){drag=true;ds={x:e.clientX-V.x,y:e.clientY-V.y}}
+  else if(ptrs.size===2){drag=false;const a=[...ptrs.values()];pd=Math.hypot(a[1].x-a[0].x,a[1].y-a[0].y);ps=V.s;pm={x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2}}
+});
+vp.addEventListener('pointermove',e=>{
+  const p=ptrs.get(e.pointerId);if(!p)return;
+  if(Math.hypot(e.clientX-p.x,e.clientY-p.y)>5)moved=true;
+  ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(ptrs.size===2){const a=[...ptrs.values()],d=Math.hypot(a[1].x-a[0].x,a[1].y-a[0].y);if(pd>0)zoomAt(ps*d/pd/V.s,pm.x,pm.y,false)}
+  else if(drag&&ptrs.size===1){V.x=e.clientX-ds.x;V.y=e.clientY-ds.y;applyT()}
+});
+function pend(e){
+  const isTouch=e.pointerType==='touch';
+  const wasSingleCleanTap=isTouch&&!moved&&!hadMultiTouch&&ptrs.size===1&&e.type==='pointerup';
+  const tapX=e.clientX,tapY=e.clientY;
+  ptrs.delete(e.pointerId);
+  if(!ptrs.size){drag=false;hadMultiTouch=false}
+  if(drawing&&isEditor()&&!moved&&e.type==='pointerup'){
+    const p=toSvg(tapX,tapY);
+    if(p.x>=0&&p.x<=W&&p.y>=0&&p.y<=H){draft.push([p.x,p.y]);renderDraft()}
+    return;
+  }
+  if(wasSingleCleanTap){
+    const now=Date.now();
+    const dt=now-lastMapTapTime;
+    const dist=Math.hypot(tapX-lastMapTapPos.x,tapY-lastMapTapPos.y);
+    if(dt>0&&dt<320&&dist<28){
+      lastMapTapTime=0;
+      stopZ();
+      fit(true);
+    }else{
+      lastMapTapTime=now;
+      lastMapTapPos={x:tapX,y:tapY};
+    }
+  }
+}
 vp.addEventListener('pointerup',pend);vp.addEventListener('pointercancel',pend);
 vp.addEventListener('wheel',e=>{e.preventDefault();const dy=Math.max(-250,Math.min(250,e.deltaY));zoomAt(Math.pow(1.006,-dy),e.clientX,e.clientY,true)},{passive:false});
 $('z-in').onclick=()=>{const r=vp.getBoundingClientRect();zoomAt(1.18,r.left+r.width/2,r.top+r.height/2,true)};
@@ -1089,40 +1163,65 @@ function closeCaptionEditor(areaEl){
   ta.classList.add('hidden');viewEl.classList.remove('hidden');
 }
 
-$('jump-to-timeline').onclick=()=>$('timeline-anchor').scrollIntoView({behavior:'smooth'});
-$('jump-to-grid').onclick=()=>$('insta-feed-view').scrollTo({top:0,behavior:'smooth'});
+/* フィード: PCはグリッド/フィード切替、スマホはグリッド→タップでフィード（左スワイプでグリッドへ戻る） */
+function applyFeedViewState(scrollTargetPost){
+  const isMob=window.innerWidth<768;
+  const mode=isMob?mobFeedMode:pcFeedMode;
+  const showGrid=(mode==='grid');
+  $('pc-mode-grid').classList.toggle('on',pcFeedMode==='grid');
+  $('pc-mode-feed').classList.toggle('on',pcFeedMode==='feed');
+  $('mob-feed-bar').classList.toggle('hidden',!(isMob&&!showGrid));
+  $('insta-grid').classList.toggle('hidden',!showGrid);
+  $('insta-stream').classList.toggle('hidden',showGrid);
+  const root=$('insta-feed-view');
+  if(showGrid){
+    const gridImgs=[...$('insta-grid').querySelectorAll('img')];
+    loadImagesSequentially(gridImgs,root);
+  }else{
+    const streamImgs=[...$('insta-stream').querySelectorAll('img')];
+    loadImagesSequentially(streamImgs,root);
+    if(scrollTargetPost){
+      requestAnimationFrame(()=>scrollTargetPost.scrollIntoView({block:'start'}));
+    }
+  }
+}
 
-/* フィード: グリッド（スマホ3列/PC4列）とタイムラインをシームレスに連続描画＋写真順次読込 */
+$('pc-mode-grid').onclick=()=>{pcFeedMode='grid';applyFeedViewState(null)};
+$('pc-mode-feed').onclick=()=>{pcFeedMode='feed';applyFeedViewState(null)};
+$('mob-back-grid').onclick=()=>{mobFeedMode='grid';applyFeedViewState(null);$('insta-feed-view').scrollTop=0};
+
+let fSwipeX0=0,fSwipeY0=0,fSwiping=false;
+$('insta-stream').addEventListener('touchstart',e=>{
+  if(window.innerWidth>=768||mobFeedMode!=='feed'||e.touches.length!==1)return;
+  if(e.target.closest('textarea,input,button,a'))return;
+  fSwipeX0=e.touches[0].clientX;fSwipeY0=e.touches[0].clientY;fSwiping=true;
+},{passive:true});
+$('insta-stream').addEventListener('touchend',e=>{
+  if(!fSwiping||window.innerWidth>=768||mobFeedMode!=='feed')return;
+  fSwiping=false;
+  const t=e.changedTouches&&e.changedTouches[0];if(!t)return;
+  const dx=t.clientX-fSwipeX0,dy=t.clientY-fSwipeY0;
+  if(dx<-65&&Math.abs(dx)>Math.abs(dy)*1.3){
+    mobFeedMode='grid';applyFeedViewState(null);$('insta-feed-view').scrollTop=0;
+  }
+},{passive:true});
+
 function renderInstaFeed(keepScroll){
   const view=$('insta-feed-view'),stream=$('insta-stream'),grid=$('insta-grid');
-  if(!keepScroll)view.scrollTop=0;
+  if(!keepScroll){
+    if(window.innerWidth<768)mobFeedMode='grid';
+    view.scrollTop=0;
+  }
   instaPhotos=allPhotosLatestFirst();
   stream.innerHTML='';grid.innerHTML='';
   if(!instaPhotos.length){
     const emptyMsg='<div style="padding:48px 16px;text-align:center;color:var(--mut);grid-column:1/-1">登録された写真がまだありません</div>';
-    stream.innerHTML=emptyMsg;grid.innerHTML=emptyMsg;return;
+    stream.innerHTML=emptyMsg;grid.innerHTML=emptyMsg;
+    applyFeedViewState(null);
+    return;
   }
   const ed=isEditor();
-  const gridImgs=[];
-  renderBatched(instaPhotos,grid,(p,idx)=>{
-    const item=document.createElement('div');
-    item.className='ig-grid-item';
-    item.dataset.igLb=idx;
-    const im=document.createElement('img');
-    im.alt=escapeHtml(p.parcelCode+' '+p.parcelLabel);
-    im.decoding='async';
-    if(idx<4)im.fetchPriority='high';
-    im.dataset.src=p.dataUrl;
-    gridImgs.push(im);
-    const cap=document.createElement('div');
-    cap.className='ig-grid-cap';
-    cap.textContent=`${p.parcelCode} ${p.cropName||p.parcelLabel}`;
-    item.appendChild(im);
-    item.appendChild(cap);
-    return item;
-  },12,()=>loadImagesSequentially(gridImgs,view));
-
-  const streamImgs=[];
+  const postEls=[];
   renderBatched(instaPhotos,stream,(p,idx)=>{
     const post=document.createElement('article');post.className='ig-post';post.dataset.idx=idx;
     const cropDisp=p.cropName||'作物未登録',commentVal=p.comment||'',isEditable=!p.isStatic&&ed;
@@ -1148,16 +1247,36 @@ function renderInstaFeed(keepScroll){
     `;
     const im=post.querySelector('.ig-photo-wrap img');
     im.dataset.src=p.dataUrl;
-    streamImgs.push(im);
+    postEls[idx]=post;
     renderCaptionDisplay(post.querySelector('.ig-caption-view'),commentVal,!isEditable);
     return post;
-  },4,()=>loadImagesSequentially(streamImgs,view));
+  },4);
+
+  renderBatched(instaPhotos,grid,(p,idx)=>{
+    const item=document.createElement('div');
+    item.className='ig-grid-item';
+    item.dataset.igPick=idx;
+    const im=document.createElement('img');
+    im.alt=escapeHtml(p.parcelCode+' '+p.parcelLabel);
+    im.decoding='async';
+    if(idx<4)im.fetchPriority='high';
+    im.dataset.src=p.dataUrl;
+    item.appendChild(im);
+    return item;
+  },12,()=>applyFeedViewState(null));
+
+  $('insta-grid').onclick=e=>{
+    const pick=e.target.closest('[data-ig-pick]');if(!pick)return;
+    const idx=Number(pick.dataset.igPick);if(Number.isNaN(idx))return;
+    if(window.innerWidth<768){
+      mobFeedMode='feed';
+      applyFeedViewState(postEls[idx]||null);
+    }else{
+      openGridLB(idx);
+    }
+  };
 }
 
-$('insta-grid').addEventListener('click',e=>{
-  const lbEl=e.target.closest('[data-ig-lb]');
-  if(lbEl){const idx=Number(lbEl.dataset.igLb);if(!Number.isNaN(idx))openGridLB(idx)}
-});
 $('insta-stream').addEventListener('click',e=>{
   const detBtn=e.target.closest('[data-detail-parcel]');
   if(detBtn){e.stopPropagation();openDetailModal(detBtn.dataset.detailParcel,detBtn.dataset.detailPhoto);return}
@@ -1184,39 +1303,26 @@ $('insta-stream').addEventListener('focusout',e=>{
   if(ta)closeCaptionEditor(ta.closest('.ig-caption-area'));
 });
 
-/* ◯ 統合最新ストリーム: 日誌・写真投稿・資料更新を最新順に表示 */
-function latestCombinedItems(){
+/* ◯ 最新情報・写真・作業日誌一覧（叩き台: 写真と作業日誌から新しい順に日付・内容・写真を抽出し大きめパネルで表示） */
+function latestPhotoAndJournalItems(){
   const items=[];
   allPhotosLatestFirst().forEach((ph,idx)=>{
     const iso=toISO(ph.postedAt);
     const ts=ph.timestamp||(Date.parse(iso)||0);
-    const hasWork=Boolean(String(ph.workLog||'').trim());
+    const work=String(ph.workLog||'').trim();
+    const cap=String(ph.comment||'').trim();
+    const head=`${ph.parcelCode} ${ph.parcelLabel}${ph.cropName?'（'+ph.cropName+'）':''}`;
+    const bodyText=work?`${head}\n${work}`:(cap?`${head}\n${cap}`:head);
     items.push({
-      kind:hasWork?'日誌・写真':'写真投稿',
-      isPhoto:true,
+      kind:work?'作業日誌':'写真',
       iso,
       ts,
       dateDisp:fmtDate(ph.postedAt),
-      title:`${ph.parcelCode} ${ph.parcelLabel}${ph.cropName?'・'+ph.cropName:''}`,
-      sub:ph.workLog||ph.comment||'写真を追加しました',
+      content:bodyText,
       dataUrl:ph.dataUrl,
       parcelId:ph.parcelId,
       photoId:ph.id,
       photoIdx:idx
-    });
-  });
-  (S.plans||[]).forEach(pl=>{
-    const iso=toISO(pl.updatedAt);
-    const ts=Number((pl.id||'').replace(/\D/g,''))||(Date.parse(iso)||0);
-    items.push({
-      kind:'資料・計画',
-      isPhoto:false,
-      iso,
-      ts,
-      dateDisp:fmtDate(pl.updatedAt),
-      title:pl.title||'資料',
-      sub:pl.body||pl.fileName||pl.ref||'',
-      planId:pl.id
     });
   });
   return items.sort((a,b)=>{
@@ -1224,47 +1330,42 @@ function latestCombinedItems(){
     return b.ts-a.ts;
   });
 }
+
 function renderCircleStream(){
   const wrap=$('c-list'),root=$('circle-view');
-  const items=latestCombinedItems();
-  if(!items.length){wrap.innerHTML='<div class="c-card" style="justify-content:center;color:var(--mut)">最新の記録はまだありません</div>';return}
+  const items=latestPhotoAndJournalItems();
+  if(!items.length){wrap.innerHTML='<div class="c-panel" style="text-align:center;color:var(--mut)">表示できる写真・作業日誌はまだありません</div>';return}
   const imgs=[];
   renderBatched(items,wrap,it=>{
     const card=document.createElement('article');
-    card.className='c-card';
-    const thumbHtml=it.dataUrl?`<img class="c-thumb" data-src="${escapeHtml(it.dataUrl)}" alt="" decoding="async">`:'';
-    const kindCls=it.isPhoto?' photo':'';
+    card.className='c-panel';
     card.innerHTML=`
-      ${thumbHtml}
-      <div class="c-body">
-        <div class="c-top">
-          <span class="c-kind${kindCls}">${escapeHtml(it.kind)}</span>
-          <span style="font-size:11px;color:var(--mut);font-variant-numeric:tabular-nums">${escapeHtml(it.dateDisp)}</span>
-        </div>
-        <div class="c-title">${escapeHtml(it.title)}</div>
-        ${it.sub?`<div class="c-sub">${escapeHtml(it.sub)}</div>`:''}
-        <div class="c-acts">
-          ${it.parcelId?`<button type="button" class="nb" data-c-jump="${escapeHtml(it.parcelId)}">区画を表示</button>`:''}
-          ${it.photoId?`<button type="button" class="nb" data-detail-parcel="${escapeHtml(it.parcelId)}" data-detail-photo="${escapeHtml(it.photoId)}">詳細を見る</button>`:''}
-          ${it.planId?`<button type="button" class="nb" data-c-plan="${escapeHtml(it.planId)}">資料を開く</button>`:''}
-        </div>
+      <div class="c-panel-hd">
+        <span class="c-panel-date">${escapeHtml(it.dateDisp)}</span>
+        <span class="c-panel-tag">${escapeHtml(it.kind)}</span>
+      </div>
+      <div class="c-panel-content">${escapeHtml(it.content)}</div>
+      ${it.dataUrl?`<img class="c-panel-photo" data-src="${escapeHtml(it.dataUrl)}" data-c-lb="${it.photoIdx}" alt="${escapeHtml(it.dateDisp)}" decoding="async">`:''}
+      <div class="c-panel-ft">
+        <button type="button" class="nb" data-c-jump="${escapeHtml(it.parcelId)}">区画を表示</button>
+        <button type="button" class="nb" data-detail-parcel="${escapeHtml(it.parcelId)}" data-detail-photo="${escapeHtml(it.photoId)}">詳細を見る</button>
       </div>
     `;
-    const im=card.querySelector('img.c-thumb');
+    const im=card.querySelector('img.c-panel-photo');
     if(im)imgs.push(im);
     return card;
-  },8,()=>loadImagesSequentially(imgs,root));
+  },6,()=>loadImagesSequentially(imgs,root));
 }
 $('c-list').addEventListener('click',e=>{
+  const lbImg=e.target.closest('[data-c-lb]');
+  if(lbImg){const idx=Number(lbImg.dataset.cLb);if(!Number.isNaN(idx))return openGridLB(idx)}
   const det=e.target.closest('[data-detail-parcel]');
   if(det)return openDetailModal(det.dataset.detailParcel,det.dataset.detailPhoto);
   const jmp=e.target.closest('[data-c-jump]');
   if(jmp&&getP(jmp.dataset.cJump)){setNav('home');selectP(jmp.dataset.cJump,window.USE_SHEET?true:false)}
-  const plb=e.target.closest('[data-c-plan]');
-  if(plb){setNav('plans');setTimeout(()=>{const box=$('pl-view-'+plb.dataset.cPlan);if(box)box.scrollIntoView({behavior:'smooth'})},80)}
 });
 
-/* 日誌（工夫した表記） */
+/* 日誌 */
 function renderJournal(){
   const selEl=$('j-parcel'),q=($('j-q').value||'').trim().toLowerCase(),listEl=$('j-list');
   const curVal=selEl.value;
@@ -1399,7 +1500,7 @@ $('pl-add').onclick=async()=>{
   });
   $('pl-title').value='';$('pl-ref').value='';$('pl-body').value='';$('pl-file').value='';
   pendingPlanFile=null;$('pl-file-name').textContent='未選択';
-  await saveState();renderPlans();toast('保存しました');
+  await saveState();renderPlans();toast('追加しました');
 };
 
 async function renderExcelInline(container,url){
@@ -1890,7 +1991,7 @@ function detectDevice(){
   window.USE_SHEET=useSheet;
 }
 detectDevice();
-window.addEventListener('resize',()=>{detectDevice();syncAdjLayout();fit(false)});
+window.addEventListener('resize',()=>{detectDevice();syncAdjLayout();fit(false);if(activeNav==='feed')applyFeedViewState(null)});
 
 let px0=0,py0=0,pdx=0,pdy=0,pswipe=false,pdir=null;
 panel.addEventListener('touchstart',e=>{
