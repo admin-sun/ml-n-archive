@@ -197,7 +197,7 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .card-date.no-exif,.card-date-wrap.no-exif{box-shadow:0 0 0 1.5px #ea580c;background:rgba(255,247,237,.95)}
 .card .ch .nb{height:22px;padding:0 6px;font-size:10px;font-weight:700;background:rgba(255,255,255,.9);color:#0f172a;border:none;border-radius:4px}
 
-/* フィード: PCはグリッド/フィード切替式（グリッド4列・画面幅ギリギリ）、スマホはグリッド→タップでフィード（右スワイプでグリッドへ戻る） */
+/* フィード: PCはグリッド/フィード切替式（グリッド4列・画面幅ギリギリ）、スマホはグリッド→タップでフィード（左→右スワイプでグリッドへ戻る） */
 #insta-feed-view{
   position:absolute;inset:0;z-index:25;background:var(--bg);
   overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;overscroll-behavior-y:none;
@@ -256,13 +256,13 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
   position:absolute;left:0;right:0;bottom:0;
   display:flex;align-items:center;justify-content:space-between;gap:4px;
   padding:4px 6px;
-  background:linear-gradient(to top,rgba(15,23,42,.82),rgba(15,23,42,0));
-  color:#fff;font-size:10px;font-weight:700;font-variant-numeric:tabular-nums;
+  background:linear-gradient(to top,rgba(15,23,42,.85),rgba(15,23,42,0));
+  font-size:10px;font-weight:700;font-variant-numeric:tabular-nums;
   pointer-events:none;
 }
 .ig-grid-num{
-  background:rgba(15,23,42,.75);
-  padding:1px 5px;border-radius:4px;line-height:1.25;
+  background:rgba(15,23,42,.78);color:#fff;
+  padding:1px 5px;border-radius:4px;line-height:1.25;white-space:nowrap;
 }
 .ig-grid-date{
   background:rgba(255,255,255,.92);color:#0f172a;
@@ -314,7 +314,7 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .c-day-entries{display:flex;flex-direction:column;gap:8px}
 .c-entry-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;background:var(--bg);border-radius:10px;padding:9px 11px}
 .c-entry-text{font-size:13.5px;font-weight:700;line-height:1.5;white-space:pre-wrap;word-break:break-word;flex:1}
-.c-day-photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.c-day-photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
 .c-photo-box{position:relative;border-radius:10px;overflow:hidden;background:#0f172a;aspect-ratio:4 / 3;cursor:zoom-in}
 .c-photo-box img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .2s ease}
 .c-photo-box img.loaded{opacity:1}
@@ -333,9 +333,11 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .j-filter{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:8px 10px}
 .j-filter select,.j-filter input{height:30px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);padding:0 8px;font-size:12px}
 .j-item{position:relative;background:var(--sf);border:1px solid var(--bd);border-left:4px solid var(--g2);border-radius:12px;padding:11px 13px;display:flex;flex-direction:column;gap:6px}
+.j-item.note-only{border-left-color:var(--a)}
 .j-item-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .j-parcel-pill{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:var(--bg);border:1px solid var(--bd)}
 .j-crop-pill{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(45,106,79,.14);color:var(--g2)}
+.j-note-pill{font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;background:rgba(217,119,6,.16);color:#b45309}
 .j-date-stamp{font-size:11px;font-weight:700;color:var(--mut);font-variant-numeric:tabular-nums}
 .j-work-box{background:var(--bg);border-radius:8px;padding:8px 10px;font-size:13px;font-weight:700;line-height:1.5;white-space:pre-wrap}
 .j-cap{font-size:12.5px;color:var(--mut);line-height:1.5;white-space:pre-wrap}
@@ -454,4 +456,457 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
     <button class="hb edit-only" id="b-draw" type="button">区画追加</button>
     <button class="hb" id="b-num" type="button">番号</button>
     <button class="hb edit-only" id="b-adj" type="button">位置調整</button>
-    <button class="hb edit-only" id="b-menu" type="button" aria-label="メニュー">⋮</button
+    <button class="hb edit-only" id="b-menu" type="button" aria-label="メニュー">⋮</button>
+    <div id="menu" class="fl hidden edit-only">
+      <button id="b-export" type="button">データを書き出し (JSON)</button>
+      <label>データを読み込み<input id="i-import" type="file" accept=".json" class="hidden"></label>
+      <button id="b-remap" type="button">地図画像を再選択</button>
+      <input id="i-map" type="file" accept="image/*" class="hidden">
+    </div>
+  </div>
+</header>
+
+<main>
+<section id="map-section">
+  <div id="map-viewport">
+    <div id="layer">
+      <img id="mapimg" src="ここに元のBase64を貼る" alt="農地地図" fetchpriority="high">
+      <svg id="svg" viewBox="0 0 1281 1117">
+        <g id="parcels"></g><g id="badges" style="pointer-events:none"></g><g id="drawp" style="pointer-events:none"></g><g id="adjl"></g>
+      </svg>
+    </div>
+  </div>
+  <div id="upload" class="hidden"><div><p style="font-weight:700;font-size:16px">地図画像を選択してください</p><p class="mut">一度選ぶと保存され、次回から自動で表示されます。</p><button class="btn edit-only" id="b-upload" type="button">地図画像を選択</button></div></div>
+  <div id="hint" class="fl">白い農地をタップして写真を表示</div>
+  <div id="draw-banner" class="fl hidden edit-only"><span>新しい農地の角を<b>3点以上</b>タップ→「確定」</span><button id="d-ok" type="button">確定</button><button id="d-undo" type="button">戻す</button><button id="d-cancel" type="button">中止</button></div>
+  <div id="zoom" class="fl"><button id="z-in" type="button">＋</button><button id="z-out" type="button">−</button><button id="z-fit" type="button" style="font-size:13px">全体</button></div>
+
+  <div id="adj-panel" class="fl hidden edit-only">
+    <div class="adj-head" style="display:flex;justify-content:space-between;align-items:center">
+      <h3>位置調整モード</h3>
+      <div style="display:flex;gap:5px;align-items:center">
+        <button type="button" class="adj-fold-btn" id="adj-fold">たたむ</button>
+        <button class="ab" data-a="done" type="button" style="width:54px;height:28px">終了</button>
+      </div>
+    </div>
+    <div class="adj-body">
+      <div class="mut adj-subhint">ズームして区画の黄色い●（頂点）をドラッグ。数px単位は下のボタンで。</div>
+      <div class="adj-ctrl-row" style="margin-top:6px">
+        <div>移動量：<select id="step"><option>0.1</option><option>0.25</option><option>0.5</option><option selected>1</option><option>2</option><option>5</option></select> px</div>
+      </div>
+      <div class="adj-sections">
+        <div class="sec"><h3>① 全区画まとめて</h3>
+          <div class="mut">移動</div>
+          <div class="row"><button class="ab" data-a="gm" data-x="-1" data-y="0" type="button">←</button><button class="ab" data-a="gm" data-x="0" data-y="-1" type="button">↑</button><button class="ab" data-a="gm" data-x="0" data-y="1" type="button">↓</button><button class="ab" data-a="gm" data-x="1" data-y="0" type="button">→</button></div>
+          <div class="mut">拡大縮小（中心基準）</div>
+          <div class="row"><button class="ab" data-a="gs" data-x="-1" data-y="0" type="button">横−</button><button class="ab" data-a="gs" data-x="1" data-y="0" type="button">横＋</button><button class="ab" data-a="gs" data-x="0" data-y="-1" type="button">縦−</button><button class="ab" data-a="gs" data-x="0" data-y="1" type="button">縦＋</button></div>
+          <div class="mut" id="gread"></div>
+          <div class="row"><button class="ab wide" data-a="greset" type="button">全体調整をリセット</button></div>
+        </div>
+        <div class="sec"><h3>② 選択中の1区画</h3>
+          <div class="mut" id="sread">地図で区画をタップ</div>
+          <div class="row"><button class="ab" data-a="pm" data-x="-1" data-y="0" type="button">←</button><button class="ab" data-a="pm" data-x="0" data-y="-1" type="button">↑</button><button class="ab" data-a="pm" data-x="0" data-y="1" type="button">↓</button><button class="ab" data-a="pm" data-x="1" data-y="0" type="button">→</button></div>
+          <div class="row"><button class="ab wide" data-a="preset" type="button">この区画を初期位置に戻す</button></div>
+        </div>
+        <div class="sec adj-sec-copy"><div class="mut" id="imgsz"></div><div class="row"><button class="ab wide" data-a="copy" type="button">座標をコピー / 保存</button></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<aside id="panel">
+  <div id="empty"><h2 style="color:var(--tx);font-size:16px">農地を選択してください</h2><p>地図の<b>白塗りの農地</b>をクリックすると、登録写真がここに表示されます。</p></div>
+  <div id="active" class="hidden">
+    <div class="top-controls">
+      <div class="bar">
+        <div class="bar-row1">
+          <div class="id-pair">
+            <span id="pcode" class="pcode-badge">F01</span>
+            <span id="pcount" class="pcount-badge">0枚</span>
+          </div>
+          <div class="fld fld-lot"><label for="lot">地番</label><input id="lot" placeholder="例: 瀬川 350-1" readonly></div>
+        </div>
+        <div class="bar-row2">
+          <div class="fld fld-crop">
+            <div class="fld-head">
+              <label for="crop">栽培作物名</label>
+              <span id="crop-multi-hint" class="crop-multi-hint hidden"></span>
+            </div>
+            <input id="crop" placeholder="例: 水稲 または キャベツ/ブロッコリー" readonly>
+          </div>
+          <div id="crop-strip" class="crop-strip hidden" aria-label="登録作物一覧"></div>
+        </div>
+      </div>
+      <div class="addrow edit-only">
+        <label class="btn circle-add" aria-label="写真を追加する">＋<input id="i-photos" type="file" accept="image/*" multiple class="hidden"></label>
+      </div>
+    </div>
+    <div id="feed"></div>
+    <div id="cfoot" class="edit-only" style="padding:8px 14px;text-align:right;border-top:1px solid var(--bd)"><button id="b-delc" type="button" style="border:0;background:none;color:#dc2626;font-size:12px">この区画を削除</button></div>
+  </div>
+</aside>
+
+<!-- フィード: PCはグリッド/フィード切替式、スマホはグリッド→タップでフィード（左→右スワイプでグリッドへ戻る） -->
+<section id="insta-feed-view" class="hidden" aria-label="フィード">
+  <div class="feed-pc-bar">
+    <button type="button" class="feed-mode-btn on" id="pc-mode-grid">グリッド</button>
+    <button type="button" class="feed-mode-btn" id="pc-mode-feed">フィード</button>
+  </div>
+  <div class="feed-mob-bar hidden" id="mob-feed-bar">
+    <button type="button" class="feed-mob-back" id="mob-back-grid">‹ グリッドに戻る</button>
+    <span style="color:var(--mut);font-size:11px">→ 右スワイプでグリッド</span>
+  </div>
+  <div id="insta-grid" class="ig-grid"></div>
+  <div id="insta-stream" class="ig-stream hidden"></div>
+</section>
+
+<!-- ◯ 最新: 日付ごとにまとめて大きめパネルで表示 -->
+<section id="circle-view" class="hidden" aria-label="◯ 最新情報・写真・作業日誌一覧">
+  <div class="c-wrap" id="c-list"></div>
+</section>
+
+<!-- 作業日誌（写真なしでも作成・編集・削除可能） -->
+<section id="journal-view" class="hidden" aria-label="作業日誌">
+  <div class="j-wrap">
+    <div class="j-editor edit-only">
+      <h3><span id="j-form-title">日誌を書く（写真なし可）</span><button type="button" class="nb hidden" id="j-cancel-edit">編集キャンセル</button></h3>
+      <div class="j-form-grid">
+        <div><input id="j-date" type="date" aria-label="日付"></div>
+        <div><select id="j-in-parcel" aria-label="対象区画"></select></div>
+        <div><input id="j-in-crop" type="text" placeholder="作物名（任意）"></div>
+        <div class="full"><textarea id="j-in-work" placeholder="作業内容（例: 耕うん、追肥、除草、観察メモなど）"></textarea></div>
+        <div class="full"><input id="j-in-memo" type="text" placeholder="補足メモ（任意）"></div>
+        <div class="full" style="display:flex;justify-content:flex-end;gap:8px">
+          <button type="button" class="btn" id="j-save-btn" style="padding:7px 14px;font-size:12px">日誌を保存</button>
+        </div>
+      </div>
+    </div>
+    <div class="j-filter">
+      <select id="j-parcel"><option value="">全区画</option></select>
+      <input id="j-q" type="search" placeholder="作業内容・作物・メモ検索">
+    </div>
+    <div id="j-list"></div>
+  </div>
+</section>
+
+<!-- 計画・資料 -->
+<section id="plans-view" class="hidden" aria-label="計画・資料">
+  <div class="pl-wrap">
+    <div class="pl-card edit-only" id="pl-editor-card">
+      <h3><span>資料を追加</span></h3>
+      <div class="pl-form">
+        <div><input id="pl-title" type="text" placeholder="タイトル（空欄ならファイル名を使用）"></div>
+        <div class="pl-file-row">
+          <label class="pl-file-btn">Excel / PDF ファイルを選択<input id="pl-file" type="file" accept=".pdf,.xlsx,.xls,.csv,application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv" class="hidden"></label>
+          <span id="pl-file-name" class="mut">未選択</span>
+        </div>
+        <div class="full"><input id="pl-ref" type="text" placeholder="外部リンクURL（任意）"></div>
+        <div class="full"><textarea id="pl-body" placeholder="メモ・内容（任意）"></textarea></div>
+        <div class="full" style="display:flex;justify-content:flex-end;gap:8px">
+          <button type="button" class="btn" id="pl-add" style="padding:8px 14px;font-size:12px">追加する</button>
+        </div>
+      </div>
+    </div>
+    <div id="pl-list"></div>
+  </div>
+</section>
+</main>
+
+<nav id="bottom-nav" aria-label="メインナビゲーション">
+  <button type="button" class="bnav-btn on" data-nav="home" data-label="ホーム" aria-label="ホーム">
+    <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg>
+  </button>
+  <button type="button" class="bnav-btn" data-nav="feed" data-label="フィード" aria-label="フィード">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+  </button>
+  <button type="button" class="bnav-btn" data-nav="circle" data-label="最新" aria-label="◯ 最新情報・写真・作業日誌一覧">
+    <span class="circle-mark" aria-hidden="true"></span>
+  </button>
+  <button type="button" class="bnav-btn" data-nav="journal" data-label="日誌" aria-label="日誌">
+    <svg viewBox="0 0 24 24"><path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><line x1="8" y1="8" x2="15" y2="8"/><line x1="8" y1="12" x2="15" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg>
+  </button>
+  <button type="button" class="bnav-btn" data-nav="plans" data-label="計画・資料" aria-label="計画・資料">
+    <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+  </button>
+</nav>
+
+<div id="detail-modal" class="hidden" role="dialog" aria-label="詳細を見る">
+  <div class="dm-box">
+    <div class="dm-head">
+      <h3 id="dm-title">詳細を見る</h3>
+      <button type="button" class="nb" id="dm-close">✕</button>
+    </div>
+    <img id="dm-img" class="dm-thumb hidden" alt="">
+    <div id="dm-meta" class="dm-meta"></div>
+    <div class="dm-field">
+      <label for="dm-work">具体的な作業内容</label>
+      <textarea id="dm-work" class="edit-only" placeholder="例: 畝立て・黒マルチ張り、追肥・中耕、防除散布など"></textarea>
+      <div id="dm-work-ro" class="dm-ro"></div>
+    </div>
+    <div class="dm-field">
+      <label for="dm-cap">キャプション・観察メモ</label>
+      <textarea id="dm-cap" class="edit-only" placeholder="生育状況や気づきを入力..."></textarea>
+      <div id="dm-cap-ro" class="dm-ro"></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px">
+      <button type="button" class="btn edit-only" id="dm-save" style="padding:8px 16px;font-size:13px">内容を保存</button>
+    </div>
+  </div>
+</div>
+
+<div id="lb" class="hidden">
+  <div class="top">
+    <div><div id="lb-t" style="font-weight:700"></div><div id="lb-d" style="font-size:12px;color:#fbbf24"></div></div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <div class="lb-pwrap">
+        <button id="lb-pbtn" type="button">全期間 ▾</button>
+        <div id="lb-pmenu" class="hidden">
+          <button type="button" data-p="all" class="on">全期間</button>
+          <button type="button" data-p="7">過去7日</button>
+          <button type="button" data-p="14">過去14日</button>
+          <button type="button" data-p="month">今月</button>
+          <button type="button" data-p="year">今年</button>
+        </div>
+      </div>
+      <span id="lb-c" style="font-size:12px;white-space:nowrap"></span>
+      <button class="nv" id="lb-x" type="button" style="position:static;transform:none">✕</button>
+    </div>
+  </div>
+  <div class="stage" id="lb-s"><button class="nv" id="lb-p" type="button" style="left:8px">‹</button><img id="lb-i" alt=""><button class="nv" id="lb-n" type="button" style="right:8px">›</button></div>
+  <div id="lb-guide" style="text-align:center;font-size:11px;color:#94a3b8;padding:8px">左右ボタン／スワイプで切替</div>
+</div>
+<div id="toast"></div>
+<div id="confirm" class="hidden"><div><h3 id="c-t" style="margin:0 0 6px"></h3><p id="c-b" class="mut" style="font-size:13px"></p><div style="display:flex;justify-content:flex-end;gap:8px"><button class="nb" id="c-no" type="button" style="height:38px">キャンセル</button><button class="btn" id="c-ok" type="button" style="background:#dc2626;padding:9px 16px">削除する</button></div></div></div>
+<div id="crop-picker" class="hidden edit-only" role="dialog" aria-label="写真の作物登録"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const W=1281,H=1117,CX=W/2,CY=H/2;
+const P=["358,61 358,75 385,76 384,64 377,65 371,61", "1036,19 1029,18 1002,26 1002,33 1007,53 1011,53 1041,42 1040,27", "1102,11 1103,22 1110,22 1124,18 1123,12", "1131,36 1124,36 1106,41 1107,49 1113,66 1118,66 1138,60 1138,55", "397,124 397,116 393,96 358,101 358,106 372,118 389,124", "644,92 643,113 670,112 672,110 671,94", "648,130 648,135 668,142 672,142 673,130", "922,66 922,78 938,75 938,66", "1009,72 1004,72 968,83 968,87 984,87 1010,84", "227,193 226,211 247,221 251,221 255,211 260,205 260,200 248,199 231,193", "654,179 632,180 633,215 645,214 656,210", "659,180 660,207 665,207 685,197 685,192 677,180", "910,171 912,201 924,209 928,209 923,170", "88,205 83,215 83,227 92,228 97,213 97,207", "107,233 102,249 102,255 115,258 124,258 128,243 128,237", "113,207 109,222 109,229 123,233 131,233 135,212 118,207", "562,225 561,229 558,232 553,232 548,256 548,265 558,267 571,276 578,278 594,279 595,233 593,225", "825,252 820,270 819,281 831,282 834,256 829,252", "97,343 98,349 119,349 119,342 98,341", "124,351 127,352 173,353 173,346 169,345 125,343", "222,299 218,329 218,355 233,356 235,355 235,326 237,302", "457,323 457,338 473,337 472,323", "539,319 519,320 517,349 515,351 507,351 508,361 540,361", "804,284 801,315 819,318 822,286", "811,332 810,348 816,349 819,352 819,359 834,359 834,336", "826,287 823,308 823,319 840,321 840,303 833,288", "474,342 458,343 459,358 474,357", "478,349 479,360 505,360 505,349", "717,470 714,487 714,499 733,502 736,483 736,473 724,470", "711,505 708,517 708,528 705,538 705,544 725,548 732,508", "702,548 699,557 700,564 747,574 749,564 748,558 708,548", "736,509 733,520 733,528 731,531 729,550 744,554 750,554 752,545 750,533 753,520 753,512", "741,475 738,503 749,506 756,506 761,478 750,475", "383,597 379,609 377,623 392,627 400,627 404,600", "544,603 535,639 535,644 558,646 568,606", "756,542 751,565 751,575 766,578 774,578 779,555 779,547 762,542", "779,566 777,579 789,581 791,567", "956,605 932,607 933,622 957,620", "990,601 959,604 960,619 991,616", "651,713 645,738 643,759 685,761 685,755 680,747 664,727 655,713", "662,700 664,710 692,749 696,749 706,717 706,713 673,702", "514,797 515,810 520,814 578,827 581,816 580,811 519,797", "597,773 589,807 589,813 586,821 586,835 588,837 608,841 642,844 654,776 625,773", "981,787 937,784 927,805 922,819 922,824 944,834 951,835 959,822 970,809 980,793", "475,848 471,861 471,868 492,875 502,876 506,852", "521,823 517,823 516,830 514,834 514,839 501,896 501,902 510,905 518,905 521,903 524,881 534,832 534,827", "576,839 546,830 538,829 525,900 533,900 566,893", "583,843 573,894 574,900 578,903 621,907 628,848", "473,916 479,1016 516,1012 513,942 511,925 505,924 503,927 479,916", "567,901 557,900 530,905 528,922 556,931 561,931 567,912", "517,967 520,1011 546,1009 588,1000 588,996 579,985 562,972 554,968 535,969 524,966", "522,1024 503,1026 503,1031 516,1078 514,1081 505,1083 506,1097 515,1097 551,1086 551,1079 536,1033 530,1027 525,1027"].map((a,i)=>{const n=String(i+1).padStart(2,'0');return{id:'F'+n,defaultLot:'区画 #'+n,points:a}});
+
+const STATIC_INFO={};
+const STATIC_PHOTOS={};
+
+const SUPABASE_URL='https://cpbwjygsxawpkroneunz.supabase.co';
+const SUPABASE_KEY='sb_publishable_rVd7KEoOrJZOeIhdc14Nkg_ghFCtNJr';
+const SUPABASE_BUCKET='photos';
+
+const _SB_BASE=SUPABASE_URL.replace(/\/+$/,'');
+const SB_OK=!/xxxx|ここに/.test(_SB_BASE+SUPABASE_KEY);
+const sbH=x=>Object.assign({apikey:SUPABASE_KEY},SUPABASE_KEY.startsWith('eyJ')?{Authorization:'Bearer '+SUPABASE_KEY}:{},x||{});
+async function sbReq(url,opt){const r=await fetch(url,opt);if(!r.ok)throw new Error('Supabase '+r.status+' '+await r.text().catch(()=>''));return r}
+function sbDb(){
+  const T=_SB_BASE+'/rest/v1/farm_docs',enc=encodeURIComponent;let loaded=false;
+  const guard=()=>{if(!loaded)throw new Error('データ未読込のため保存を中止（上書き防止）')};
+  const doc=path=>({
+    async get(){const a=await(await sbReq(T+'?select=data&path=eq.'+enc(path),{headers:sbH()})).json();return a.length?{exists:true,id:path.split('/').pop(),data:()=>a[0].data}:{exists:false,id:path.split('/').pop(),data:()=>undefined}},
+    async set(obj){guard();await sbReq(T+'?on_conflict=path',{method:'POST',headers:sbH({'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'}),body:JSON.stringify({path,data:obj,updated_at:new Date().toISOString()})})},
+    async delete(){guard();await sbReq(T+'?path=eq.'+enc(path),{method:'DELETE',headers:sbH()})}
+  });
+  const collection=name=>({async get(){const a=await(await sbReq(T+'?select=path,data&path=like.'+enc(name+'/*'),{headers:sbH()})).json();loaded=true;return{docs:a.map(x=>({id:x.path.slice(name.length+1),data:()=>x.data}))}}});
+  return{doc,collection};
+}
+function sbAssets(){
+  const B=_SB_BASE+'/storage/v1/object/';
+  return{
+    async upload(blob,customExt){const t=blob.type||'application/octet-stream',ext=customExt||(t.includes('pdf')?'pdf':t.includes('spreadsheet')||t.includes('excel')?'xlsx':t.includes('csv')?'csv':t.includes('png')?'png':t.includes('webp')?'webp':'jpg'),id=Date.now()+'_'+Math.random().toString(36).slice(2,9)+'.'+ext;
+      await sbReq(B+SUPABASE_BUCKET+'/'+id,{method:'POST',headers:sbH({'Content-Type':t,'Cache-Control':'max-age=31536000'}),body:blob});
+      return{id,url:B+'public/'+SUPABASE_BUCKET+'/'+id}},
+    async delete(id){await sbReq(B+SUPABASE_BUCKET+'/'+id,{method:'DELETE',headers:sbH()})}
+  };
+}
+
+const DB='FarmlandPhotoArchiveDB';
+const openDB=()=>new Promise((res,rej)=>{const r=indexedDB.open(DB,1);r.onupgradeneeded=e=>{if(!e.target.result.objectStoreNames.contains('appState'))e.target.result.createObjectStore('appState')};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+let DBH=null,ASS=null;const lastSaved={};
+async function loadState(){
+  if(SB_OK){DBH=sbDb();ASS=sbAssets()}
+  if(!DBH){try{const db=await openDB();return await new Promise((res,rej)=>{const q=db.transaction('appState').objectStore('appState').get('main');q.onsuccess=()=>res(q.result||null);q.onerror=()=>rej(q.error)})}catch(e){return null}}
+  try{const m=await DBH.doc('app/main').get(),q=await DBH.collection('parcels').get(),records={};
+    if(Array.isArray(q.docs))q.docs.forEach(d=>{records[d.id]=d.data();lastSaved[d.id]=JSON.stringify(d.data())});
+    const md=m.exists?m.data():{};lastSaved.__meta=JSON.stringify(md);return{...md,records}
+  }catch(e){console.error(e);return null}
+}
+async function saveState(){
+  if(!isEditor())return false;
+  if(!DBH){try{const db=await openDB();return await new Promise((res,rej)=>{const q=db.transaction('appState','readwrite').objectStore('appState').put(S,'main');q.onsuccess=()=>res(true);q.onerror=()=>rej(q.error)})}catch(e){toast('端末への保存に失敗しました');return false}}
+  try{const{records,...meta}=S,ms=JSON.stringify(meta);
+    if(ms!==lastSaved.__meta){await DBH.doc('app/main').set(JSON.parse(ms));lastSaved.__meta=ms}
+    for(const id in records){const s=JSON.stringify(records[id]);if(lastSaved[id]!==s){await DBH.doc('parcels/'+id).set(JSON.parse(s));lastSaved[id]=s}}
+    for(const id in lastSaved){if(id!=='__meta'&&!records[id]){await DBH.doc('parcels/'+id).delete();delete lastSaved[id]}}
+    return true
+  }catch(e){console.error(e);toast('エラー詳細: '+e.message);return false}
+}
+let saveT;const saveSoon=()=>{clearTimeout(saveT);saveT=setTimeout(saveState,300)};
+
+let S={records:{},customParcels:[],deletedParcels:[],customMapDataUrl:null,parcelOverrides:{},globalAdjust:{dx:0,dy:0,sx:1,sy:1},plans:[],journalNotes:[],role:'viewer'};
+const normState=o=>({
+  records:o.records||{},
+  customParcels:o.customParcels||[],
+  deletedParcels:o.deletedParcels||[],
+  customMapDataUrl:o.customMapDataUrl||null,
+  parcelOverrides:o.parcelOverrides||{},
+  globalAdjust:o.globalAdjust||{dx:0,dy:0,sx:1,sy:1},
+  plans:Array.isArray(o.plans)?o.plans:[],
+  journalNotes:Array.isArray(o.journalNotes)?o.journalNotes:[],
+  role:'viewer'
+});
+const isEditor=()=>S.role==='editor';
+
+function loadImagesSequentially(imgs,rootEl){
+  const list=[...imgs].filter(im=>im&&(im.dataset.src||!im.complete));
+  if(!list.length)return;
+  let idx=0,active=0;
+  const maxConc=2;
+  const next=()=>{
+    while(active<maxConc&&idx<list.length){
+      const im=list[idx++];
+      if(im.dataset.loadedQueued)continue;
+      im.dataset.loadedQueued='1';
+      active++;
+      const finish=()=>{
+        im.classList.add('loaded');
+        active=Math.max(0,active-1);
+        requestAnimationFrame(next);
+      };
+      im.addEventListener('load',finish,{once:true});
+      im.addEventListener('error',finish,{once:true});
+      if(im.dataset.src){im.src=im.dataset.src;im.removeAttribute('data-src')}
+      else if(im.complete&&im.naturalWidth)finish();
+    }
+  };
+  if(rootEl){
+    const io=new IntersectionObserver(entries=>{
+      entries.forEach(en=>{
+        if(en.isIntersecting){
+          const im=en.target;
+          if(im.dataset.src){im.src=im.dataset.src;im.removeAttribute('data-src')}
+          io.unobserve(im);
+        }
+      });
+    },{root:rootEl,rootMargin:'300px 0px'});
+    list.slice(6).forEach(im=>io.observe(im));
+  }
+  next();
+}
+function renderBatched(items,container,buildEl,batchSize=8,onDone){
+  container.innerHTML='';
+  if(!items.length){if(onDone)onDone();return}
+  let pos=0;
+  const stepBatch=()=>{
+    const frag=document.createDocumentFragment();
+    const end=Math.min(pos+batchSize,items.length);
+    for(;pos<end;pos++){
+      const el=buildEl(items[pos],pos);
+      if(el)frag.appendChild(el);
+    }
+    container.appendChild(frag);
+    if(pos<items.length)requestAnimationFrame(stepBatch);
+    else if(onDone)onDone();
+  };
+  stepBatch();
+}
+
+let sel=null,cropFilter=null,drawing=false,draft=[],adjusting=false,showNum=false,activeNav='home',instaPhotos=[],V={s:1,x:0,y:0};
+let pcFeedMode='grid',mobFeedMode='grid';
+let currentDetailTarget=null,pendingPlanFile=null,editingNoteId=null;
+const expandedComments=new Set();
+
+function goHomeMap(){
+  setNav('home');
+  if(window.USE_SHEET&&sel){
+    closeP();
+  }else{
+    stopZ();
+    fit(true);
+  }
+}
+
+function applyRoleUI(){
+  const ed=isEditor();
+  document.body.classList.toggle('role-viewer',!ed);
+  const rb=$('b-role');
+  if(rb){
+    rb.textContent=ed?'編集':'閲覧';
+    rb.classList.toggle('role-viewer',!ed);
+  }
+  $('lot').readOnly=!ed;
+  $('crop').readOnly=!ed;
+  $('hint').textContent=ed?'白い農地をタップして写真を表示・登録':'白い農地をタップして写真を表示';
+  if(!ed){
+    if(drawing)setDraw(false);
+    if(adjusting)setAdj(false);
+    closeCropPicker();
+    $('menu').classList.add('hidden');
+    resetNoteForm();
+  }
+  if(sel){
+    const prevScroll=$('feed').scrollTop;
+    feed();
+    $('feed').scrollTop=prevScroll;
+  }
+  if(activeNav==='feed'){
+    const prevScroll=$('insta-feed-view').scrollTop;
+    renderInstaFeed(true);
+    $('insta-feed-view').scrollTop=prevScroll;
+  }
+  if(activeNav==='circle')renderCircleStream();
+  if(activeNav==='journal')renderJournal();
+  if(activeNav==='plans'){
+    const prevScroll=$('plans-view').scrollTop;
+    renderPlans();
+    $('plans-view').scrollTop=prevScroll;
+  }
+  if(!$('detail-modal').classList.contains('hidden')&&currentDetailTarget){
+    openDetailModal(currentDetailTarget.parcelId,currentDetailTarget.photoId);
+  }
+}
+
+$('b-role').onclick=()=>{
+  S.role=isEditor()?'viewer':'editor';
+  applyRoleUI();
+  toast(isEditor()?'編集モードに切り替えました':'閲覧モードに切り替えました');
+};
+
+function parseCrops(str){
+  if(!str)return[];
+  const raw=String(str).split(/[/、・]/).map(s=>s.trim()).filter(Boolean);
+  const out=[];
+  raw.forEach(item=>{if(!out.includes(item))out.push(item)});
+  return out;
+}
+function effectivePhotoCrop(ph,parcelCropStr){
+  const pc=String((ph&&ph.cropName)||'').trim();
+  return pc||String(parcelCropStr||'').trim();
+}
+
+const r2=n=>Math.round(n*100)/100;
+const parse=s=>s.trim().split(/\s+/).map(p=>p.split(',').map(Number));
+const str=a=>a.map(([x,y])=>r2(x)+','+r2(y)).join(' ');
+function gTransform(s){const g=S.globalAdjust;return str(parse(s).map(([x,y])=>[CX+(x-CX)*g.sx+g.dx,CY+(y-CY)*g.sy+g.dy]))}
+function parcelSortPos(ptsStr){
+  const a=parse(ptsStr);
+  return{x:Math.min(...a.map(p=>p[0])),y:Math.max(...a.map(p=>p[1]))};
+}
+function allParcels(){
+  const del=S.deletedParcels||[];
+  const list=[...P.filter(p=>!del.includes(p.id)).map(p=>({...p,points:S.parcelOverrides[p.id]||gTransform(p.points)})),...S.customParcels.map(p=>({...p,points:S.parcelOverrides[p.id]||p.points}))];
+  list.sort((a,b)=>{
+    const pa=parcelSortPos(a.points),pb=parcelSortPos(b.points);
+    if(Math.abs(pb.y-pa.y)>12)return pb.y-pa.y;
+    return pa.x-pb.x;
+  });
+  return list.map((p,i)=>{const code='F'+String(i+1).padStart(2,'0');return{...p,code,defaultLot:'区画 #'+String(i+1).padStart(2,'0')}});
+}
+const getP=id=>allParcels().find(p=>p.id===id)||null;
+const centroid=s=>{const a=parse(s);return{x:a.reduce((t,p)=>t+p[0],0)/a.length,y:a.reduce((t,p)=>t+p[1],0)/a.length}};
+function rec(id){
+  if(!S.records[id]){const m=getP(id);const si=STATIC_INFO[id]||{};S.records[id]={lotNumber:si.lotNumber||(m?m.defaultLot:id),cropName:si.cropName||'',photos:[]}}
+  const r0=S.records[id],s0=STATIC_INFO[id],m0=getP(id);
+  if(s0){if(s0.lotNumber&&(!r0.lotNumber||(m0&&r0.lotNumber===m0.defaultLot)))r0.lotNumber=s0.lotNumber;if(s0.cropName&&!r0.cropName)r0.cropName=s0.cropName}
+  return r0;
+}
+const todayISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const jpDate=iso=>iso.replace(/-/g,'/');
+const fmtDate=s=>String(s||'').replace(/(\d{4})[年\/\-](\d{1,2})[月\/\-](\d{1,2})日?.*/,(_,y,m,d)=>y+'/'+Number(m)+'/'+Number(d)).replace(/\s+\d{1,2}:\d{2}.*/,'');
+const toISO=s=>{const m=fmtDate(s).match(/(\d{4})\/(\d{1,2})\/(\d{1,2})/);return m?m[1]+'-'+m[2].padStart
