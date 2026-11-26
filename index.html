@@ -169,7 +169,7 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 /* 区画サムネイル: スマホは1列・詳細/全画面ボタン非表示、PCは2列 */
 #feed{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;overscroll-behavior-y:none;padding:10px;display:grid;grid-template-columns:1fr;grid-auto-rows:max-content;gap:12px;background:var(--bg);align-content:start}
 .card{position:relative;overflow:hidden;background:var(--sf);display:block;border-radius:10px;border:1px solid var(--bd)}
-.card img{width:100%;aspect-ratio:4 / 3;object-fit:cover;min-height:0;display:block;cursor:zoom-in;background:rgba(148,163,184,.12);opacity:0;transition:opacity .25s ease}
+.card img{width:100%;aspect-ratio:4 / 3;object-fit:cover;min-height:0;display:block;cursor:zoom-in;background:rgba(148,163,184,.12);opacity:0;transition:opacity .22s ease}
 @media(max-width:767px){
   .card .mob-hide-btn{display:none!important}
 }
@@ -198,27 +198,31 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .card-date.no-exif,.card-date-wrap.no-exif{box-shadow:0 0 0 1.5px #ea580c;background:rgba(255,247,237,.95)}
 .card .ch .nb{height:22px;padding:0 6px;font-size:10px;font-weight:700;background:rgba(255,255,255,.9);color:#0f172a;border:none;border-radius:4px}
 
-/* フィード（タイムライン＆グリッド復活: スマホ3列3-4行 / PC2列1-2行） */
+/* フィード: タイムラインとグリッドのシームレス表示（スマホ3列 / PC4列） */
 #insta-feed-view{
-  position:absolute;inset:0;z-index:25;background:var(--sf);
+  position:absolute;inset:0;z-index:25;background:var(--bg);
   overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;overscroll-behavior-y:none;
-  padding:0 0 28px;
+  padding:12px 12px 32px;
 }
-.feed-mode-bar{
-  position:sticky;top:0;z-index:10;display:flex;justify-content:center;gap:6px;padding:8px 12px;
-  background:var(--sf);border-bottom:1px solid var(--bd);
-}
-.fmode-btn{height:30px;padding:0 14px;border-radius:99px;border:1px solid var(--bd);background:var(--bg);font-size:12px;font-weight:700}
-.fmode-btn.on{background:var(--g2);border-color:var(--g2);color:#fff}
-:root[data-theme=dark] .fmode-btn.on{color:#0f172a}
+.feed-seamless-wrap{width:100%;max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.seamless-block-hd{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 2px;border-bottom:1px solid var(--bd)}
+.seamless-block-hd h2{margin:0;font-size:13px;font-weight:700;color:var(--tx)}
+.seamless-jump-link{border:0;background:none;color:var(--g2);font-size:12px;font-weight:700;padding:2px 4px}
 
-.ig-stream{width:100%;max-width:500px;margin:0 auto;display:flex;flex-direction:column;background:var(--sf)}
-@media(min-width:501px){
-  #insta-feed-view{background:var(--bg)}
-  .ig-stream{border-left:1px solid var(--bd);border-right:1px solid var(--bd)}
+.ig-grid{
+  width:100%;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;
 }
-.ig-post{width:100%;background:var(--sf);border-bottom:1px solid var(--bd)}
-.ig-post:last-child{border-bottom:0}
+@media(min-width:768px){
+  .ig-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+}
+.ig-grid-item{position:relative;overflow:hidden;background:#0f172a;cursor:pointer;aspect-ratio:1 / 1;border-radius:8px;border:1px solid var(--bd)}
+.ig-grid-item img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .2s ease}
+.ig-grid-item img.loaded{opacity:1}
+.ig-grid-cap{position:absolute;left:0;right:0;bottom:0;padding:4px 6px;background:linear-gradient(to top,rgba(0,0,0,.75),transparent);color:#fff;font-size:10px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+
+.ig-stream{width:100%;max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.ig-post{width:100%;background:var(--sf);border:1px solid var(--bd);border-radius:12px;overflow:hidden}
 .ig-post-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:var(--sf)}
 .ig-author{display:flex;align-items:center;gap:10px;min-width:0;flex:1;cursor:pointer}
 .ig-avatar{width:32px;height:32px;border-radius:50%;background:var(--g);color:#fff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;font-variant-numeric:tabular-nums}
@@ -233,7 +237,7 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .ig-post-date{font-size:11px;color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap}
 .ig-detail-btn{border:1px solid var(--bd);background:var(--bg);color:var(--tx);border-radius:6px;padding:4px 8px;font-size:11px;font-weight:700;white-space:nowrap}
 .ig-photo-wrap{width:100%;margin:0;padding:0;background:#0f172a;display:block;cursor:zoom-in}
-.ig-photo-wrap img{width:100%;aspect-ratio:1 / 1;object-fit:cover;display:block;opacity:0;transition:opacity .22s ease}
+.ig-photo-wrap img{width:100%;aspect-ratio:4 / 3;object-fit:cover;display:block;opacity:0;transition:opacity .22s ease}
 .ig-photo-wrap img.loaded{opacity:1}
 .ig-caption-area{padding:10px 12px 13px;background:var(--sf)}
 .ig-caption-view{font-size:13.5px;line-height:1.5;color:var(--tx);word-break:break-word;overflow-wrap:anywhere;white-space:pre-wrap;cursor:text}
@@ -243,50 +247,48 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .ig-caption-input{width:100%;min-height:42px;border:0;outline:0;background:transparent;color:var(--tx);padding:0;margin:0;font-size:13.5px;line-height:1.5;resize:none;display:block;overflow:hidden}
 @media(max-width:767px){.ig-caption-input{font-size:16px}}
 
-/* グリッド表示: スマホ3列(3〜4行相当)、PC2列(1〜2行相当) */
-.ig-grid{
-  width:100%;max-width:960px;margin:0 auto;
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;background:var(--bd);
-}
-.ig-grid-item{position:relative;overflow:hidden;background:#0f172a;cursor:zoom-in;aspect-ratio:3 / 4}
-.ig-grid-item img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .2s ease}
-.ig-grid-item img.loaded{opacity:1}
-.ig-grid-cap{position:absolute;left:0;right:0;bottom:0;padding:4px 5px;background:linear-gradient(to top,rgba(0,0,0,.72),transparent);color:#fff;font-size:10px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
-@media(min-width:768px){
-  .ig-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px;background:transparent}
-  .ig-grid-item{aspect-ratio:4 / 3;border-radius:10px;border:1px solid var(--bd)}
-  .ig-grid-cap{padding:6px 10px;font-size:12px}
-}
+/* ◯ 統合最新ストリーム（日誌・写真投稿・更新などを最新順に表示） */
+#circle-view{position:absolute;inset:0;z-index:25;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 32px}
+.c-wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.c-card{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:11px 13px;display:flex;gap:11px;align-items:flex-start}
+.c-thumb{width:68px;height:68px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#0f172a;opacity:0;transition:opacity .2s ease}
+.c-thumb.loaded{opacity:1}
+.c-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.c-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.c-kind{font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;background:rgba(45,106,79,.14);color:var(--g2)}
+.c-kind.photo{background:rgba(217,119,6,.16);color:#b45309}
+.c-title{font-size:13px;font-weight:700;line-height:1.4;word-break:break-word}
+.c-sub{font-size:12px;color:var(--mut);line-height:1.45;white-space:pre-wrap;word-break:break-word}
+.c-acts{display:flex;gap:6px;flex-wrap:wrap;padding-top:2px}
 
-#journal-view{position:absolute;inset:0;z-index:25;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 28px}
-.j-wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
-.j-filter{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:8px 10px}
-.j-filter select,.j-filter input{height:30px;border:1px solid var(--bd);border-radius:7px;background:var(--bg);padding:0 8px;font-size:12px}
-.j-item{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:11px 12px;display:flex;flex-direction:column;gap:6px}
+/* 日誌（工夫した表記） */
+#journal-view{position:absolute;inset:0;z-index:25;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 32px}
+.j-wrap{max-width:740px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.j-filter{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:8px 10px}
+.j-filter select,.j-filter input{height:30px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);padding:0 8px;font-size:12px}
+.j-item{position:relative;background:var(--sf);border:1px solid var(--bd);border-left:4px solid var(--g2);border-radius:12px;padding:11px 13px;display:flex;flex-direction:column;gap:6px}
 .j-item-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-.j-badge{font-size:11px;font-weight:700;padding:2px 7px;border-radius:99px;background:rgba(45,106,79,.14);color:var(--g2)}
-.j-work{font-size:13px;font-weight:700;line-height:1.45;white-space:pre-wrap}
-.j-cap{font-size:12.5px;color:var(--mut);line-height:1.45;white-space:pre-wrap}
-.j-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;padding-top:4px}
+.j-parcel-pill{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:var(--bg);border:1px solid var(--bd)}
+.j-crop-pill{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(45,106,79,.14);color:var(--g2)}
+.j-date-stamp{font-size:11px;font-weight:700;color:var(--mut);font-variant-numeric:tabular-nums}
+.j-work-box{background:var(--bg);border-radius:8px;padding:8px 10px;font-size:13px;font-weight:700;line-height:1.5;white-space:pre-wrap}
+.j-cap{font-size:12.5px;color:var(--mut);line-height:1.5;white-space:pre-wrap}
+.j-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;padding-top:2px}
 
-#plans-view{position:absolute;inset:0;z-index:25;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 28px}
-.pl-wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
-.pl-tabs{display:flex;gap:6px;flex-wrap:wrap}
-.pl-tab{height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--bd);background:var(--sf);font-size:12px;font-weight:700}
-.pl-tab.on{background:var(--g2);border-color:var(--g2);color:#fff}
-:root[data-theme=dark] .pl-tab.on{color:#0f172a}
+/* 計画・資料（固定枠なし・自由追加＆その場プレビュー） */
+#plans-view{position:absolute;inset:0;z-index:25;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 32px}
+.pl-wrap{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
 .pl-card{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
 .pl-card h3{margin:0;font-size:14px;display:flex;justify-content:space-between;align-items:center;gap:8px}
 .pl-form{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .pl-form .full{grid-column:1/-1}
 .pl-form input,.pl-form select,.pl-form textarea{width:100%;border:1px solid var(--bd);border-radius:8px;background:var(--bg);padding:7px 9px;font-size:12px}
-.pl-form textarea{min-height:60px;resize:vertical}
+.pl-form textarea{min-height:58px;resize:vertical}
 .pl-file-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 .pl-file-btn{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:8px;border:1px dashed var(--g2);background:rgba(45,106,79,.08);color:var(--g2);font-size:12px;font-weight:700;cursor:pointer}
 .pl-file-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;background:var(--bg);border:1px solid var(--bd);font-size:11px;font-weight:700}
 @media(max-width:600px){.pl-form{grid-template-columns:1fr}}
 
-/* 計画・資料 その場プレビュー */
 .pl-inline-viewer{margin-top:6px;border:1px solid var(--bd);border-radius:10px;overflow:hidden;background:var(--bg)}
 .pl-pdf-frame{width:100%;height:70vh;min-height:420px;border:0;display:block;background:#fff}
 .pl-sheet-tabs{display:flex;gap:4px;overflow-x:auto;padding:6px 8px;background:var(--sf);border-bottom:1px solid var(--bd)}
@@ -317,7 +319,7 @@ nav#bottom-nav{
   background:var(--sf);
   border-top:1px solid var(--bd);
   display:grid;
-  grid-template-columns:repeat(4,1fr);
+  grid-template-columns:repeat(5,1fr);
   z-index:60;
 }
 .bnav-btn{
@@ -332,11 +334,13 @@ nav#bottom-nav{
   transition:color .15s ease,transform .1s ease;
 }
 .bnav-btn:active{transform:scale(.92)}
-.bnav-btn svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.bnav-btn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.circle-mark{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;border:2px solid currentColor;font-size:0}
 .bnav-btn.on{color:var(--tx)}
 .bnav-btn.on svg{stroke-width:2.4}
+.bnav-btn.on .circle-mark{border-width:2.6;background:rgba(45,106,79,.12)}
 @media(min-width:768px){
-  .bnav-btn{gap:6px;font-size:12px;font-weight:600}
+  .bnav-btn{gap:5px;font-size:12px;font-weight:600}
   .bnav-btn::after{content:attr(data-label)}
 }
 
@@ -398,7 +402,7 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
 <section id="map-section">
   <div id="map-viewport">
     <div id="layer">
-      <img id="mapimg" src="ここに元のBase64を貼る" alt="農地地図">
+      <img id="mapimg" src="ここに元のBase64を貼る" alt="農地地図" fetchpriority="high">
       <svg id="svg" viewBox="0 0 1281 1117">
         <g id="parcels"></g><g id="badges" style="pointer-events:none"></g><g id="drawp" style="pointer-events:none"></g><g id="adjl"></g>
       </svg>
@@ -474,15 +478,28 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
   </div>
 </aside>
 
+<!-- フィード: グリッド（スマホ3列 / PC4列）とタイムラインをシームレスに連続表示 -->
 <section id="insta-feed-view" class="hidden" aria-label="フィード">
-  <div class="feed-mode-bar">
-    <button type="button" class="fmode-btn on" data-fmode="timeline">タイムライン</button>
-    <button type="button" class="fmode-btn" data-fmode="grid">グリッド</button>
+  <div class="feed-seamless-wrap">
+    <div class="seamless-block-hd">
+      <h2>写真一覧（グリッド）</h2>
+      <button type="button" class="seamless-jump-link" id="jump-to-timeline">タイムラインへ ↓</button>
+    </div>
+    <div id="insta-grid" class="ig-grid"></div>
+    <div class="seamless-block-hd" id="timeline-anchor">
+      <h2>タイムライン</h2>
+      <button type="button" class="seamless-jump-link" id="jump-to-grid">グリッドへ ↑</button>
+    </div>
+    <div id="insta-stream" class="ig-stream"></div>
   </div>
-  <div id="insta-stream" class="ig-stream"></div>
-  <div id="insta-grid" class="ig-grid hidden"></div>
 </section>
 
+<!-- ◯ 統合最新ストリーム: 日誌や写真投稿などを最新順に表示 -->
+<section id="circle-view" class="hidden" aria-label="最新ストリーム">
+  <div class="c-wrap" id="c-list"></div>
+</section>
+
+<!-- 作業日誌: 視認性を高めたタイムライン表記 -->
 <section id="journal-view" class="hidden" aria-label="作業日誌">
   <div class="j-wrap">
     <div class="j-filter">
@@ -493,15 +510,11 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
   </div>
 </section>
 
-<section id="plans-view" class="hidden" aria-label="事業計画・予算書・作付計画">
+<!-- 計画・資料: 決められた枠なし・自由追加＆Excel/PDFその場プレビュー -->
+<section id="plans-view" class="hidden" aria-label="計画・資料">
   <div class="pl-wrap">
-    <div class="pl-tabs" id="pl-tabs">
-      <button type="button" class="pl-tab on" data-cat="事業計画">事業計画</button>
-      <button type="button" class="pl-tab" data-cat="予算書">予算書</button>
-      <button type="button" class="pl-tab" data-cat="作付計画">作付計画</button>
-    </div>
     <div class="pl-card edit-only" id="pl-editor-card">
-      <h3><span id="pl-form-title">事業計画を追加</span></h3>
+      <h3><span>資料・計画を追加</span></h3>
       <div class="pl-form">
         <div><input id="pl-title" type="text" placeholder="タイトル（空欄ならファイル名を使用）"></div>
         <div class="pl-file-row">
@@ -509,7 +522,7 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
           <span id="pl-file-name" class="mut">未選択</span>
         </div>
         <div class="full"><input id="pl-ref" type="text" placeholder="外部リンクURL（Drive / Sheets 等・任意）"></div>
-        <div class="full"><textarea id="pl-body" placeholder="補足メモ・概要（任意）"></textarea></div>
+        <div class="full"><textarea id="pl-body" placeholder="メモ・概要（任意）"></textarea></div>
         <div class="full" style="display:flex;justify-content:flex-end;gap:8px">
           <button type="button" class="btn" id="pl-add" style="padding:8px 14px;font-size:12px">登録・保存する</button>
         </div>
@@ -526,6 +539,9 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
   </button>
   <button type="button" class="bnav-btn" data-nav="feed" data-label="フィード" aria-label="フィード">
     <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+  </button>
+  <button type="button" class="bnav-btn" data-nav="circle" data-label="最新" aria-label="最新">
+    <span class="circle-mark" aria-hidden="true"></span>
   </button>
   <button type="button" class="bnav-btn" data-nav="journal" data-label="日誌" aria-label="日誌">
     <svg viewBox="0 0 24 24"><path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><line x1="8" y1="8" x2="15" y2="8"/><line x1="8" y1="12" x2="15" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg>
@@ -657,7 +673,62 @@ const normState=o=>({
 });
 const isEditor=()=>S.role==='editor';
 
-let sel=null,cropFilter=null,drawing=false,draft=[],adjusting=false,showNum=false,activeNav='home',feedMode='timeline',planCat='事業計画',instaPhotos=[],instaIO=null,V={s:1,x:0,y:0};
+/* 順次読み込みキュー: 写真は上から順番に読み込み、その他は段階的に描画 */
+function loadImagesSequentially(imgs,rootEl){
+  const list=[...imgs].filter(im=>im&&(im.dataset.src||!im.complete));
+  if(!list.length)return;
+  let idx=0,active=0;
+  const maxConc=2;
+  const next=()=>{
+    while(active<maxConc&&idx<list.length){
+      const im=list[idx++];
+      if(im.dataset.loadedQueued)continue;
+      im.dataset.loadedQueued='1';
+      active++;
+      const finish=()=>{
+        im.classList.add('loaded');
+        active=Math.max(0,active-1);
+        requestAnimationFrame(next);
+      };
+      im.addEventListener('load',finish,{once:true});
+      im.addEventListener('error',finish,{once:true});
+      if(im.dataset.src){im.src=im.dataset.src;im.removeAttribute('data-src')}
+      else if(im.complete&&im.naturalWidth)finish();
+    }
+  };
+  if(rootEl){
+    const io=new IntersectionObserver(entries=>{
+      entries.forEach(en=>{
+        if(en.isIntersecting){
+          const im=en.target;
+          if(im.dataset.src){im.src=im.dataset.src;im.removeAttribute('data-src')}
+          io.unobserve(im);
+        }
+      });
+    },{root:rootEl,rootMargin:'300px 0px'});
+    list.slice(6).forEach(im=>io.observe(im));
+  }
+  next();
+}
+function renderBatched(items,container,buildEl,batchSize=8,onDone){
+  container.innerHTML='';
+  if(!items.length){if(onDone)onDone();return}
+  let pos=0;
+  const stepBatch=()=>{
+    const frag=document.createDocumentFragment();
+    const end=Math.min(pos+batchSize,items.length);
+    for(;pos<end;pos++){
+      const el=buildEl(items[pos],pos);
+      if(el)frag.appendChild(el);
+    }
+    container.appendChild(frag);
+    if(pos<items.length)requestAnimationFrame(stepBatch);
+    else if(onDone)onDone();
+  };
+  stepBatch();
+}
+
+let sel=null,cropFilter=null,drawing=false,draft=[],adjusting=false,showNum=false,activeNav='home',instaPhotos=[],V={s:1,x:0,y:0};
 let currentDetailTarget=null,pendingPlanFile=null;
 const expandedComments=new Set();
 
@@ -699,6 +770,8 @@ function applyRoleUI(){
     renderInstaFeed(true);
     $('insta-feed-view').scrollTop=prevScroll;
   }
+  if(activeNav==='circle')renderCircleStream();
+  if(activeNav==='journal')renderJournal();
   if(activeNav==='plans'){
     const prevScroll=$('plans-view').scrollTop;
     renderPlans();
@@ -916,6 +989,7 @@ function render(){
   if(showNum)renderBadges(ps);
   $('reg').textContent=reg;$('tot').textContent=ps.length;renderHandles();updAdj();
   if(activeNav==='feed')renderInstaFeed(true);
+  if(activeNav==='circle')renderCircleStream();
   if(activeNav==='journal')renderJournal();
 }
 function insidePoly(x,y,pts){
@@ -1015,20 +1089,12 @@ function closeCaptionEditor(areaEl){
   ta.classList.add('hidden');viewEl.classList.remove('hidden');
 }
 
-function setFeedMode(mode){
-  feedMode=mode;
-  document.querySelectorAll('.fmode-btn').forEach(b=>b.classList.toggle('on',b.dataset.fmode===mode));
-  $('insta-stream').classList.toggle('hidden',mode!=='timeline');
-  $('insta-grid').classList.toggle('hidden',mode!=='grid');
-  renderInstaFeed(false);
-}
-document.querySelector('.feed-mode-bar').addEventListener('click',e=>{
-  const b=e.target.closest('.fmode-btn');if(b)setFeedMode(b.dataset.fmode);
-});
+$('jump-to-timeline').onclick=()=>$('timeline-anchor').scrollIntoView({behavior:'smooth'});
+$('jump-to-grid').onclick=()=>$('insta-feed-view').scrollTo({top:0,behavior:'smooth'});
 
+/* フィード: グリッド（スマホ3列/PC4列）とタイムラインをシームレスに連続描画＋写真順次読込 */
 function renderInstaFeed(keepScroll){
   const view=$('insta-feed-view'),stream=$('insta-stream'),grid=$('insta-grid');
-  if(instaIO){instaIO.disconnect();instaIO=null}
   if(!keepScroll)view.scrollTop=0;
   instaPhotos=allPhotosLatestFirst();
   stream.innerHTML='';grid.innerHTML='';
@@ -1036,57 +1102,56 @@ function renderInstaFeed(keepScroll){
     const emptyMsg='<div style="padding:48px 16px;text-align:center;color:var(--mut);grid-column:1/-1">登録された写真がまだありません</div>';
     stream.innerHTML=emptyMsg;grid.innerHTML=emptyMsg;return;
   }
-  const ed=isEditor(),deferred=[];
-  if(feedMode==='grid'){
-    instaPhotos.forEach((p,idx)=>{
-      const item=document.createElement('div');item.className='ig-grid-item';item.dataset.igLb=idx;
-      const imgAttr=idx<12?`src="${p.dataUrl}"`:`data-src="${p.dataUrl}" loading="lazy"`;
-      item.innerHTML=`<img ${imgAttr} alt="${escapeHtml(p.parcelCode+' '+p.parcelLabel)}" decoding="async"><div class="ig-grid-cap">${escapeHtml(p.parcelCode)} ${escapeHtml(p.cropName||p.parcelLabel)}</div>`;
-      const im=item.querySelector('img');
-      im.onload=()=>im.classList.add('loaded');
-      if(im.complete&&im.naturalWidth)im.classList.add('loaded');
-      if(idx>=12)deferred.push(im);
-      grid.appendChild(item);
-    });
-  }else{
-    instaPhotos.forEach((p,idx)=>{
-      const post=document.createElement('article');post.className='ig-post';post.dataset.idx=idx;
-      const cropDisp=p.cropName||'作物未登録',commentVal=p.comment||'',isEditable=!p.isStatic&&ed;
-      const imgAttr=idx<3?`src="${p.dataUrl}" ${idx===0?'fetchpriority="high"':''}`:`data-src="${p.dataUrl}" loading="lazy"`;
-      post.innerHTML=`
-        <div class="ig-post-hd">
-          <div class="ig-author" data-ig-jump="${escapeHtml(p.parcelId)}">
-            <span class="ig-avatar">${escapeHtml(p.parcelCode)}</span>
-            <div class="ig-author-meta">
-              <div class="ig-author-line1"><span class="ig-code-inline">${escapeHtml(p.parcelCode)}</span><span class="ig-lot">${escapeHtml(p.parcelLabel)}</span></div>
-              <div class="ig-crop-line2">${escapeHtml(cropDisp)}</div>
-            </div>
-          </div>
-          <div class="ig-hd-right">
-            <span class="ig-post-date">${escapeHtml(fmtDate(p.postedAt))}</span>
-            <button type="button" class="ig-detail-btn" data-detail-parcel="${escapeHtml(p.parcelId)}" data-detail-photo="${escapeHtml(p.id)}">詳細を見る</button>
+  const ed=isEditor();
+  const gridImgs=[];
+  renderBatched(instaPhotos,grid,(p,idx)=>{
+    const item=document.createElement('div');
+    item.className='ig-grid-item';
+    item.dataset.igLb=idx;
+    const im=document.createElement('img');
+    im.alt=escapeHtml(p.parcelCode+' '+p.parcelLabel);
+    im.decoding='async';
+    if(idx<4)im.fetchPriority='high';
+    im.dataset.src=p.dataUrl;
+    gridImgs.push(im);
+    const cap=document.createElement('div');
+    cap.className='ig-grid-cap';
+    cap.textContent=`${p.parcelCode} ${p.cropName||p.parcelLabel}`;
+    item.appendChild(im);
+    item.appendChild(cap);
+    return item;
+  },12,()=>loadImagesSequentially(gridImgs,view));
+
+  const streamImgs=[];
+  renderBatched(instaPhotos,stream,(p,idx)=>{
+    const post=document.createElement('article');post.className='ig-post';post.dataset.idx=idx;
+    const cropDisp=p.cropName||'作物未登録',commentVal=p.comment||'',isEditable=!p.isStatic&&ed;
+    post.innerHTML=`
+      <div class="ig-post-hd">
+        <div class="ig-author" data-ig-jump="${escapeHtml(p.parcelId)}">
+          <span class="ig-avatar">${escapeHtml(p.parcelCode)}</span>
+          <div class="ig-author-meta">
+            <div class="ig-author-line1"><span class="ig-code-inline">${escapeHtml(p.parcelCode)}</span><span class="ig-lot">${escapeHtml(p.parcelLabel)}</span></div>
+            <div class="ig-crop-line2">${escapeHtml(cropDisp)}</div>
           </div>
         </div>
-        <div class="ig-photo-wrap" data-ig-lb="${idx}"><img ${imgAttr} alt="${escapeHtml(p.parcelCode+' '+p.parcelLabel)}" decoding="async"></div>
-        <div class="ig-caption-area">
-          <div class="ig-caption-view${isEditable?'':' is-readonly'}" data-parcel-id="${escapeHtml(p.parcelId)}" data-photo-id="${escapeHtml(p.id)}"></div>
-          <textarea class="ig-caption-input hidden" data-parcel-id="${escapeHtml(p.parcelId)}" data-photo-id="${escapeHtml(p.id)}" placeholder="文章を入力..." ${isEditable?'':'readonly'}>${escapeHtml(commentVal)}</textarea>
+        <div class="ig-hd-right">
+          <span class="ig-post-date">${escapeHtml(fmtDate(p.postedAt))}</span>
+          <button type="button" class="ig-detail-btn" data-detail-parcel="${escapeHtml(p.parcelId)}" data-detail-photo="${escapeHtml(p.id)}">詳細を見る</button>
         </div>
-      `;
-      const im=post.querySelector('.ig-photo-wrap img');
-      im.onload=()=>im.classList.add('loaded');
-      if(im.complete&&im.naturalWidth)im.classList.add('loaded');
-      if(idx>=3)deferred.push(im);
-      renderCaptionDisplay(post.querySelector('.ig-caption-view'),commentVal,!isEditable);
-      stream.appendChild(post);
-    });
-  }
-  if(deferred.length){
-    instaIO=new IntersectionObserver((entries,obs)=>{
-      entries.forEach(entry=>{if(entry.isIntersecting){const im=entry.target;if(im.dataset.src){im.src=im.dataset.src;im.removeAttribute('data-src')}obs.unobserve(im)}});
-    },{root:view,rootMargin:'240px 0px'});
-    deferred.forEach(im=>instaIO.observe(im));
-  }
+      </div>
+      <div class="ig-photo-wrap" data-ig-lb="${idx}"><img alt="${escapeHtml(p.parcelCode+' '+p.parcelLabel)}" decoding="async"></div>
+      <div class="ig-caption-area">
+        <div class="ig-caption-view${isEditable?'':' is-readonly'}" data-parcel-id="${escapeHtml(p.parcelId)}" data-photo-id="${escapeHtml(p.id)}"></div>
+        <textarea class="ig-caption-input hidden" data-parcel-id="${escapeHtml(p.parcelId)}" data-photo-id="${escapeHtml(p.id)}" placeholder="文章を入力..." ${isEditable?'':'readonly'}>${escapeHtml(commentVal)}</textarea>
+      </div>
+    `;
+    const im=post.querySelector('.ig-photo-wrap img');
+    im.dataset.src=p.dataUrl;
+    streamImgs.push(im);
+    renderCaptionDisplay(post.querySelector('.ig-caption-view'),commentVal,!isEditable);
+    return post;
+  },4,()=>loadImagesSequentially(streamImgs,view));
 }
 
 $('insta-grid').addEventListener('click',e=>{
@@ -1119,6 +1184,87 @@ $('insta-stream').addEventListener('focusout',e=>{
   if(ta)closeCaptionEditor(ta.closest('.ig-caption-area'));
 });
 
+/* ◯ 統合最新ストリーム: 日誌・写真投稿・資料更新を最新順に表示 */
+function latestCombinedItems(){
+  const items=[];
+  allPhotosLatestFirst().forEach((ph,idx)=>{
+    const iso=toISO(ph.postedAt);
+    const ts=ph.timestamp||(Date.parse(iso)||0);
+    const hasWork=Boolean(String(ph.workLog||'').trim());
+    items.push({
+      kind:hasWork?'日誌・写真':'写真投稿',
+      isPhoto:true,
+      iso,
+      ts,
+      dateDisp:fmtDate(ph.postedAt),
+      title:`${ph.parcelCode} ${ph.parcelLabel}${ph.cropName?'・'+ph.cropName:''}`,
+      sub:ph.workLog||ph.comment||'写真を追加しました',
+      dataUrl:ph.dataUrl,
+      parcelId:ph.parcelId,
+      photoId:ph.id,
+      photoIdx:idx
+    });
+  });
+  (S.plans||[]).forEach(pl=>{
+    const iso=toISO(pl.updatedAt);
+    const ts=Number((pl.id||'').replace(/\D/g,''))||(Date.parse(iso)||0);
+    items.push({
+      kind:'資料・計画',
+      isPhoto:false,
+      iso,
+      ts,
+      dateDisp:fmtDate(pl.updatedAt),
+      title:pl.title||'資料',
+      sub:pl.body||pl.fileName||pl.ref||'',
+      planId:pl.id
+    });
+  });
+  return items.sort((a,b)=>{
+    if(a.iso!==b.iso)return b.iso.localeCompare(a.iso);
+    return b.ts-a.ts;
+  });
+}
+function renderCircleStream(){
+  const wrap=$('c-list'),root=$('circle-view');
+  const items=latestCombinedItems();
+  if(!items.length){wrap.innerHTML='<div class="c-card" style="justify-content:center;color:var(--mut)">最新の記録はまだありません</div>';return}
+  const imgs=[];
+  renderBatched(items,wrap,it=>{
+    const card=document.createElement('article');
+    card.className='c-card';
+    const thumbHtml=it.dataUrl?`<img class="c-thumb" data-src="${escapeHtml(it.dataUrl)}" alt="" decoding="async">`:'';
+    const kindCls=it.isPhoto?' photo':'';
+    card.innerHTML=`
+      ${thumbHtml}
+      <div class="c-body">
+        <div class="c-top">
+          <span class="c-kind${kindCls}">${escapeHtml(it.kind)}</span>
+          <span style="font-size:11px;color:var(--mut);font-variant-numeric:tabular-nums">${escapeHtml(it.dateDisp)}</span>
+        </div>
+        <div class="c-title">${escapeHtml(it.title)}</div>
+        ${it.sub?`<div class="c-sub">${escapeHtml(it.sub)}</div>`:''}
+        <div class="c-acts">
+          ${it.parcelId?`<button type="button" class="nb" data-c-jump="${escapeHtml(it.parcelId)}">区画を表示</button>`:''}
+          ${it.photoId?`<button type="button" class="nb" data-detail-parcel="${escapeHtml(it.parcelId)}" data-detail-photo="${escapeHtml(it.photoId)}">詳細を見る</button>`:''}
+          ${it.planId?`<button type="button" class="nb" data-c-plan="${escapeHtml(it.planId)}">資料を開く</button>`:''}
+        </div>
+      </div>
+    `;
+    const im=card.querySelector('img.c-thumb');
+    if(im)imgs.push(im);
+    return card;
+  },8,()=>loadImagesSequentially(imgs,root));
+}
+$('c-list').addEventListener('click',e=>{
+  const det=e.target.closest('[data-detail-parcel]');
+  if(det)return openDetailModal(det.dataset.detailParcel,det.dataset.detailPhoto);
+  const jmp=e.target.closest('[data-c-jump]');
+  if(jmp&&getP(jmp.dataset.cJump)){setNav('home');selectP(jmp.dataset.cJump,window.USE_SHEET?true:false)}
+  const plb=e.target.closest('[data-c-plan]');
+  if(plb){setNav('plans');setTimeout(()=>{const box=$('pl-view-'+plb.dataset.cPlan);if(box)box.scrollIntoView({behavior:'smooth'})},80)}
+});
+
+/* 日誌（工夫した表記） */
 function renderJournal(){
   const selEl=$('j-parcel'),q=($('j-q').value||'').trim().toLowerCase(),listEl=$('j-list');
   const curVal=selEl.value;
@@ -1130,28 +1276,27 @@ function renderJournal(){
     if(!q)return true;
     return [p.parcelCode,p.parcelLabel,p.cropName,p.workLog,p.comment,p.postedAt].join(' ').toLowerCase().includes(q);
   });
-  listEl.innerHTML='';
-  if(!rows.length){listEl.innerHTML='<div class="j-item" style="text-align:center;color:var(--mut)">該当する記録がありません</div>';return}
-  rows.forEach(p=>{
+  if(!rows.length){listEl.innerHTML='<div class="j-item" style="text-align:center;color:var(--mut)">該当する日誌はありません</div>';return}
+  renderBatched(rows,listEl,p=>{
     const card=document.createElement('article');card.className='j-item';
     const workText=p.workLog||'（作業内容の記載なし）';
     card.innerHTML=`
       <div class="j-item-top">
         <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-          <span class="j-badge">${escapeHtml(p.parcelCode)} ${escapeHtml(p.parcelLabel)}</span>
-          ${p.cropName?`<span style="font-size:12px;font-weight:700">${escapeHtml(p.cropName)}</span>`:''}
+          <span class="j-parcel-pill">${escapeHtml(p.parcelCode)} · ${escapeHtml(p.parcelLabel)}</span>
+          ${p.cropName?`<span class="j-crop-pill">${escapeHtml(p.cropName)}</span>`:''}
         </div>
-        <span style="font-size:11px;color:var(--mut)">${escapeHtml(fmtDate(p.postedAt))}</span>
+        <span class="j-date-stamp">${escapeHtml(fmtDate(p.postedAt))}</span>
       </div>
-      <div class="j-work">${escapeHtml(workText)}</div>
-      ${p.comment?`<div class="j-cap">${escapeHtml(p.comment)}</div>`:''}
+      <div class="j-work-box">${escapeHtml(workText)}</div>
+      ${p.comment?`<div class="j-cap">メモ: ${escapeHtml(p.comment)}</div>`:''}
       <div class="j-foot">
-        <button type="button" class="nb" data-j-jump="${escapeHtml(p.parcelId)}">区画を表示</button>
+        <button type="button" class="nb" data-j-jump="${escapeHtml(p.parcelId)}">地図・区画へ</button>
         <button type="button" class="nb" data-detail-parcel="${escapeHtml(p.parcelId)}" data-detail-photo="${escapeHtml(p.id)}">詳細を見る</button>
       </div>
     `;
-    listEl.appendChild(card);
-  });
+    return card;
+  },10);
 }
 $('j-parcel').addEventListener('change',renderJournal);
 $('j-q').addEventListener('input',renderJournal);
@@ -1200,18 +1345,12 @@ $('dm-save').onclick=async()=>{
   await saveState();
   if(sel===currentDetailTarget.parcelId)feed();
   if(activeNav==='feed')renderInstaFeed(true);
+  if(activeNav==='circle')renderCircleStream();
   if(activeNav==='journal')renderJournal();
   toast('詳細内容を保存しました');
 };
 
-/* 計画・資料: Excel / PDF ファイルアップロード＆その場プレビュー */
-$('pl-tabs').addEventListener('click',e=>{
-  const b=e.target.closest('button[data-cat]');if(!b)return;
-  planCat=b.dataset.cat;
-  document.querySelectorAll('#pl-tabs .pl-tab').forEach(x=>x.classList.toggle('on',x.dataset.cat===planCat));
-  $('pl-form-title').textContent=planCat+'を追加';
-  renderPlans();
-});
+/* 計画・資料: 固定枠なし・自由追加＆Excel/PDFその場プレビュー */
 $('pl-file').addEventListener('change',e=>{
   const f=e.target.files&&e.target.files[0];
   pendingPlanFile=f||null;
@@ -1249,8 +1388,7 @@ $('pl-add').onclick=async()=>{
   if(!Array.isArray(S.plans))S.plans=[];
   S.plans.unshift({
     id:'PL_'+Date.now(),
-    category:planCat,
-    title:title||fileName||planCat,
+    title:title||fileName||'資料',
     ref,
     body,
     fileUrl,
@@ -1261,7 +1399,7 @@ $('pl-add').onclick=async()=>{
   });
   $('pl-title').value='';$('pl-ref').value='';$('pl-body').value='';$('pl-file').value='';
   pendingPlanFile=null;$('pl-file-name').textContent='未選択';
-  await saveState();renderPlans();toast(planCat+'を保存しました');
+  await saveState();renderPlans();toast('保存しました');
 };
 
 async function renderExcelInline(container,url){
@@ -1279,7 +1417,7 @@ async function renderExcelInline(container,url){
     const showSheet=idx=>{
       container.querySelectorAll('.pl-sheet-tab').forEach((b,bi)=>b.classList.toggle('on',bi===idx));
       const ws=wb.Sheets[sheets[idx]];
-      wrap.innerHTML=XLSX.utils.sheet_to_html(ws,{editable:false});
+      requestAnimationFrame(()=>{wrap.innerHTML=XLSX.utils.sheet_to_html(ws,{editable:false})});
     };
     showSheet(0);
     container.querySelector('.pl-sheet-tabs').addEventListener('click',e=>{
@@ -1292,10 +1430,9 @@ async function renderExcelInline(container,url){
 
 function renderPlans(){
   const list=$('pl-list'),ed=isEditor();
-  const items=(S.plans||[]).filter(x=>x.category===planCat);
-  list.innerHTML='';
-  if(!items.length){list.innerHTML=`<div class="pl-card" style="text-align:center;color:var(--mut)">登録された${escapeHtml(planCat)}はまだありません</div>`;return}
-  items.forEach(it=>{
+  const items=S.plans||[];
+  if(!items.length){list.innerHTML='<div class="pl-card" style="text-align:center;color:var(--mut)">登録された資料はまだありません</div>';return}
+  renderBatched(items,list,it=>{
     const card=document.createElement('article');card.className='pl-card';
     const hasFile=Boolean(it.fileUrl);
     const kind=it.fileKind||detectFileKind(it.fileName||it.fileUrl,'');
@@ -1314,8 +1451,8 @@ function renderPlans(){
       <div class="pl-inline-viewer hidden" id="pl-view-${escapeHtml(it.id)}"></div>
       ${ed?`<div style="text-align:right"><button type="button" class="nb" style="color:#dc2626" data-pl-del="${escapeHtml(it.id)}">削除</button></div>`:''}
     `;
-    list.appendChild(card);
-  });
+    return card;
+  },6);
 }
 
 $('pl-list').addEventListener('click',async e=>{
@@ -1347,7 +1484,7 @@ $('pl-list').addEventListener('click',async e=>{
     return;
   }
   const b=e.target.closest('[data-pl-del]');if(!b||!isEditor())return;
-  if(!await ask('計画・資料の削除','この項目を削除しますか？'))return;
+  if(!await ask('資料の削除','この項目を削除しますか？'))return;
   const target=(S.plans||[]).find(x=>x.id===b.dataset.plDel);
   if(target&&target.assetId&&ASS){try{await ASS.delete(target.assetId)}catch(_){}}
   S.plans=(S.plans||[]).filter(x=>x.id!==b.dataset.plDel);
@@ -1358,6 +1495,7 @@ function setNav(nav){
   activeNav=nav;
   document.querySelectorAll('#bottom-nav .bnav-btn').forEach(b=>b.classList.toggle('on',b.dataset.nav===nav));
   $('insta-feed-view').classList.toggle('hidden',nav!=='feed');
+  $('circle-view').classList.toggle('hidden',nav!=='circle');
   $('journal-view').classList.toggle('hidden',nav!=='journal');
   $('plans-view').classList.toggle('hidden',nav!=='plans');
   if(nav!=='home'){
@@ -1365,10 +1503,10 @@ function setNav(nav){
     if(adjusting)setAdj(false);
     closeCropPicker();
   }
-  if(nav==='feed')renderInstaFeed(false);
-  else if(instaIO){instaIO.disconnect();instaIO=null}
-  if(nav==='journal')renderJournal();
-  if(nav==='plans')renderPlans();
+  if(nav==='feed')requestAnimationFrame(()=>renderInstaFeed(false));
+  if(nav==='circle')requestAnimationFrame(renderCircleStream);
+  if(nav==='journal')requestAnimationFrame(renderJournal);
+  if(nav==='plans')requestAnimationFrame(renderPlans);
 }
 $('bottom-nav').addEventListener('click',e=>{
   const b=e.target.closest('button[data-nav]');if(!b)return;
@@ -1418,7 +1556,7 @@ function feed(){
   f.innerHTML='';
   if(!allPh.length){f.innerHTML='<div style="grid-column:1/-1;border:2px dashed var(--bd);border-radius:14px;padding:30px;text-align:center;color:var(--mut)"><b>まだ写真がありません</b></div>';return}
   if(!ph.length){f.innerHTML=`<div style="grid-column:1/-1;border:2px dashed var(--bd);border-radius:14px;padding:24px;text-align:center;color:var(--mut)"><b>「${escapeHtml(cropFilter)}」が登録された写真はありません</b></div>`;return}
-  const eagerCount=innerWidth<768?2:4;
+  const imgs=[];
   ph.forEach((p,i)=>{
     const realIdx=allPh.findIndex(x=>x.id===p.id);
     const fsIdx=realIdx>=0?realIdx:i;
@@ -1438,19 +1576,14 @@ function feed(){
     const warnBanner=(isWarn&&ed)
       ? `<div class="card-warn-banner" data-a="crop" data-id="${p.id}"><span>作物名欄から削除済: ${escapeHtml(photoCrop)}</span><span>修正</span></div>`
       : '';
-    const isEager=i<eagerCount;
-    c.innerHTML=`${warnBanner}<div class="ch"><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;min-width:0"><span class="tag ${fsIdx?'old':''}">${fsIdx?'履歴 #'+(allPh.length-fsIdx):'最新'}</span>${dateUI}${cropBtnUI}</div><div style="display:flex;gap:3px"><button class="nb mob-hide-btn" type="button" data-a="detail" data-id="${p.id}">詳細を見る</button><button class="nb mob-hide-btn" type="button" data-a="fs" data-i="${fsIdx}">全画面</button>${(!p.isStatic&&ed)?`<button class="nb" type="button" data-a="del" data-id="${p.id}" aria-label="削除">削除</button>`:''}</div></div><img ${isEager?`src="${p.dataUrl}" fetchpriority="high"`:`data-src="${p.dataUrl}"`} alt="農地写真" decoding="async" data-a="fs" data-i="${fsIdx}">`;
+    c.innerHTML=`${warnBanner}<div class="ch"><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;min-width:0"><span class="tag ${fsIdx?'old':''}">${fsIdx?'履歴 #'+(allPh.length-fsIdx):'最新'}</span>${dateUI}${cropBtnUI}</div><div style="display:flex;gap:3px"><button class="nb mob-hide-btn" type="button" data-a="detail" data-id="${p.id}">詳細を見る</button><button class="nb mob-hide-btn" type="button" data-a="fs" data-i="${fsIdx}">全画面</button>${(!p.isStatic&&ed)?`<button class="nb" type="button" data-a="del" data-id="${p.id}" aria-label="削除">削除</button>`:''}</div></div><img alt="農地写真" decoding="async" data-a="fs" data-i="${fsIdx}">`;
     const im=c.querySelector('img');
-    im.onload=()=>im.classList.add('loaded');
-    if(im.complete&&im.naturalWidth)im.classList.add('loaded');
+    if(i===0)im.fetchPriority='high';
+    im.dataset.src=p.dataUrl;
+    imgs.push(im);
     f.appendChild(c);
   });
-  const lazyImgs=[...f.querySelectorAll('img[data-src]')];
-  if(lazyImgs.length){
-    const loadImg=im=>{if(!im.dataset.src)return;im.src=im.dataset.src;im.removeAttribute('data-src')};
-    const io=new IntersectionObserver((es,o)=>{es.forEach(e=>{if(e.isIntersecting){loadImg(e.target);o.unobserve(e.target)}})},{root:f,rootMargin:'250px'});
-    lazyImgs.forEach((im,idx)=>{io.observe(im);setTimeout(()=>{if(sel&&im.dataset.src){loadImg(im);io.unobserve(im)}},300+idx*160)});
-  }
+  loadImagesSequentially(imgs,f);
 }
 
 async function applyPhotoCrop(photoId,cropStr,alsoAddToParcel){
