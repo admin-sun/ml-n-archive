@@ -6,24 +6,24 @@
 <title>農地写真アーカイブ</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{--g:#1b4332;--g2:#2d6a4f;--a:#d97706;--bd:#e2e8f0;--tx:#0f172a;--bg:#f8fafc;--sf:#fff;--mut:#64748b;--hd:#1b4332}
+:root{--g:#1b4332;--g2:#2d6a4f;--a:#d97706;--bd:#dbdbdb;--tx:#0f172a;--bg:#fafafa;--sf:#fff;--mut:#737373;--hd:#1b4332}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f172a;--sf:#1e293b;--bd:#334155;--tx:#e2e8f0;--mut:#94a3b8;--g:#6ee7b7;--g2:#34d399}}
 :root[data-theme=dark]{--bg:#0f172a;--sf:#1e293b;--bd:#334155;--tx:#e2e8f0;--mut:#94a3b8;--g:#6ee7b7;--g2:#34d399}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-family:"Noto Sans JP",system-ui,sans-serif;font-size:14px}
+html,body{margin:0;width:100%;height:100%;height:100dvh;overflow:hidden;background:var(--bg);color:var(--tx);font-family:"Noto Sans JP",system-ui,sans-serif;font-size:14px}
 body{display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);user-select:none}
 button,select{font:inherit;cursor:pointer;color:inherit}
 input,textarea{font:inherit;color:inherit;user-select:text}
 .hidden{display:none!important}
 
-header{height:50px;min-height:50px;background:var(--hd);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 12px;gap:8px;z-index:30}
+header{height:48px;min-height:48px;flex-shrink:0;background:var(--hd);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 12px;gap:8px;z-index:30}
 header h1{font-size:16px;margin:0;white-space:nowrap}
-.hb{height:32px;padding:0 9px;border-radius:8px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);color:#fff;font-size:12px;font-weight:700;white-space:nowrap}
+.hb{height:30px;padding:0 9px;border-radius:8px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.12);color:#fff;font-size:12px;font-weight:700;white-space:nowrap}
 .hb.on{background:var(--a);border-color:var(--a);color:#fff}
-.hb.role-viewer{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.45)}
+.hb.role-viewer{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.5)}
 .pill{font-size:12px;background:rgba(0,0,0,.25);padding:4px 10px;border-radius:99px;white-space:nowrap}
 
-main{flex:1;display:flex;position:relative;overflow:hidden;min-height:0;width:100%}
+main{flex:1 1 auto;display:flex;position:relative;overflow:hidden;min-height:0;width:100%}
 #map-section{flex:1;position:relative;overflow:hidden;background:#cbd5e1;min-width:0}
 #map-viewport{position:absolute;inset:0;touch-action:none;cursor:grab;overflow:hidden}
 #map-viewport.draw{cursor:crosshair}
@@ -81,8 +81,8 @@ main{flex:1;display:flex;position:relative;overflow:hidden;min-height:0;width:10
 .ab.wide{grid-column:1/-1}
 .mut{color:var(--mut);font-size:11px;line-height:1.5}
 #upload{position:absolute;inset:0;z-index:30;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px;text-align:center}
-.btn{border:0;border-radius:12px;background:var(--g2);color:#fff;font-weight:700;padding:12px 18px}
-#menu{position:absolute;right:0;top:40px;width:230px;padding:6px 0;z-index:60;color:var(--tx)}
+.btn{border:0;border-radius:10px;background:var(--g2);color:#fff;font-weight:700;padding:10px 16px}
+#menu{position:absolute;right:0;top:38px;width:230px;padding:6px 0;z-index:60;color:var(--tx)}
 #menu button,#menu label{display:block;width:100%;text-align:left;padding:10px 14px;background:none;border:0;font-size:13px;cursor:pointer}
 #menu button:hover,#menu label:hover{background:var(--bg)}
 
@@ -154,9 +154,6 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 
 #crop-picker{position:fixed;z-index:85;width:min(300px,calc(100vw - 24px));background:var(--sf);color:var(--tx);border:1px solid var(--bd);border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,.28);padding:12px;font-size:12px}
 #crop-picker h4{margin:0 0 6px;font-size:13px;display:flex;align-items:center;justify-content:space-between}
-.cp-warn-box{background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.35);color:#b91c1c;border-radius:8px;padding:7px 9px;margin-bottom:8px;font-size:11px;line-height:1.4}
-:root[data-theme=dark] .cp-warn-box{color:#fca5a5}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .cp-warn-box{color:#fca5a5}}
 .cp-chips{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0 8px}
 .cp-chip{height:28px;padding:0 10px;border-radius:99px;border:1px solid var(--bd);background:var(--bg);font-size:12px;font-weight:700}
 .cp-chip.on{background:var(--g2);border-color:var(--g2);color:#fff}
@@ -167,19 +164,24 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .cp-act.primary{background:var(--g2);border-color:var(--g2);color:#fff}
 .cp-act.danger{color:#dc2626}
 
-#feed{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;overscroll-behavior-y:none;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:max-content;gap:1px;background:rgba(148,163,184,.28);align-content:start}
-.card{position:relative;border:none;border-radius:0;overflow:hidden;background:var(--sf);display:block}
-.card .ch{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:center;padding:4px 6px;gap:4px;background:linear-gradient(to top,rgba(15,23,42,.62),rgba(15,23,42,0));pointer-events:none}
+/* サムネイル写真一覧：PCでは2列 */
+#feed{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;overscroll-behavior-y:none;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:max-content;gap:2px;background:rgba(148,163,184,.28);align-content:start}
+@media(min-width:768px){
+  #feed{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px;padding:14px;background:var(--bg)}
+  .card{border-radius:8px;border:1px solid var(--bd)}
+}
+.card{position:relative;overflow:hidden;background:var(--sf);display:block}
+.card .ch{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:center;padding:6px;gap:4px;background:linear-gradient(to top,rgba(15,23,42,.68),rgba(15,23,42,0));pointer-events:none}
 .card .ch > div{pointer-events:auto}
-.tag{font-size:10px;font-weight:500;padding:1px 5px;border-radius:4px;background:rgba(255,255,255,.82);color:#334155;margin-right:2px}
-.tag.old{background:rgba(15,23,42,.52);color:#f1f5f9}
+.tag{font-size:10px;font-weight:500;padding:1px 5px;border-radius:4px;background:rgba(255,255,255,.85);color:#334155;margin-right:2px}
+.tag.old{background:rgba(15,23,42,.55);color:#f1f5f9}
 .card img{width:100%;aspect-ratio:1 / 1;object-fit:cover;min-height:0;display:block;cursor:zoom-in;background:rgba(148,163,184,.12);opacity:0;transition:opacity .25s ease}
 .card img.loaded{opacity:1}
 .card-date{border:none;background:rgba(255,255,255,.85);color:#1e293b;border-radius:4px;padding:0 5px;font-family:"Noto Sans JP",system-ui,sans-serif;font-size:10px!important;font-weight:600!important;line-height:20px!important;height:20px;min-height:20px;max-height:20px;font-variant-numeric:tabular-nums;-webkit-text-size-adjust:100%;box-sizing:border-box}
 @media(max-width:767px){.card-date-wrap{display:none!important}}
 @media(min-width:768px){
   .card-date{display:none!important}
-  .card-date-wrap{display:inline-flex;align-items:center;background:rgba(255,255,255,.85);color:#1e293b;border-radius:4px;padding:0 4px;height:20px;font-family:"Noto Sans JP",system-ui,sans-serif;font-size:10px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums;gap:0}
+  .card-date-wrap{display:inline-flex;align-items:center;background:rgba(255,255,255,.88);color:#1e293b;border-radius:4px;padding:0 4px;height:20px;font-family:"Noto Sans JP",system-ui,sans-serif;font-size:10px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums;gap:0}
   .card-date-wrap span,.card-date-wrap input{font-family:"Noto Sans JP",system-ui,sans-serif!important;font-size:10px!important;font-weight:600!important;line-height:16px!important;font-variant-numeric:tabular-nums;color:#1e293b}
   .card-date-wrap input{border:none;background:transparent;padding:0;text-align:center;outline:none;height:16px;border-radius:2px}
   .card-date-wrap input:focus{background:#fef08a;color:#0f172a}
@@ -188,7 +190,7 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
   .card-date-wrap input.dm,.card-date-wrap input.dd{width:11px;padding:0;margin:0}
 }
 .card-date.no-exif,.card-date-wrap.no-exif{box-shadow:0 0 0 1.5px #ea580c;background:rgba(255,247,237,.95)}
-.card .ch .nb{height:20px;padding:0 5px;font-size:10px;font-weight:600;background:rgba(255,255,255,.86);color:#0f172a;border:none;border-radius:4px}
+.card .ch .nb{height:22px;padding:0 6px;font-size:10px;font-weight:700;background:rgba(255,255,255,.9);color:#0f172a;border:none;border-radius:4px}
 
 /* インスタグラム風シームレス縦スクロール表示 */
 #insta-feed-view{
@@ -196,8 +198,8 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
   overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;overscroll-behavior-y:none;
   padding:0 0 28px;
 }
-.ig-stream{width:100%;max-width:540px;margin:0 auto;display:flex;flex-direction:column;background:var(--sf)}
-@media(min-width:541px){
+.ig-stream{width:100%;max-width:500px;margin:0 auto;display:flex;flex-direction:column;background:var(--sf)}
+@media(min-width:501px){
   #insta-feed-view{background:var(--bg)}
   .ig-stream{border-left:1px solid var(--bd);border-right:1px solid var(--bd)}
 }
@@ -215,7 +217,7 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .ig-crop-line2{margin-top:1px;font-size:11px;font-weight:500;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ig-hd-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .ig-post-date{font-size:11px;color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap}
-.ig-detail-btn{border:1px solid var(--bd);background:var(--bg);color:var(--tx);border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;white-space:nowrap}
+.ig-detail-btn{border:1px solid var(--bd);background:var(--bg);color:var(--tx);border-radius:6px;padding:4px 8px;font-size:11px;font-weight:700;white-space:nowrap}
 .ig-photo-wrap{width:100%;margin:0;padding:0;background:#0f172a;display:block;cursor:zoom-in}
 .ig-photo-wrap img{width:100%;aspect-ratio:1 / 1;object-fit:cover;display:block;opacity:0;transition:opacity .22s ease}
 .ig-photo-wrap img.loaded{opacity:1}
@@ -224,7 +226,6 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .ig-caption-view.is-empty{color:var(--mut);font-size:13px}
 .ig-caption-view.is-readonly{cursor:default}
 .ig-more-link{display:inline;border:0;background:none;padding:0;margin:0;color:var(--mut);font-size:13px;font-weight:500;cursor:pointer}
-.ig-more-link:hover,.ig-more-link:active{color:var(--tx)}
 .ig-caption-input{width:100%;min-height:42px;border:0;outline:0;background:transparent;color:var(--tx);padding:0;margin:0;font-size:13.5px;line-height:1.5;resize:none;display:block;overflow:hidden}
 @media(max-width:767px){.ig-caption-input{font-size:16px}}
 
@@ -261,18 +262,44 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .dm-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .dm-head h3{margin:0;font-size:15px}
 .dm-thumb{width:100%;max-height:220px;object-fit:cover;border-radius:10px;background:#0f172a}
-.dm-meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;color:var(--mut)}
+.dm-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--mut)}
 .dm-field{display:flex;flex-direction:column;gap:4px}
 .dm-field label{font-size:11px;font-weight:700;color:var(--mut)}
 .dm-field textarea,.dm-field input{width:100%;border:1px solid var(--bd);border-radius:8px;background:var(--bg);padding:8px 10px;font-size:13px;line-height:1.5}
 .dm-field textarea{min-height:76px;resize:vertical}
 .dm-ro{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;font-size:13px;line-height:1.5;white-space:pre-wrap;min-height:42px}
 
-/* 下部ナビゲーション */
-nav#bottom-nav{height:52px;min-height:52px;background:var(--sf);border-top:1px solid var(--bd);display:grid;grid-template-columns:repeat(4,1fr);z-index:35;padding-bottom:env(safe-area-inset-bottom,0px)}
-.bnav-btn{border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;font-weight:700;color:var(--mut);padding:2px 4px}
-.bnav-btn .ico{font-size:15px;line-height:1}
-.bnav-btn.on{color:var(--g2);background:rgba(45,106,79,.08)}
+/* Instagram風ミニマルボトムバー（画像なし・線画SVGアイコン） */
+nav#bottom-nav{
+  flex-shrink:0;
+  width:100%;
+  min-height:calc(48px + env(safe-area-inset-bottom,0px));
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  background:var(--sf);
+  border-top:1px solid var(--bd);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  z-index:60;
+}
+.bnav-btn{
+  border:0;
+  background:none;
+  height:48px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--mut);
+  padding:0;
+  transition:color .15s ease,transform .1s ease;
+}
+.bnav-btn:active{transform:scale(.92)}
+.bnav-btn svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.bnav-btn.on{color:var(--tx)}
+.bnav-btn.on svg{stroke-width:2.4}
+@media(min-width:768px){
+  .bnav-btn{gap:6px;font-size:12px;font-weight:600}
+  .bnav-btn::after{content:attr(data-label)}
+}
 
 #lb{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.95);display:flex;flex-direction:column;color:#fff;opacity:1;transition:opacity .38s ease,transform .38s ease}
 #lb.closing{opacity:0!important;pointer-events:none!important}
@@ -289,11 +316,11 @@ nav#bottom-nav{height:52px;min-height:52px;background:var(--sf);border-top:1px s
 #lb-pmenu{position:absolute;right:0;top:38px;min-width:136px;background:#1e293b;border:1px solid rgba(255,255,255,.22);border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,.55);padding:4px 0;z-index:100}
 #lb-pmenu button{display:flex;align-items:center;justify-content:space-between;width:100%;padding:9px 14px;border:0;background:none;color:#f8fafc;font-size:13px;text-align:left;white-space:nowrap}
 #lb-pmenu button:hover,#lb-pmenu button.on{background:rgba(255,255,255,.12);color:#fbbf24;font-weight:700}
-#toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%);background:#0f172ae6;color:#fff;padding:9px 16px;border-radius:99px;font-size:13px;z-index:90;opacity:0;transition:opacity .2s;pointer-events:none}
+#toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:#0f172ae6;color:#fff;padding:9px 16px;border-radius:99px;font-size:13px;z-index:90;opacity:0;transition:opacity .2s;pointer-events:none}
 #confirm{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:16px}
 #confirm div{background:var(--sf);border-radius:16px;padding:18px;max-width:340px;width:100%}
 
-body.layout-sheet aside{position:fixed;left:0;right:0;top:0;bottom:52px;width:100%;height:auto;max-height:none;border-radius:0;box-shadow:0 -8px 30px rgba(0,0,0,.25);transform:translateY(100%);transition:transform .28s;padding-top:env(safe-area-inset-top,0px);z-index:50}
+body.layout-sheet aside{position:fixed;left:0;right:0;top:0;bottom:calc(48px + env(safe-area-inset-bottom,0px));width:100%;height:auto;max-height:none;border-radius:0;box-shadow:0 -8px 30px rgba(0,0,0,.25);transform:translateY(100%);transition:transform .28s;padding-top:env(safe-area-inset-top,0px);z-index:50}
 body.layout-sheet aside.open{transform:none}
 body.layout-sheet aside::before{content:"";display:block;width:40px;height:5px;background:var(--bd);border-radius:99px;margin:6px auto 2px;flex-shrink:0}
 body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display:none!important}
@@ -303,26 +330,26 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
   header > div{gap:4px!important}
   .hb{padding:0 7px;font-size:11px;height:30px}
   .pill,#zoom,#empty{display:none!important}
-  aside{position:fixed;left:0;right:0;top:0;bottom:52px;width:100%;height:auto;max-height:none;border-radius:0;box-shadow:0 -8px 30px rgba(0,0,0,.25);transform:translateY(100%);transition:transform .28s;padding-top:env(safe-area-inset-top,0px);z-index:50}
+  aside{position:fixed;left:0;right:0;top:0;bottom:calc(48px + env(safe-area-inset-bottom,0px));width:100%;height:auto;max-height:none;border-radius:0;box-shadow:0 -8px 30px rgba(0,0,0,.25);transform:translateY(100%);transition:transform .28s;padding-top:env(safe-area-inset-top,0px);z-index:50}
   aside.open{transform:none}
   aside::before{content:"";display:block;width:40px;height:5px;background:var(--bd);border-radius:99px;margin:6px auto 2px;flex-shrink:0}
 }
 </style>
 </head>
-<body>
+<body class="role-viewer">
 <header>
   <h1>農地の現状</h1>
   <div style="display:flex;gap:6px;align-items:center;position:relative">
     <span class="pill">登録済 <b id="reg">0</b> / <span id="tot">0</span></span>
-    <button class="hb" id="b-role" type="button">編集者</button>
-    <button class="hb edit-only" id="b-draw" type="button">区画追加</button>
+    <button class="hb role-viewer" id="b-role" type="button">閲覧者</button>
+    <button class="hb edit-only hidden" id="b-draw" type="button">区画追加</button>
     <button class="hb" id="b-num" type="button">番号</button>
-    <button class="hb edit-only" id="b-adj" type="button">位置調整</button>
-    <button class="hb edit-only" id="b-menu" type="button" aria-label="メニュー">⋮</button>
+    <button class="hb edit-only hidden" id="b-adj" type="button">位置調整</button>
+    <button class="hb edit-only hidden" id="b-menu" type="button" aria-label="メニュー">⋮</button>
     <div id="menu" class="fl hidden edit-only">
-      <button id="b-export" type="button">⬇ データを書き出し (JSON)</button>
-      <label>⬆ データを読み込み<input id="i-import" type="file" accept=".json" class="hidden"></label>
-      <button id="b-remap" type="button">🗺 地図画像を再選択</button>
+      <button id="b-export" type="button">データを書き出し (JSON)</button>
+      <label>データを読み込み<input id="i-import" type="file" accept=".json" class="hidden"></label>
+      <button id="b-remap" type="button">地図画像を再選択</button>
       <input id="i-map" type="file" accept="image/*" class="hidden">
     </div>
   </div>
@@ -338,14 +365,14 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
       </svg>
     </div>
   </div>
-  <div id="upload" class="hidden"><div><p style="font-weight:700;font-size:16px">地図画像を選択してください</p><p class="mut">一度選ぶと保存され、次回から自動で表示されます。</p><button class="btn edit-only" id="b-upload" type="button">地図画像を選択</button></div></div>
-  <div id="hint" class="fl">白い農地をタップして写真を表示・登録</div>
+  <div id="upload" class="hidden"><div><p style="font-weight:700;font-size:16px">地図画像を選択してください</p><p class="mut">一度選ぶと保存され、次回から自動で表示されます。</p><button class="btn edit-only hidden" id="b-upload" type="button">地図画像を選択</button></div></div>
+  <div id="hint" class="fl">白い農地をタップして写真を表示</div>
   <div id="draw-banner" class="fl hidden"><span>新しい農地の角を<b>3点以上</b>タップ→「確定」</span><button id="d-ok" type="button">確定</button><button id="d-undo" type="button">戻す</button><button id="d-cancel" type="button">中止</button></div>
   <div id="zoom" class="fl"><button id="z-in" type="button">＋</button><button id="z-out" type="button">−</button><button id="z-fit" type="button" style="font-size:13px">全体</button></div>
 
   <div id="adj-panel" class="fl hidden edit-only">
     <div class="adj-head" style="display:flex;justify-content:space-between;align-items:center">
-      <h3>📐 位置調整モード</h3>
+      <h3>位置調整モード</h3>
       <div style="display:flex;gap:5px;align-items:center">
         <button type="button" class="adj-fold-btn" id="adj-fold">たたむ</button>
         <button class="ab" data-a="done" type="button" style="width:54px;height:28px">終了</button>
@@ -377,7 +404,7 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
 </section>
 
 <aside id="panel">
-  <div id="empty"><div style="font-size:40px">🌱</div><h2 style="color:var(--tx)">農地を選択してください</h2><p>地図の<b>白塗りの農地</b>をクリックすると、登録写真がここに表示されます。</p></div>
+  <div id="empty"><h2 style="color:var(--tx);font-size:16px">農地を選択してください</h2><p>地図の<b>白塗りの農地</b>をクリックすると、登録写真がここに表示されます。</p></div>
   <div id="active" class="hidden">
     <div class="top-controls">
       <div class="bar">
@@ -386,7 +413,7 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
             <span id="pcode" class="pcode-badge">F01</span>
             <span id="pcount" class="pcount-badge">0枚</span>
           </div>
-          <div class="fld fld-lot"><label for="lot">地番</label><input id="lot" placeholder="例: 瀬川 350-1"></div>
+          <div class="fld fld-lot"><label for="lot">地番</label><input id="lot" placeholder="例: 瀬川 350-1" readonly></div>
         </div>
         <div class="bar-row2">
           <div class="fld fld-crop">
@@ -394,12 +421,12 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
               <label for="crop">栽培作物名</label>
               <span id="crop-multi-hint" class="crop-multi-hint hidden"></span>
             </div>
-            <input id="crop" placeholder="例: 水稲 または キャベツ/ブロッコリー">
+            <input id="crop" placeholder="例: 水稲 または キャベツ/ブロッコリー" readonly>
           </div>
           <div id="crop-strip" class="crop-strip hidden" aria-label="登録作物一覧"></div>
         </div>
       </div>
-      <div class="addrow edit-only">
+      <div class="addrow edit-only hidden">
         <label class="btn circle-add" aria-label="写真を追加する">＋<input id="i-photos" type="file" accept="image/*" multiple class="hidden"></label>
       </div>
     </div>
@@ -429,8 +456,8 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
       <button type="button" class="pl-tab" data-cat="予算書">予算書</button>
       <button type="button" class="pl-tab" data-cat="作付計画">作付計画</button>
     </div>
-    <div class="pl-card edit-only" id="pl-editor-card">
-      <h3><span id="pl-form-title">計画・資料を追加</span></h3>
+    <div class="pl-card edit-only hidden" id="pl-editor-card">
+      <h3><span id="pl-form-title">事業計画を追加</span></h3>
       <div class="pl-form">
         <div><input id="pl-title" type="text" placeholder="タイトル（例: 令和8年度 作付計画）"></div>
         <div><input id="pl-ref" type="text" placeholder="参照先・ファイル名・リンク（任意）"></div>
@@ -446,10 +473,18 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
 </main>
 
 <nav id="bottom-nav" aria-label="メインナビゲーション">
-  <button type="button" class="bnav-btn on" data-nav="home"><span class="ico">🗺</span><span>ホーム</span></button>
-  <button type="button" class="bnav-btn" data-nav="feed"><span class="ico">🖼️</span><span>フィード</span></button>
-  <button type="button" class="bnav-btn" data-nav="journal"><span class="ico">📓</span><span>日誌</span></button>
-  <button type="button" class="bnav-btn" data-nav="plans"><span class="ico">📊</span><span>計画・資料</span></button>
+  <button type="button" class="bnav-btn on" data-nav="home" data-label="ホーム" aria-label="ホーム">
+    <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg>
+  </button>
+  <button type="button" class="bnav-btn" data-nav="feed" data-label="フィード" aria-label="フィード">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+  </button>
+  <button type="button" class="bnav-btn" data-nav="journal" data-label="日誌" aria-label="日誌">
+    <svg viewBox="0 0 24 24"><path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><line x1="8" y1="8" x2="15" y2="8"/><line x1="8" y1="12" x2="15" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg>
+  </button>
+  <button type="button" class="bnav-btn" data-nav="plans" data-label="計画・資料" aria-label="計画・資料">
+    <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+  </button>
 </nav>
 
 <div id="detail-modal" class="hidden" role="dialog" aria-label="詳細を見る">
@@ -462,16 +497,16 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
     <div id="dm-meta" class="dm-meta"></div>
     <div class="dm-field">
       <label for="dm-work">具体的な作業内容</label>
-      <textarea id="dm-work" class="edit-only" placeholder="例: 畝立て・黒マルチ張り、追肥・中耕、防除散布など"></textarea>
-      <div id="dm-work-ro" class="dm-ro hidden"></div>
+      <textarea id="dm-work" class="edit-only hidden" placeholder="例: 畝立て・黒マルチ張り、追肥・中耕、防除散布など"></textarea>
+      <div id="dm-work-ro" class="dm-ro"></div>
     </div>
     <div class="dm-field">
       <label for="dm-cap">キャプション・観察メモ</label>
-      <textarea id="dm-cap" class="edit-only" placeholder="生育状況や気づきを入力..."></textarea>
-      <div id="dm-cap-ro" class="dm-ro hidden"></div>
+      <textarea id="dm-cap" class="edit-only hidden" placeholder="生育状況や気づきを入力..."></textarea>
+      <div id="dm-cap-ro" class="dm-ro"></div>
     </div>
     <div style="display:flex;justify-content:flex-end;gap:8px">
-      <button type="button" class="btn edit-only" id="dm-save" style="padding:8px 16px;font-size:13px">内容を保存</button>
+      <button type="button" class="btn edit-only hidden" id="dm-save" style="padding:8px 16px;font-size:13px">内容を保存</button>
     </div>
   </div>
 </div>
@@ -561,7 +596,8 @@ async function saveState(){
 }
 let saveT;const saveSoon=()=>{clearTimeout(saveT);saveT=setTimeout(saveState,300)};
 
-let S={records:{},customParcels:[],deletedParcels:[],customMapDataUrl:null,parcelOverrides:{},globalAdjust:{dx:0,dy:0,sx:1,sy:1},plans:[],role:'editor'};
+// 初期起動時は常に閲覧者モード（role: 'viewer'）
+let S={records:{},customParcels:[],deletedParcels:[],customMapDataUrl:null,parcelOverrides:{},globalAdjust:{dx:0,dy:0,sx:1,sy:1},plans:[],role:'viewer'};
 const normState=o=>({
   records:o.records||{},
   customParcels:o.customParcels||[],
@@ -570,13 +606,23 @@ const normState=o=>({
   parcelOverrides:o.parcelOverrides||{},
   globalAdjust:o.globalAdjust||{dx:0,dy:0,sx:1,sy:1},
   plans:Array.isArray(o.plans)?o.plans:[],
-  role:o.role==='viewer'?'viewer':'editor'
+  role:'viewer'
 });
-const isEditor=()=>S.role!=='viewer';
+const isEditor=()=>S.role==='editor';
 
 let sel=null,cropFilter=null,drawing=false,draft=[],adjusting=false,showNum=false,activeNav='home',planCat='事業計画',instaPhotos=[],instaIO=null,V={s:1,x:0,y:0};
 let currentDetailTarget=null;
 const expandedComments=new Set();
+
+function goHomeMap(){
+  setNav('home');
+  if(window.USE_SHEET&&sel){
+    closeP();
+  }else{
+    stopZ();
+    fit(true);
+  }
+}
 
 function applyRoleUI(){
   const ed=isEditor();
@@ -591,6 +637,7 @@ function applyRoleUI(){
   });
   $('lot').readOnly=!ed;
   $('crop').readOnly=!ed;
+  $('hint').textContent=ed?'白い農地をタップして写真を表示・登録':'白い農地をタップして写真を表示';
   if(!ed){
     if(drawing)setDraw(false);
     if(adjusting)setAdj(false);
@@ -599,14 +646,13 @@ function applyRoleUI(){
   }
 }
 
-$('b-role').onclick=async()=>{
+$('b-role').onclick=()=>{
   S.role=isEditor()?'viewer':'editor';
   applyRoleUI();
+  goHomeMap();
   render();
   if(sel)feed();
-  if(activeNav==='journal')renderJournal();
-  if(activeNav==='plans')renderPlans();
-  toast(isEditor()?'編集者モードに切り替えました':'閲覧者モードに切り替えました（編集機能は非表示）');
+  toast(isEditor()?'編集者モードに切り替えました':'閲覧者モードに切り替えました');
 };
 
 function parseCrops(str){
@@ -1093,7 +1139,7 @@ function renderPlans(){
     const card=document.createElement('article');card.className='pl-card';
     card.innerHTML=`
       <h3><span>${escapeHtml(it.title)}</span><span style="font-size:11px;color:var(--mut);font-weight:400">${escapeHtml(it.updatedAt||'')}</span></h3>
-      ${it.ref?`<div style="font-size:12px;color:var(--g2);font-weight:700">📎 ${escapeHtml(it.ref)}</div>`:''}
+      ${it.ref?`<div style="font-size:12px;color:var(--g2);font-weight:700">${escapeHtml(it.ref)}</div>`:''}
       ${it.body?`<div style="font-size:13px;line-height:1.55;white-space:pre-wrap">${escapeHtml(it.body)}</div>`:''}
       ${ed?`<div style="text-align:right"><button type="button" class="nb" style="color:#dc2626" data-pl-del="${escapeHtml(it.id)}">削除</button></div>`:''}
     `;
@@ -1126,7 +1172,8 @@ function setNav(nav){
 }
 $('bottom-nav').addEventListener('click',e=>{
   const b=e.target.closest('button[data-nav]');if(!b)return;
-  setNav(b.dataset.nav);
+  if(b.dataset.nav==='home')goHomeMap();
+  else setNav(b.dataset.nav);
 });
 
 const panel=$('panel');
@@ -1188,12 +1235,12 @@ function feed(){
       : `<input type="date" class="card-date${missCls}" data-id="${p.id}" value="${toISO(p.postedAt)}" aria-label="投稿日を変更"><span class="card-date-wrap${missCls}" data-id="${p.id}" data-orig="${yVal}-${mVal}-${dVal}"><input type="text" inputmode="numeric" maxlength="4" class="dy" value="${yVal}"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dm" value="${mVal}"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dd" value="${dVal}"></span>`;
     const cropBtnUI=(p.isStatic||!ed)
       ? (photoCrop?`<span class="card-crop-static">${escapeHtml(photoCrop)}</span>`:'')
-      : `<button type="button" class="card-crop-btn${isWarn?' warn':(!photoCrop?' unset':'')}" data-a="crop" data-id="${p.id}">${escapeHtml(photoCrop?(isWarn?`⚠ ${photoCrop}`:`🌱 ${photoCrop}`):'＋作物')}</button>`;
+      : `<button type="button" class="card-crop-btn${isWarn?' warn':(!photoCrop?' unset':'')}" data-a="crop" data-id="${p.id}">${escapeHtml(photoCrop?(isWarn?`! ${photoCrop}`:`${photoCrop}`):'＋作物')}</button>`;
     const warnBanner=(isWarn&&ed)
-      ? `<div class="card-warn-banner" data-a="crop" data-id="${p.id}"><span>⚠ 作物名欄から削除済: ${escapeHtml(photoCrop)}</span><span>修正</span></div>`
+      ? `<div class="card-warn-banner" data-a="crop" data-id="${p.id}"><span>作物名欄から削除済: ${escapeHtml(photoCrop)}</span><span>修正</span></div>`
       : '';
     const isEager=i<eagerCount;
-    c.innerHTML=`${warnBanner}<div class="ch"><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;min-width:0"><span class="tag ${fsIdx?'old':''}">${fsIdx?'履歴 #'+(allPh.length-fsIdx):'最新'}</span>${dateUI}${cropBtnUI}</div><div style="display:flex;gap:3px"><button class="nb" type="button" data-a="detail" data-id="${p.id}">詳細を見る</button><button class="nb" type="button" data-a="fs" data-i="${fsIdx}">全画面</button>${(!p.isStatic&&ed)?`<button class="nb" type="button" data-a="del" data-id="${p.id}" aria-label="削除">🗑</button>`:''}</div></div><img ${isEager?`src="${p.dataUrl}" fetchpriority="high"`:`data-src="${p.dataUrl}"`} alt="農地写真" decoding="async" data-a="fs" data-i="${fsIdx}">`;
+    c.innerHTML=`${warnBanner}<div class="ch"><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;min-width:0"><span class="tag ${fsIdx?'old':''}">${fsIdx?'履歴 #'+(allPh.length-fsIdx):'最新'}</span>${dateUI}${cropBtnUI}</div><div style="display:flex;gap:3px"><button class="nb" type="button" data-a="detail" data-id="${p.id}">詳細を見る</button><button class="nb" type="button" data-a="fs" data-i="${fsIdx}">全画面</button>${(!p.isStatic&&ed)?`<button class="nb" type="button" data-a="del" data-id="${p.id}" aria-label="削除">削除</button>`:''}</div></div><img ${isEager?`src="${p.dataUrl}" fetchpriority="high"`:`data-src="${p.dataUrl}"`} alt="農地写真" decoding="async" data-a="fs" data-i="${fsIdx}">`;
     const im=c.querySelector('img');
     im.onload=()=>im.classList.add('loaded');
     if(im.complete&&im.naturalWidth)im.classList.add('loaded');
@@ -1229,7 +1276,7 @@ function openCropPicker(photoId,anchorEl){
   const parcelCrops=parseCrops(r.cropName),currentPhotoCrop=String(ph.cropName||'').trim();
   const cp=$('crop-picker');
   cp.innerHTML=`
-    <h4><span>🌱 写真の作物を登録</span><button type="button" class="nb" id="cp-close">✕</button></h4>
+    <h4><span>写真の作物を登録</span><button type="button" class="nb" id="cp-close">✕</button></h4>
     ${parcelCrops.length?`<div class="cp-chips">${parcelCrops.map(c=>`<button type="button" class="cp-chip${currentPhotoCrop===c?' on':''}" data-cp-pick="${escapeHtml(c)}">${escapeHtml(c)}</button>`).join('')}</div>`:''}
     <div class="cp-input-row"><input type="text" id="cp-custom" placeholder="作物名を入力" value="${escapeHtml(currentPhotoCrop)}"></div>
     <div class="cp-actions">
@@ -1496,7 +1543,7 @@ $('b-export').onclick=()=>{if(!isEditor())return;const u=URL.createObjectURL(new
 $('i-import').addEventListener('change',async e=>{
   if(!isEditor())return;
   const f=e.target.files[0];if(!f)return;
-  try{const o=JSON.parse(await f.text());if(o&&typeof o.records==='object'){const m=S.customMapDataUrl;S=normState(o);S.customMapDataUrl=o.customMapDataUrl||m;applyRoleUI();await saveState();if(S.customMapDataUrl)$('mapimg').src=S.customMapDataUrl;render();if(sel)selectP(sel,false);toast('データを復元しました')}else toast('無効なバックアップです')}catch(x){toast('読み込みに失敗しました')}finally{e.target.value=''}
+  try{const o=JSON.parse(await f.text());if(o&&typeof o.records==='object'){const m=S.customMapDataUrl;S=normState(o);S.customMapDataUrl=o.customMapDataUrl||m;S.role='editor';applyRoleUI();await saveState();if(S.customMapDataUrl)$('mapimg').src=S.customMapDataUrl;render();if(sel)selectP(sel,false);toast('データを復元しました')}else toast('無効なバックアップです')}catch(x){toast('読み込みに失敗しました')}finally{e.target.value=''}
 });
 const pickMap=()=>{if(isEditor())$('i-map').click()};$('b-remap').onclick=pickMap;$('b-upload').onclick=pickMap;
 $('i-map').addEventListener('change',e=>{const f=e.target.files[0];if(!f||!isEditor())return;if(!ASS)return toast('地図の保存には編集権限が必要です');(async()=>{try{const u=(await ASS.upload(f)).url;S.customMapDataUrl=u;$('mapimg').src=u;await saveState();toast('地図を保存しました')}catch(x){toast('地図の保存に失敗しました')}})()});
@@ -1504,7 +1551,7 @@ $('mapimg').addEventListener('error',()=>{if(window._appLoaded&&!S.customMapData
 $('mapimg').addEventListener('load',()=>{$('upload').classList.add('hidden');updAdj()});
 
 function detectDevice(){
-  const w=window.innerWidth,h=window.innerHeight;
+  const w=window.innerWidth;
   const isTouch=('ontouchstart' in window)||(navigator.maxTouchPoints>0)||window.matchMedia('(pointer:coarse)').matches;
   const useSheet=(w<768);
   document.body.classList.toggle('layout-sheet',useSheet);
@@ -1540,6 +1587,7 @@ addEventListener('DOMContentLoaded',async()=>{
       if(S.customMapDataUrl)$('mapimg').src=S.customMapDataUrl;
     }
   }catch(err){console.error(err)}
+  S.role='viewer';
   applyRoleUI();
   window._appLoaded=true;
   const im=$('mapimg');
