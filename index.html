@@ -11,15 +11,18 @@
 :root[data-theme=dark]{--bg:#0f172a;--sf:#1e293b;--bd:#334155;--tx:#e2e8f0;--mut:#94a3b8;--g:#6ee7b7;--g2:#34d399}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-family:"Noto Sans JP",system-ui,sans-serif;font-size:14px}
-body{display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);user-select:none}
-button{font:inherit;cursor:pointer;color:inherit}
+body{display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);user-select:none}
+button,select{font:inherit;cursor:pointer;color:inherit}
 input,textarea{font:inherit;color:inherit;user-select:text}
 .hidden{display:none!important}
+
 header{height:50px;min-height:50px;background:var(--hd);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 12px;gap:8px;z-index:30}
 header h1{font-size:16px;margin:0;white-space:nowrap}
-.hb{height:34px;padding:0 10px;border-radius:8px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);color:#fff;font-size:13px}
-.hb.on{background:var(--a);border-color:var(--a)}
-.pill{font-size:12px;background:rgba(0,0,0,.25);padding:4px 10px;border-radius:99px}
+.hb{height:32px;padding:0 9px;border-radius:8px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);color:#fff;font-size:12px;font-weight:700;white-space:nowrap}
+.hb.on{background:var(--a);border-color:var(--a);color:#fff}
+.hb.role-viewer{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.45)}
+.pill{font-size:12px;background:rgba(0,0,0,.25);padding:4px 10px;border-radius:99px;white-space:nowrap}
+
 main{flex:1;display:flex;position:relative;overflow:hidden;min-height:0;width:100%}
 #map-section{flex:1;position:relative;overflow:hidden;background:#cbd5e1;min-width:0}
 #map-viewport{position:absolute;inset:0;touch-action:none;cursor:grab;overflow:hidden}
@@ -57,10 +60,7 @@ main{flex:1;display:flex;position:relative;overflow:hidden;min-height:0;width:10
     flex:0 0 auto;z-index:22;border-radius:12px 12px 0 0;border-left:0;border-right:0;border-bottom:0;
     border-top:1px solid var(--bd);box-shadow:0 -4px 16px rgba(0,0,0,.14);padding:8px 10px 10px;font-size:11px;overflow:visible;
   }
-  #adj-panel.adj-mobile-dock .adj-fold-btn{
-    display:inline-flex;align-items:center;justify-content:center;height:24px;padding:0 8px;
-    border-radius:6px;border:1px solid var(--bd);background:var(--sf);font-size:11px;font-weight:700;color:var(--tx);
-  }
+  #adj-panel.adj-mobile-dock .adj-fold-btn{display:inline-flex;align-items:center;justify-content:center;height:24px;padding:0 8px;border-radius:6px;border:1px solid var(--bd);background:var(--sf);font-size:11px;font-weight:700;color:var(--tx)}
   #adj-panel.adj-mobile-dock .adj-head{display:flex;justify-content:space-between;align-items:center;gap:6px}
   #adj-panel.adj-mobile-dock .adj-head h3{margin:0;font-size:12px}
   #adj-panel.adj-mobile-dock .adj-subhint{margin-top:3px;font-size:10px;line-height:1.3}
@@ -85,10 +85,11 @@ main{flex:1;display:flex;position:relative;overflow:hidden;min-height:0;width:10
 #menu{position:absolute;right:0;top:40px;width:230px;padding:6px 0;z-index:60;color:var(--tx)}
 #menu button,#menu label{display:block;width:100%;text-align:left;padding:10px 14px;background:none;border:0;font-size:13px;cursor:pointer}
 #menu button:hover,#menu label:hover{background:var(--bg)}
+
 aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:flex;flex-direction:column;z-index:20;min-height:0}
 #empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center;color:var(--mut)}
 #active{flex:1;display:flex;flex-direction:column;min-height:0}
-.nb{height:30px;padding:0 9px;border-radius:8px;border:1px solid var(--bd);background:var(--sf);font-size:12px;font-weight:700}
+.nb{height:28px;padding:0 8px;border-radius:7px;border:1px solid var(--bd);background:var(--sf);font-size:11px;font-weight:700}
 
 #active .top-controls{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;border-bottom:1px solid var(--bd);background:var(--bg);min-width:0;flex-shrink:0}
 .bar{flex:1;min-width:0;display:flex;gap:8px}
@@ -102,7 +103,9 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 .fld label{display:block;font-size:10px;font-weight:700;line-height:1.15;color:var(--mut);white-space:nowrap}
 .crop-multi-hint{font-size:9px;font-weight:700;color:var(--g2);background:rgba(45,106,79,.1);padding:1px 5px;border-radius:4px;white-space:nowrap}
 .fld input{width:100%;min-width:0;border:0;outline:0;background:none;font-weight:700;font-size:14px;line-height:1.25;padding:0}
+.fld input[readonly]{color:var(--tx);cursor:default}
 .fld:focus-within{border-color:var(--g2);box-shadow:0 0 0 2px rgba(45,106,79,.12)}
+body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 
 .crop-strip{display:flex;flex-wrap:wrap;align-items:center;gap:4px;padding-top:2px}
 .crop-chip{display:inline-flex;align-items:center;gap:3px;height:22px;padding:0 8px;border-radius:99px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);font-size:11px;font-weight:700;line-height:1;white-space:nowrap;transition:background .15s,border-color .15s,color .15s}
@@ -144,9 +147,11 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 .card-crop-btn{display:inline-flex;align-items:center;gap:3px;height:20px;max-width:100%;padding:0 6px;border-radius:4px;border:none;background:rgba(27,67,50,.86);color:#fff;font-size:10px;font-weight:700;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
 .card-crop-btn.unset{background:rgba(255,255,255,.82);color:#334155;font-weight:600}
 .card-crop-btn.warn{background:#dc2626;color:#fff;box-shadow:0 0 0 1.5px #fef08a}
+.card-crop-static{display:inline-flex;align-items:center;height:20px;padding:0 6px;border-radius:4px;background:rgba(27,67,50,.82);color:#fff;font-size:10px;font-weight:700;line-height:1;white-space:nowrap}
 .card.has-crop-warn{box-shadow:inset 0 0 0 2px #dc2626}
 .card-warn-banner{position:absolute;top:0;left:0;right:0;z-index:4;background:rgba(220,38,38,.92);color:#fff;font-size:10px;font-weight:700;line-height:1.25;padding:3px 6px;display:flex;align-items:center;justify-content:space-between;gap:4px;cursor:pointer}
 .card-warn-banner span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
 #crop-picker{position:fixed;z-index:85;width:min(300px,calc(100vw - 24px));background:var(--sf);color:var(--tx);border:1px solid var(--bd);border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,.28);padding:12px;font-size:12px}
 #crop-picker h4{margin:0 0 6px;font-size:13px;display:flex;align-items:center;justify-content:space-between}
 .cp-warn-box{background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.35);color:#b91c1c;border-radius:8px;padding:7px 9px;margin-bottom:8px;font-size:11px;line-height:1.4}
@@ -164,13 +169,13 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 
 #feed{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;overscroll-behavior-y:none;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:max-content;gap:1px;background:rgba(148,163,184,.28);align-content:start}
 .card{position:relative;border:none;border-radius:0;overflow:hidden;background:var(--sf);display:block}
-.card .ch{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:center;padding:4px 6px;gap:4px;background:linear-gradient(to top,rgba(15,23,42,.52),rgba(15,23,42,0));pointer-events:none}
+.card .ch{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:center;padding:4px 6px;gap:4px;background:linear-gradient(to top,rgba(15,23,42,.62),rgba(15,23,42,0));pointer-events:none}
 .card .ch > div{pointer-events:auto}
-.tag{font-size:10px;font-weight:500;padding:1px 5px;border-radius:4px;background:rgba(255,255,255,.78);color:#334155;margin-right:4px}
-.tag.old{background:rgba(15,23,42,.45);color:#f1f5f9}
+.tag{font-size:10px;font-weight:500;padding:1px 5px;border-radius:4px;background:rgba(255,255,255,.82);color:#334155;margin-right:2px}
+.tag.old{background:rgba(15,23,42,.52);color:#f1f5f9}
 .card img{width:100%;aspect-ratio:1 / 1;object-fit:cover;min-height:0;display:block;cursor:zoom-in;background:rgba(148,163,184,.12);opacity:0;transition:opacity .25s ease}
 .card img.loaded{opacity:1}
-.card-date{border:none;background:rgba(255,255,255,.82);color:#1e293b;border-radius:4px;padding:0 5px;font-family:"Noto Sans JP",system-ui,sans-serif;font-size:10px!important;font-weight:600!important;line-height:20px!important;height:20px;min-height:20px;max-height:20px;font-variant-numeric:tabular-nums;-webkit-text-size-adjust:100%;box-sizing:border-box}
+.card-date{border:none;background:rgba(255,255,255,.85);color:#1e293b;border-radius:4px;padding:0 5px;font-family:"Noto Sans JP",system-ui,sans-serif;font-size:10px!important;font-weight:600!important;line-height:20px!important;height:20px;min-height:20px;max-height:20px;font-variant-numeric:tabular-nums;-webkit-text-size-adjust:100%;box-sizing:border-box}
 @media(max-width:767px){.card-date-wrap{display:none!important}}
 @media(min-width:768px){
   .card-date{display:none!important}
@@ -183,31 +188,15 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
   .card-date-wrap input.dm,.card-date-wrap input.dd{width:11px;padding:0;margin:0}
 }
 .card-date.no-exif,.card-date-wrap.no-exif{box-shadow:0 0 0 1.5px #ea580c;background:rgba(255,247,237,.95)}
-.card .ch .nb{height:20px;padding:0 5px;font-size:10px;font-weight:500;background:rgba(255,255,255,.78);color:#1e293b;border:none;border-radius:4px}
-
-#all-grid-view{position:absolute;inset:0;z-index:25;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;overscroll-behavior-y:none;padding:0}
-.insta-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:max-content;gap:1px;background:rgba(148,163,184,.28);align-content:start}
-.g-tile{position:relative;width:100%;aspect-ratio:1 / 1;overflow:hidden;background:rgba(148,163,184,.12);cursor:zoom-in}
-.g-tile img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .22s ease}
-.g-tile img.loaded{opacity:1}
-.g-meta{position:absolute;left:0;right:0;bottom:0;padding:4px 6px;font-size:10px;line-height:1.25;color:#fff;background:linear-gradient(to top,rgba(15,23,42,.65),rgba(15,23,42,0));display:flex;justify-content:space-between;gap:4px;pointer-events:none}
-.g-meta span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-@media(max-width:767px){
-  .insta-grid{grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(110px,calc((100dvh - 50px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)) / 3.5))}
-  .g-tile{aspect-ratio:auto;height:100%}
-}
+.card .ch .nb{height:20px;padding:0 5px;font-size:10px;font-weight:600;background:rgba(255,255,255,.86);color:#0f172a;border:none;border-radius:4px}
 
 /* インスタグラム風シームレス縦スクロール表示 */
 #insta-feed-view{
   position:absolute;inset:0;z-index:25;background:var(--sf);
   overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;overscroll-behavior-y:none;
-  padding:0 0 calc(28px + env(safe-area-inset-bottom,0px));
+  padding:0 0 28px;
 }
-.ig-stream{
-  width:100%;max-width:540px;margin:0 auto;
-  display:flex;flex-direction:column;background:var(--sf);
-}
+.ig-stream{width:100%;max-width:540px;margin:0 auto;display:flex;flex-direction:column;background:var(--sf)}
 @media(min-width:541px){
   #insta-feed-view{background:var(--bg)}
   .ig-stream{border-left:1px solid var(--bd);border-right:1px solid var(--bd)}
@@ -216,11 +205,7 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 .ig-post:last-child{border-bottom:0}
 .ig-post-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:var(--sf)}
 .ig-author{display:flex;align-items:center;gap:10px;min-width:0;flex:1;cursor:pointer}
-.ig-avatar{
-  width:32px;height:32px;border-radius:50%;background:var(--g);color:#fff;
-  font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;
-  flex-shrink:0;font-variant-numeric:tabular-nums;
-}
+.ig-avatar{width:32px;height:32px;border-radius:50%;background:var(--g);color:#fff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;font-variant-numeric:tabular-nums}
 :root[data-theme=dark] .ig-avatar{color:#0f172a}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]) .ig-avatar{color:#0f172a}}
 .ig-author-meta{min-width:0;flex:1}
@@ -228,7 +213,9 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 .ig-code-inline{font-size:12px;font-weight:700;color:var(--g2);font-variant-numeric:tabular-nums;flex-shrink:0}
 .ig-lot{font-size:13px;font-weight:700;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ig-crop-line2{margin-top:1px;font-size:11px;font-weight:500;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ig-post-date{font-size:11px;color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap;flex-shrink:0}
+.ig-hd-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.ig-post-date{font-size:11px;color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ig-detail-btn{border:1px solid var(--bd);background:var(--bg);color:var(--tx);border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;white-space:nowrap}
 .ig-photo-wrap{width:100%;margin:0;padding:0;background:#0f172a;display:block;cursor:zoom-in}
 .ig-photo-wrap img{width:100%;aspect-ratio:1 / 1;object-fit:cover;display:block;opacity:0;transition:opacity .22s ease}
 .ig-photo-wrap img.loaded{opacity:1}
@@ -241,13 +228,58 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 .ig-caption-input{width:100%;min-height:42px;border:0;outline:0;background:transparent;color:var(--tx);padding:0;margin:0;font-size:13.5px;line-height:1.5;resize:none;display:block;overflow:hidden}
 @media(max-width:767px){.ig-caption-input{font-size:16px}}
 
+/* 作業日誌ビュー */
+#journal-view{position:absolute;inset:0;z-index:25;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 28px}
+.j-wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.j-filter{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:8px 10px}
+.j-filter select,.j-filter input{height:30px;border:1px solid var(--bd);border-radius:7px;background:var(--bg);padding:0 8px;font-size:12px}
+.j-item{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:11px 12px;display:flex;flex-direction:column;gap:6px}
+.j-item-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.j-badge{font-size:11px;font-weight:700;padding:2px 7px;border-radius:99px;background:rgba(45,106,79,.14);color:var(--g2)}
+.j-work{font-size:13px;font-weight:700;line-height:1.45;white-space:pre-wrap}
+.j-cap{font-size:12.5px;color:var(--mut);line-height:1.45;white-space:pre-wrap}
+.j-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;padding-top:4px}
+
+/* 事業計画・予算書・作付計画ビュー */
+#plans-view{position:absolute;inset:0;z-index:25;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 28px}
+.pl-wrap{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.pl-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.pl-tab{height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--bd);background:var(--sf);font-size:12px;font-weight:700}
+.pl-tab.on{background:var(--g2);border-color:var(--g2);color:#fff}
+:root[data-theme=dark] .pl-tab.on{color:#0f172a}
+.pl-card{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.pl-card h3{margin:0;font-size:14px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pl-form{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pl-form .full{grid-column:1/-1}
+.pl-form input,.pl-form select,.pl-form textarea{width:100%;border:1px solid var(--bd);border-radius:8px;background:var(--bg);padding:7px 9px;font-size:12px}
+.pl-form textarea{min-height:66px;resize:vertical}
+@media(max-width:600px){.pl-form{grid-template-columns:1fr}}
+
+/* 詳細モーダル */
+#detail-modal{position:fixed;inset:0;z-index:75;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:14px}
+.dm-box{background:var(--sf);color:var(--tx);border:1px solid var(--bd);border-radius:14px;max-width:520px;width:100%;max-height:90dvh;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 16px 40px rgba(0,0,0,.35)}
+.dm-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.dm-head h3{margin:0;font-size:15px}
+.dm-thumb{width:100%;max-height:220px;object-fit:cover;border-radius:10px;background:#0f172a}
+.dm-meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;color:var(--mut)}
+.dm-field{display:flex;flex-direction:column;gap:4px}
+.dm-field label{font-size:11px;font-weight:700;color:var(--mut)}
+.dm-field textarea,.dm-field input{width:100%;border:1px solid var(--bd);border-radius:8px;background:var(--bg);padding:8px 10px;font-size:13px;line-height:1.5}
+.dm-field textarea{min-height:76px;resize:vertical}
+.dm-ro{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;font-size:13px;line-height:1.5;white-space:pre-wrap;min-height:42px}
+
+/* 下部ナビゲーション */
+nav#bottom-nav{height:52px;min-height:52px;background:var(--sf);border-top:1px solid var(--bd);display:grid;grid-template-columns:repeat(4,1fr);z-index:35;padding-bottom:env(safe-area-inset-bottom,0px)}
+.bnav-btn{border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;font-weight:700;color:var(--mut);padding:2px 4px}
+.bnav-btn .ico{font-size:15px;line-height:1}
+.bnav-btn.on{color:var(--g2);background:rgba(45,106,79,.08)}
+
 #lb{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.95);display:flex;flex-direction:column;color:#fff;opacity:1;transition:opacity .38s ease,transform .38s ease}
 #lb.closing{opacity:0!important;pointer-events:none!important}
 #lb .top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;height:68px;min-height:68px;max-height:68px;flex-shrink:0;overflow:visible;position:relative;z-index:30}
 #lb .top > div:first-child{min-width:0;flex:1}
 #lb-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35}
-#lb-t.jumpable{cursor:pointer;border-radius:6px;padding:2px 6px;margin:-2px -6px;transition:background .15s ease,color .15s ease}
-#lb-t.jumpable:hover,#lb-t.jumpable:active{background:rgba(251,191,36,.22);color:#fde68a}
+#lb-t.jumpable{cursor:pointer;border-radius:6px;padding:2px 6px;margin:-2px -6px}
 #lb .stage{flex:1;display:flex;align-items:center;justify-content:center;position:relative;min-height:0;touch-action:none;overscroll-behavior:none;overflow:hidden}
 #lb img{max-width:100%;max-height:100%;object-fit:contain;transform-origin:center center;will-change:transform;user-select:none;-webkit-user-drag:none}
 #lb .nv{position:absolute;top:50%;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.2);color:#fff;font-size:22px;transform:translateY(-50%)}
@@ -257,43 +289,23 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 #lb-pmenu{position:absolute;right:0;top:38px;min-width:136px;background:#1e293b;border:1px solid rgba(255,255,255,.22);border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,.55);padding:4px 0;z-index:100}
 #lb-pmenu button{display:flex;align-items:center;justify-content:space-between;width:100%;padding:9px 14px;border:0;background:none;color:#f8fafc;font-size:13px;text-align:left;white-space:nowrap}
 #lb-pmenu button:hover,#lb-pmenu button.on{background:rgba(255,255,255,.12);color:#fbbf24;font-weight:700}
-#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#0f172ae6;color:#fff;padding:9px 16px;border-radius:99px;font-size:13px;z-index:90;opacity:0;transition:opacity .2s;pointer-events:none}
+#toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%);background:#0f172ae6;color:#fff;padding:9px 16px;border-radius:99px;font-size:13px;z-index:90;opacity:0;transition:opacity .2s;pointer-events:none}
 #confirm{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:16px}
 #confirm div{background:var(--sf);border-radius:16px;padding:18px;max-width:340px;width:100%}
 
-body.is-touch #zoom button{width:44px;height:44px;font-size:20px}
-body.is-touch .nb{height:34px;padding:0 10px;font-size:13px}
-body.layout-sheet aside{position:fixed;left:0;right:0;top:0;bottom:0;width:100%;height:100%;max-height:100%;border-radius:0;box-shadow:0 -8px 30px rgba(0,0,0,.25);transform:translateY(100%);transition:transform .28s;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);z-index:50}
+body.layout-sheet aside{position:fixed;left:0;right:0;top:0;bottom:52px;width:100%;height:auto;max-height:none;border-radius:0;box-shadow:0 -8px 30px rgba(0,0,0,.25);transform:translateY(100%);transition:transform .28s;padding-top:env(safe-area-inset-top,0px);z-index:50}
 body.layout-sheet aside.open{transform:none}
 body.layout-sheet aside::before{content:"";display:block;width:40px;height:5px;background:var(--bd);border-radius:99px;margin:6px auto 2px;flex-shrink:0}
-body.layout-sheet #empty{display:none}
-body.layout-sheet .pill,body.layout-sheet .dsk{display:none!important}
-body.layout-sheet #zoom{display:none!important}
-body.sz-xs header{padding:0 8px;gap:4px}
-body.sz-xs header h1{font-size:14px}
-body.sz-xs .hb{padding:0 7px;font-size:12px;height:32px}
-body.sz-xs #feed,body.sz-sm #feed{grid-template-columns:1fr;padding:12px;gap:12px}
-body.dev-tablet.layout-sheet aside{top:auto;height:68vh;max-height:68vh;border-radius:20px 20px 0 0}
-body.dev-tablet #feed{grid-template-columns:repeat(2,minmax(0,1fr));padding:14px;gap:14px}
-body.dev-tablet.layout-split aside{width:50%}
-body.sz-lg aside{width:46%}
-body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
-@media(min-width:1800px){body.sz-lg #feed{grid-template-columns:repeat(4,minmax(0,1fr))}}
+body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display:none!important}
 @media(max-width:767px){
   header{padding:0 8px;gap:4px}
   header h1{font-size:14px}
   header > div{gap:4px!important}
-  .hb{padding:0 6px;font-size:11px;height:30px;white-space:nowrap}
-}
-@media(min-width:768px){
-  #feed,body.sz-lg #feed,body.dev-tablet #feed{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-rows:max-content;gap:12px;padding:14px!important;align-content:start}
-}
-@media(max-width:767px){
-  html,body{overscroll-behavior:none;overscroll-behavior-y:none}
-  aside{position:fixed;left:0;right:0;top:0;bottom:0;width:100%;height:100%;max-height:100%;border-radius:0;box-shadow:0 -8px 30px rgba(0,0,0,.25);transform:translateY(100%);transition:transform .28s;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);overscroll-behavior:none;overscroll-behavior-y:none;z-index:50}
+  .hb{padding:0 7px;font-size:11px;height:30px}
+  .pill,#zoom,#empty{display:none!important}
+  aside{position:fixed;left:0;right:0;top:0;bottom:52px;width:100%;height:auto;max-height:none;border-radius:0;box-shadow:0 -8px 30px rgba(0,0,0,.25);transform:translateY(100%);transition:transform .28s;padding-top:env(safe-area-inset-top,0px);z-index:50}
   aside.open{transform:none}
   aside::before{content:"";display:block;width:40px;height:5px;background:var(--bd);border-radius:99px;margin:6px auto 2px;flex-shrink:0}
-  #empty,.pill,.dsk,#zoom{display:none!important}
 }
 </style>
 </head>
@@ -302,20 +314,20 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
   <h1>農地の現状</h1>
   <div style="display:flex;gap:6px;align-items:center;position:relative">
     <span class="pill">登録済 <b id="reg">0</b> / <span id="tot">0</span></span>
-    <button class="hb" id="b-draw">区画追加</button>
-    <button class="hb" id="b-num">番号</button>
-    <button class="hb" id="b-adj">位置調整</button>
-    <button class="hb" id="b-grid">グリッド</button>
-    <button class="hb" id="b-insta">フィード</button>
-    <button class="hb" id="b-menu" aria-label="メニュー">⋮</button>
-    <div id="menu" class="fl hidden">
-      <button id="b-export">⬇ データを書き出し (JSON)</button>
+    <button class="hb" id="b-role" type="button">編集者</button>
+    <button class="hb edit-only" id="b-draw" type="button">区画追加</button>
+    <button class="hb" id="b-num" type="button">番号</button>
+    <button class="hb edit-only" id="b-adj" type="button">位置調整</button>
+    <button class="hb edit-only" id="b-menu" type="button" aria-label="メニュー">⋮</button>
+    <div id="menu" class="fl hidden edit-only">
+      <button id="b-export" type="button">⬇ データを書き出し (JSON)</button>
       <label>⬆ データを読み込み<input id="i-import" type="file" accept=".json" class="hidden"></label>
-      <button id="b-remap">🗺 地図画像を再選択</button>
+      <button id="b-remap" type="button">🗺 地図画像を再選択</button>
       <input id="i-map" type="file" accept="image/*" class="hidden">
     </div>
   </div>
 </header>
+
 <main>
 <section id="map-section">
   <div id="map-viewport">
@@ -326,17 +338,17 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
       </svg>
     </div>
   </div>
-  <div id="upload" class="hidden"><div><p style="font-weight:700;font-size:16px">地図画像を選択してください</p><p class="mut">一度選ぶと保存され、次回から自動で表示されます。</p><button class="btn" id="b-upload">地図画像を選択</button></div></div>
+  <div id="upload" class="hidden"><div><p style="font-weight:700;font-size:16px">地図画像を選択してください</p><p class="mut">一度選ぶと保存され、次回から自動で表示されます。</p><button class="btn edit-only" id="b-upload" type="button">地図画像を選択</button></div></div>
   <div id="hint" class="fl">白い農地をタップして写真を表示・登録</div>
-  <div id="draw-banner" class="fl hidden"><span>新しい農地の角を<b>3点以上</b>タップ→「確定」</span><button id="d-ok">確定</button><button id="d-undo">戻す</button><button id="d-cancel">中止</button></div>
-  <div id="zoom" class="fl"><button id="z-in">＋</button><button id="z-out">−</button><button id="z-fit" style="font-size:13px">全体</button></div>
+  <div id="draw-banner" class="fl hidden"><span>新しい農地の角を<b>3点以上</b>タップ→「確定」</span><button id="d-ok" type="button">確定</button><button id="d-undo" type="button">戻す</button><button id="d-cancel" type="button">中止</button></div>
+  <div id="zoom" class="fl"><button id="z-in" type="button">＋</button><button id="z-out" type="button">−</button><button id="z-fit" type="button" style="font-size:13px">全体</button></div>
 
-  <div id="adj-panel" class="fl hidden">
+  <div id="adj-panel" class="fl hidden edit-only">
     <div class="adj-head" style="display:flex;justify-content:space-between;align-items:center">
       <h3>📐 位置調整モード</h3>
       <div style="display:flex;gap:5px;align-items:center">
         <button type="button" class="adj-fold-btn" id="adj-fold">たたむ</button>
-        <button class="ab" data-a="done" style="width:54px;height:28px">終了</button>
+        <button class="ab" data-a="done" type="button" style="width:54px;height:28px">終了</button>
       </div>
     </div>
     <div class="adj-body">
@@ -347,26 +359,25 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
       <div class="adj-sections">
         <div class="sec"><h3>① 全区画まとめて</h3>
           <div class="mut">移動</div>
-          <div class="row"><button class="ab" data-a="gm" data-x="-1" data-y="0">←</button><button class="ab" data-a="gm" data-x="0" data-y="-1">↑</button><button class="ab" data-a="gm" data-x="0" data-y="1">↓</button><button class="ab" data-a="gm" data-x="1" data-y="0">→</button></div>
+          <div class="row"><button class="ab" data-a="gm" data-x="-1" data-y="0" type="button">←</button><button class="ab" data-a="gm" data-x="0" data-y="-1" type="button">↑</button><button class="ab" data-a="gm" data-x="0" data-y="1" type="button">↓</button><button class="ab" data-a="gm" data-x="1" data-y="0" type="button">→</button></div>
           <div class="mut">拡大縮小（中心基準）</div>
-          <div class="row"><button class="ab" data-a="gs" data-x="-1" data-y="0">横−</button><button class="ab" data-a="gs" data-x="1" data-y="0">横＋</button><button class="ab" data-a="gs" data-x="0" data-y="-1">縦−</button><button class="ab" data-a="gs" data-x="0" data-y="1">縦＋</button></div>
+          <div class="row"><button class="ab" data-a="gs" data-x="-1" data-y="0" type="button">横−</button><button class="ab" data-a="gs" data-x="1" data-y="0" type="button">横＋</button><button class="ab" data-a="gs" data-x="0" data-y="-1" type="button">縦−</button><button class="ab" data-a="gs" data-x="0" data-y="1" type="button">縦＋</button></div>
           <div class="mut" id="gread"></div>
-          <div class="row"><button class="ab wide" data-a="greset">全体調整をリセット</button></div>
+          <div class="row"><button class="ab wide" data-a="greset" type="button">全体調整をリセット</button></div>
         </div>
         <div class="sec"><h3>② 選択中の1区画</h3>
           <div class="mut" id="sread">地図で区画をタップ</div>
-          <div class="row"><button class="ab" data-a="pm" data-x="-1" data-y="0">←</button><button class="ab" data-a="pm" data-x="0" data-y="-1">↑</button><button class="ab" data-a="pm" data-x="0" data-y="1">↓</button><button class="ab" data-a="pm" data-x="1" data-y="0">→</button></div>
-          <div class="row"><button class="ab wide" data-a="preset">この区画を初期位置に戻す</button></div>
-          <div class="mut">※個別に調整した区画は①の影響を受けません。先に①、次に②の順がおすすめ。</div>
+          <div class="row"><button class="ab" data-a="pm" data-x="-1" data-y="0" type="button">←</button><button class="ab" data-a="pm" data-x="0" data-y="-1" type="button">↑</button><button class="ab" data-a="pm" data-x="0" data-y="1" type="button">↓</button><button class="ab" data-a="pm" data-x="1" data-y="0" type="button">→</button></div>
+          <div class="row"><button class="ab wide" data-a="preset" type="button">この区画を初期位置に戻す</button></div>
         </div>
-        <div class="sec adj-sec-copy"><div class="mut" id="imgsz"></div><div class="row"><button class="ab wide" data-a="copy">座標をコピー / 保存</button></div></div>
+        <div class="sec adj-sec-copy"><div class="mut" id="imgsz"></div><div class="row"><button class="ab wide" data-a="copy" type="button">座標をコピー / 保存</button></div></div>
       </div>
     </div>
   </div>
 </section>
 
 <aside id="panel">
-  <div id="empty"><div style="font-size:40px">🌱</div><h2 style="color:var(--tx)">農地を選択してください</h2><p>地図の<b>白塗りの農地</b>をクリックすると、登録写真がここに大きく表示されます。</p></div>
+  <div id="empty"><div style="font-size:40px">🌱</div><h2 style="color:var(--tx)">農地を選択してください</h2><p>地図の<b>白塗りの農地</b>をクリックすると、登録写真がここに表示されます。</p></div>
   <div id="active" class="hidden">
     <div class="top-controls">
       <div class="bar">
@@ -388,22 +399,82 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
           <div id="crop-strip" class="crop-strip hidden" aria-label="登録作物一覧"></div>
         </div>
       </div>
-      <div class="addrow">
+      <div class="addrow edit-only">
         <label class="btn circle-add" aria-label="写真を追加する">＋<input id="i-photos" type="file" accept="image/*" multiple class="hidden"></label>
       </div>
     </div>
     <div id="feed"></div>
-    <div id="cfoot" class="hidden" style="padding:8px 14px;text-align:right;border-top:1px solid var(--bd)"><button id="b-delc" style="border:0;background:none;color:#dc2626;font-size:12px">この区画を削除</button></div>
+    <div id="cfoot" class="hidden edit-only" style="padding:8px 14px;text-align:right;border-top:1px solid var(--bd)"><button id="b-delc" type="button" style="border:0;background:none;color:#dc2626;font-size:12px">この区画を削除</button></div>
   </div>
 </aside>
-<section id="all-grid-view" class="hidden" aria-label="全農地写真グリッド">
-  <div id="insta-grid" class="insta-grid"></div>
-</section>
-<section id="insta-feed-view" class="hidden" aria-label="インスタグラム風フィード">
+
+<section id="insta-feed-view" class="hidden" aria-label="フィード">
   <div id="insta-stream" class="ig-stream"></div>
 </section>
-<script>if(window.innerWidth<768)document.body.classList.add('layout-sheet');</script>
+
+<section id="journal-view" class="hidden" aria-label="作業日誌">
+  <div class="j-wrap">
+    <div class="j-filter">
+      <select id="j-parcel"><option value="">全区画</option></select>
+      <input id="j-q" type="search" placeholder="作業内容・作物・キャプション検索">
+    </div>
+    <div id="j-list"></div>
+  </div>
+</section>
+
+<section id="plans-view" class="hidden" aria-label="事業計画・予算書・作付計画">
+  <div class="pl-wrap">
+    <div class="pl-tabs" id="pl-tabs">
+      <button type="button" class="pl-tab on" data-cat="事業計画">事業計画</button>
+      <button type="button" class="pl-tab" data-cat="予算書">予算書</button>
+      <button type="button" class="pl-tab" data-cat="作付計画">作付計画</button>
+    </div>
+    <div class="pl-card edit-only" id="pl-editor-card">
+      <h3><span id="pl-form-title">計画・資料を追加</span></h3>
+      <div class="pl-form">
+        <div><input id="pl-title" type="text" placeholder="タイトル（例: 令和8年度 作付計画）"></div>
+        <div><input id="pl-ref" type="text" placeholder="参照先・ファイル名・リンク（任意）"></div>
+        <div class="full"><textarea id="pl-body" placeholder="計画内容・予算内訳・作付予定メモを入力..."></textarea></div>
+        <div class="full" style="display:flex;justify-content:flex-end;gap:8px">
+          <button type="button" class="btn" id="pl-add" style="padding:8px 14px;font-size:12px">保存する</button>
+        </div>
+      </div>
+    </div>
+    <div id="pl-list"></div>
+  </div>
+</section>
 </main>
+
+<nav id="bottom-nav" aria-label="メインナビゲーション">
+  <button type="button" class="bnav-btn on" data-nav="home"><span class="ico">🗺</span><span>ホーム</span></button>
+  <button type="button" class="bnav-btn" data-nav="feed"><span class="ico">🖼️</span><span>フィード</span></button>
+  <button type="button" class="bnav-btn" data-nav="journal"><span class="ico">📓</span><span>日誌</span></button>
+  <button type="button" class="bnav-btn" data-nav="plans"><span class="ico">📊</span><span>計画・資料</span></button>
+</nav>
+
+<div id="detail-modal" class="hidden" role="dialog" aria-label="詳細を見る">
+  <div class="dm-box">
+    <div class="dm-head">
+      <h3 id="dm-title">詳細を見る</h3>
+      <button type="button" class="nb" id="dm-close">✕</button>
+    </div>
+    <img id="dm-img" class="dm-thumb hidden" alt="">
+    <div id="dm-meta" class="dm-meta"></div>
+    <div class="dm-field">
+      <label for="dm-work">具体的な作業内容</label>
+      <textarea id="dm-work" class="edit-only" placeholder="例: 畝立て・黒マルチ張り、追肥・中耕、防除散布など"></textarea>
+      <div id="dm-work-ro" class="dm-ro hidden"></div>
+    </div>
+    <div class="dm-field">
+      <label for="dm-cap">キャプション・観察メモ</label>
+      <textarea id="dm-cap" class="edit-only" placeholder="生育状況や気づきを入力..."></textarea>
+      <div id="dm-cap-ro" class="dm-ro hidden"></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px">
+      <button type="button" class="btn edit-only" id="dm-save" style="padding:8px 16px;font-size:13px">内容を保存</button>
+    </div>
+  </div>
+</div>
 
 <div id="lb" class="hidden">
   <div class="top">
@@ -420,14 +491,14 @@ body.sz-lg #feed{grid-template-columns:repeat(3,minmax(0,1fr))}
         </div>
       </div>
       <span id="lb-c" style="font-size:12px;white-space:nowrap"></span>
-      <button class="nv" id="lb-x" style="position:static;transform:none">✕</button>
+      <button class="nv" id="lb-x" type="button" style="position:static;transform:none">✕</button>
     </div>
   </div>
-  <div class="stage" id="lb-s"><button class="nv" id="lb-p" style="left:8px">‹</button><img id="lb-i" alt=""><button class="nv" id="lb-n" style="right:8px">›</button></div>
+  <div class="stage" id="lb-s"><button class="nv" id="lb-p" type="button" style="left:8px">‹</button><img id="lb-i" alt=""><button class="nv" id="lb-n" type="button" style="right:8px">›</button></div>
   <div id="lb-guide" style="text-align:center;font-size:11px;color:#94a3b8;padding:8px">左右ボタン／スワイプで切替</div>
 </div>
 <div id="toast"></div>
-<div id="confirm" class="hidden"><div><h3 id="c-t" style="margin:0 0 6px"></h3><p id="c-b" class="mut" style="font-size:13px"></p><div style="display:flex;justify-content:flex-end;gap:8px"><button class="nb" id="c-no" style="height:38px">キャンセル</button><button class="btn" id="c-ok" style="background:#dc2626;padding:9px 16px">削除する</button></div></div></div>
+<div id="confirm" class="hidden"><div><h3 id="c-t" style="margin:0 0 6px"></h3><p id="c-b" class="mut" style="font-size:13px"></p><div style="display:flex;justify-content:flex-end;gap:8px"><button class="nb" id="c-no" type="button" style="height:38px">キャンセル</button><button class="btn" id="c-ok" type="button" style="background:#dc2626;padding:9px 16px">削除する</button></div></div></div>
 <div id="crop-picker" class="hidden" role="dialog" aria-label="写真の作物登録"></div>
 
 <script>
@@ -479,7 +550,8 @@ async function loadState(){
   }catch(e){console.error(e);return null}
 }
 async function saveState(){
-  if(!DBH){try{const db=await openDB();return await new Promise((res,rej)=>{const q=db.transaction('appState','readwrite').objectStore('appState').put(S,'main');q.onsuccess=()=>res(true);q.onerror=()=>rej(q.error)})}catch(e){toast('端末への保存に失敗しました（容量を確認してください）');return false}}
+  if(!isEditor())return false;
+  if(!DBH){try{const db=await openDB();return await new Promise((res,rej)=>{const q=db.transaction('appState','readwrite').objectStore('appState').put(S,'main');q.onsuccess=()=>res(true);q.onerror=()=>rej(q.error)})}catch(e){toast('端末への保存に失敗しました');return false}}
   try{const{records,...meta}=S,ms=JSON.stringify(meta);
     if(ms!==lastSaved.__meta){await DBH.doc('app/main').set(JSON.parse(ms));lastSaved.__meta=ms}
     for(const id in records){const s=JSON.stringify(records[id]);if(lastSaved[id]!==s){await DBH.doc('parcels/'+id).set(JSON.parse(s));lastSaved[id]=s}}
@@ -489,10 +561,53 @@ async function saveState(){
 }
 let saveT;const saveSoon=()=>{clearTimeout(saveT);saveT=setTimeout(saveState,300)};
 
-let S={records:{},customParcels:[],deletedParcels:[],customMapDataUrl:null,parcelOverrides:{},globalAdjust:{dx:0,dy:0,sx:1,sy:1}};
-const normState=o=>({records:o.records||{},customParcels:o.customParcels||[],deletedParcels:o.deletedParcels||[],customMapDataUrl:o.customMapDataUrl||null,parcelOverrides:o.parcelOverrides||{},globalAdjust:o.globalAdjust||{dx:0,dy:0,sx:1,sy:1}});
-let sel=null,cropFilter=null,drawing=false,draft=[],adjusting=false,showNum=false,gridMode=false,instaMode=false,gridPhotos=[],instaPhotos=[],gridIO=null,instaIO=null,V={s:1,x:0,y:0};
+let S={records:{},customParcels:[],deletedParcels:[],customMapDataUrl:null,parcelOverrides:{},globalAdjust:{dx:0,dy:0,sx:1,sy:1},plans:[],role:'editor'};
+const normState=o=>({
+  records:o.records||{},
+  customParcels:o.customParcels||[],
+  deletedParcels:o.deletedParcels||[],
+  customMapDataUrl:o.customMapDataUrl||null,
+  parcelOverrides:o.parcelOverrides||{},
+  globalAdjust:o.globalAdjust||{dx:0,dy:0,sx:1,sy:1},
+  plans:Array.isArray(o.plans)?o.plans:[],
+  role:o.role==='viewer'?'viewer':'editor'
+});
+const isEditor=()=>S.role!=='viewer';
+
+let sel=null,cropFilter=null,drawing=false,draft=[],adjusting=false,showNum=false,activeNav='home',planCat='事業計画',instaPhotos=[],instaIO=null,V={s:1,x:0,y:0};
+let currentDetailTarget=null;
 const expandedComments=new Set();
+
+function applyRoleUI(){
+  const ed=isEditor();
+  document.body.classList.toggle('role-viewer',!ed);
+  const rb=$('b-role');
+  if(rb){
+    rb.textContent=ed?'編集者':'閲覧者';
+    rb.classList.toggle('role-viewer',!ed);
+  }
+  document.querySelectorAll('.edit-only').forEach(el=>{
+    el.classList.toggle('hidden',!ed);
+  });
+  $('lot').readOnly=!ed;
+  $('crop').readOnly=!ed;
+  if(!ed){
+    if(drawing)setDraw(false);
+    if(adjusting)setAdj(false);
+    closeCropPicker();
+    $('menu').classList.add('hidden');
+  }
+}
+
+$('b-role').onclick=async()=>{
+  S.role=isEditor()?'viewer':'editor';
+  applyRoleUI();
+  render();
+  if(sel)feed();
+  if(activeNav==='journal')renderJournal();
+  if(activeNav==='plans')renderPlans();
+  toast(isEditor()?'編集者モードに切り替えました':'閲覧者モードに切り替えました（編集機能は非表示）');
+};
 
 function parseCrops(str){
   if(!str)return[];
@@ -536,8 +651,9 @@ const todayISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMo
 const jpDate=iso=>iso.replace(/-/g,'/');
 const fmtDate=s=>String(s||'').replace(/(\d{4})[年\/\-](\d{1,2})[月\/\-](\d{1,2})日?.*/,(_,y,m,d)=>y+'/'+Number(m)+'/'+Number(d)).replace(/\s+\d{1,2}:\d{2}.*/,'');
 const toISO=s=>{const m=fmtDate(s).match(/(\d{4})\/(\d{1,2})\/(\d{1,2})/);return m?m[1]+'-'+m[2].padStart(2,'0')+'-'+m[3].padStart(2,'0'):todayISO()};
+
 function photosOf(id){
-  const list=[...((S.records[id]&&S.records[id].photos)||[]),...(STATIC_PHOTOS[id]||[]).map((p,i)=>({id:'S_'+id+'_'+i,dataUrl:p.src,postedAt:p.postedAt,isStatic:true}))];
+  const list=[...((S.records[id]&&S.records[id].photos)||[]),...(STATIC_PHOTOS[id]||[]).map((p,i)=>({id:'S_'+id+'_'+i,dataUrl:p.src,postedAt:p.postedAt,workLog:p.workLog||'',comment:p.comment||'',isStatic:true}))];
   return list.sort((a,b)=>{
     const da=toISO(a.postedAt),db=toISO(b.postedAt);
     if(da!==db)return db.localeCompare(da);
@@ -569,6 +685,7 @@ function allPhotosLatestFirst(){
     return(b.timestamp||0)-(a.timestamp||0);
   });
 }
+
 function toast(m){const t=$('toast');t.textContent=m;t.style.opacity=1;clearTimeout(window._tt);window._tt=setTimeout(()=>t.style.opacity=0,2200)}
 function ask(title,body){return new Promise(res=>{$('c-t').textContent=title;$('c-b').textContent=body;$('confirm').classList.remove('hidden');const done=v=>{$('confirm').classList.add('hidden');res(v)};$('c-ok').onclick=()=>done(true);$('c-no').onclick=()=>done(false)})}
 function compress(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=e=>{const im=new Image();im.onload=()=>{let w=im.width,h=im.height;const M=1400;if(w>M||h>M){if(w>h){h=Math.round(h*M/w);w=M}else{w=Math.round(w*M/h);h=M}}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);c.toBlob(b=>res(b),'image/webp',.85)};im.onerror=rej;im.src=e.target.result};fr.onerror=rej;fr.readAsDataURL(file)})}
@@ -580,83 +697,53 @@ function extractExifDateISO(file){
       try{
         const view=new DataView(e.target.result);
         if(view.byteLength<12||view.getUint16(0,false)!==0xFFD8){res(null);return}
-        const readAscii=(start,len)=>{
-          let s='';
-          for(let i=0;i<len;i++){
-            if(start+i>=view.byteLength)break;
-            const c=view.getUint8(start+i);
-            if(c===0)break;
-            if(c>=32&&c<=126)s+=String.fromCharCode(c);
-          }
-          return s;
-        };
+        const readAscii=(start,len)=>{let s='';for(let i=0;i<len;i++){if(start+i>=view.byteLength)break;const c=view.getUint8(start+i);if(c===0)break;if(c>=32&&c<=126)s+=String.fromCharCode(c)}return s};
         const toISOFromExifStr=str=>{
           if(!str)return null;
           const m=str.match(/(\d{4})\s*[:\-/]\s*(\d{1,2})\s*[:\-/]\s*(\d{1,2})/);
           if(!m)return null;
           const y=Number(m[1]),mo=Number(m[2]),d=Number(m[3]);
           if(y<1990||y>2100||mo<1||mo>12||d<1||d>31)return null;
-          const maxD=new Date(y,mo,0).getDate();
-          if(d>maxD)return null;
           return `${String(y).padStart(4,'0')}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         };
         const parseExifAtTiff=(tiff,limitEnd)=>{
           if(tiff+8>limitEnd||tiff+8>view.byteLength)return null;
-          const end=Math.min(limitEnd,view.byteLength);
-          const bo=view.getUint16(tiff,false);
-          const le=(bo===0x4949),be=(bo===0x4D4D);
+          const end=Math.min(limitEnd,view.byteLength),bo=view.getUint16(tiff,false),le=(bo===0x4949),be=(bo===0x4D4D);
           if(!le&&!be)return null;
-          const u16=p=>(p+2<=end)?view.getUint16(p,le):0;
-          const u32=p=>(p+4<=end)?view.getUint32(p,le):0;
-          const ifd0Off=u32(tiff+4);
+          const u16=p=>(p+2<=end)?view.getUint16(p,le):0,u32=p=>(p+4<=end)?view.getUint32(p,le):0,ifd0Off=u32(tiff+4);
           const parseIFD=(relOff,visited=new Set())=>{
             if(!relOff||visited.has(relOff))return{};
             visited.add(relOff);
-            const pos=tiff+relOff;
-            if(pos<tiff||pos+2>end)return{};
-            const n=u16(pos);
-            if(n>300)return{};
+            const pos=tiff+relOff;if(pos<tiff||pos+2>end)return{};
+            const n=u16(pos);if(n>300)return{};
             const found={};
             for(let i=0;i<n;i++){
-              const ep=pos+2+i*12;
-              if(ep+12>end)break;
+              const ep=pos+2+i*12;if(ep+12>end)break;
               const tag=u16(ep),type=u16(ep+2),cnt=u32(ep+4),valField=ep+8;
               const unit=(type===1||type===2||type===6||type===7)?1:(type===3||type===8)?2:4;
               const dataPos=(cnt*unit<=4)?valField:(tiff+u32(valField));
-              if(tag===0x9003||tag===0x9004||tag===0x0132){
-                if(dataPos>=tiff&&dataPos+10<=end){
-                  const iso=toISOFromExifStr(readAscii(dataPos,Math.min(28,end-dataPos)));
-                  if(iso)found[tag]=iso;
-                }
+              if((tag===0x9003||tag===0x9004||tag===0x0132)&&dataPos>=tiff&&dataPos+10<=end){
+                const iso=toISOFromExifStr(readAscii(dataPos,Math.min(28,end-dataPos)));
+                if(iso)found[tag]=iso;
               }
               if(tag===0x8769)found.exifPtr=u32(valField);
             }
             return found;
           };
           const d0=parseIFD(ifd0Off);
-          if(d0.exifPtr){
-            const sub=parseIFD(d0.exifPtr);
-            if(sub[0x9003])return sub[0x9003];
-            if(sub[0x9004])return sub[0x9004];
-          }
+          if(d0.exifPtr){const sub=parseIFD(d0.exifPtr);if(sub[0x9003])return sub[0x9003];if(sub[0x9004])return sub[0x9004]}
           return d0[0x0132]||null;
         };
         let offset=2;
         while(offset+4<=view.byteLength){
-          const marker=view.getUint16(offset,false);
-          offset+=2;
+          const marker=view.getUint16(offset,false);offset+=2;
           if(marker===0xFFE1){
             const segLen=view.getUint16(offset,false),segStart=offset+2,segEnd=Math.min(view.byteLength,offset+segLen);
-            if(segStart+12<=segEnd&&readAscii(segStart,6)==='Exif'){
-              const iso=parseExifAtTiff(segStart+6,segEnd);
-              if(iso){res(iso);return}
-            }
+            if(segStart+12<=segEnd&&readAscii(segStart,6)==='Exif'){const iso=parseExifAtTiff(segStart+6,segEnd);if(iso){res(iso);return}}
             offset+=segLen;
-          }else if(marker===0xFFDA){break}
-          else if((marker&0xFF00)===0xFF00){
-            if(offset+2>view.byteLength)break;
-            offset+=view.getUint16(offset,false);
-          }else{break}
+          }else if(marker===0xFFDA)break;
+          else if((marker&0xFF00)===0xFF00){if(offset+2>view.byteLength)break;offset+=view.getUint16(offset,false)}
+          else break;
         }
         res(null);
       }catch(_){res(null)}
@@ -681,9 +768,7 @@ function zoomAt(f,cx,cy,smooth){
       if(!zTgt){zRaf=0;return}
       const ds=zTgt.s-V.s;
       if(Math.abs(ds)<0.0008){const k=zTgt.s/V.s;V.x=zTgt.px-(zTgt.px-V.x)*k;V.y=zTgt.py-(zTgt.py-V.y)*k;V.s=zTgt.s;applyT();zTgt=null;zRaf=0;return}
-      const next=V.s+ds*0.16,k=next/V.s;
-      V.x=zTgt.px-(zTgt.px-V.x)*k;V.y=zTgt.py-(zTgt.py-V.y)*k;V.s=next;applyT();
-      zRaf=requestAnimationFrame(tick);
+      const next=V.s+ds*0.16,k=next/V.s;V.x=zTgt.px-(zTgt.px-V.x)*k;V.y=zTgt.py-(zTgt.py-V.y)*k;V.s=next;applyT();zRaf=requestAnimationFrame(tick);
     };
     zRaf=requestAnimationFrame(tick);
   }
@@ -692,7 +777,7 @@ function focusP(id,off){stopZ();const p=getP(id);if(!p)return;const c=centroid(p
 const ptrs=new Map();let drag=false,ds={x:0,y:0},moved=false,pd=0,ps=1,pm={x:0,y:0};
 vp.addEventListener('pointerdown',e=>{stopZ();ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=false;if(ptrs.size===1){drag=true;ds={x:e.clientX-V.x,y:e.clientY-V.y}}else if(ptrs.size===2){drag=false;const a=[...ptrs.values()];pd=Math.hypot(a[1].x-a[0].x,a[1].y-a[0].y);ps=V.s;pm={x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2}}});
 vp.addEventListener('pointermove',e=>{const p=ptrs.get(e.pointerId);if(!p)return;if(Math.hypot(e.clientX-p.x,e.clientY-p.y)>4)moved=true;ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});if(ptrs.size===2){const a=[...ptrs.values()],d=Math.hypot(a[1].x-a[0].x,a[1].y-a[0].y);if(pd>0)zoomAt(ps*d/pd/V.s,pm.x,pm.y,false)}else if(drag&&ptrs.size===1){V.x=e.clientX-ds.x;V.y=e.clientY-ds.y;applyT()}});
-function pend(e){ptrs.delete(e.pointerId);if(!ptrs.size)drag=false;if(drawing&&!moved&&e.type==='pointerup'){const p=toSvg(e.clientX,e.clientY);if(p.x>=0&&p.x<=W&&p.y>=0&&p.y<=H){draft.push([p.x,p.y]);renderDraft()}}}
+function pend(e){ptrs.delete(e.pointerId);if(!ptrs.size)drag=false;if(drawing&&isEditor()&&!moved&&e.type==='pointerup'){const p=toSvg(e.clientX,e.clientY);if(p.x>=0&&p.x<=W&&p.y>=0&&p.y<=H){draft.push([p.x,p.y]);renderDraft()}}}
 vp.addEventListener('pointerup',pend);vp.addEventListener('pointercancel',pend);
 vp.addEventListener('wheel',e=>{e.preventDefault();const dy=Math.max(-250,Math.min(250,e.deltaY));zoomAt(Math.pow(1.006,-dy),e.clientX,e.clientY,true)},{passive:false});
 $('z-in').onclick=()=>{const r=vp.getBoundingClientRect();zoomAt(1.18,r.left+r.width/2,r.top+r.height/2,true)};
@@ -700,8 +785,6 @@ $('z-out').onclick=()=>{const r=vp.getBoundingClientRect();zoomAt(1/1.18,r.left+
 $('z-fit').onclick=()=>{stopZ();fit(true)};
 vp.addEventListener('dblclick',()=>{if(!drawing){stopZ();fit(true)}});
 function toSvg(cx,cy){const r=layer.getBoundingClientRect();return{x:r2((cx-r.left)/r.width*W),y:r2((cy-r.top)/r.height*H)}}
-let lastW=innerWidth;
-window.addEventListener('resize',()=>{if(innerWidth!==lastW){lastW=innerWidth;fit(false)}});
 
 const NS='http://www.w3.org/2000/svg',mk=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e};
 function render(){
@@ -726,8 +809,8 @@ function render(){
   });
   if(showNum)renderBadges(ps);
   $('reg').textContent=reg;$('tot').textContent=ps.length;renderHandles();updAdj();
-  if(gridMode)renderAllGrid();
-  if(instaMode)renderInstaFeed();
+  if(activeNav==='feed')renderInstaFeed();
+  if(activeNav==='journal')renderJournal();
 }
 function insidePoly(x,y,pts){
   let inside=false;
@@ -739,436 +822,332 @@ function insidePoly(x,y,pts){
   return inside;
 }
 function anchorPoint(pts){
-  const cx=pts.reduce((t,p)=>t+p[0],0)/pts.length;
-  const cy=pts.reduce((t,p)=>t+p[1],0)/pts.length;
+  const cx=pts.reduce((t,p)=>t+p[0],0)/pts.length,cy=pts.reduce((t,p)=>t+p[1],0)/pts.length;
   if(insidePoly(cx,cy,pts))return{x:cx,y:cy};
   let best={x:cx,y:cy},bestD=Infinity;
   for(let i=0;i<pts.length;i++){
     const mx=(pts[i][0]+cx)/2,my=(pts[i][1]+cy)/2;
-    if(insidePoly(mx,my,pts)){
-      const d=Math.hypot(mx-cx,my-cy);
-      if(d<bestD){bestD=d;best={x:mx,y:my}}
-    }
+    if(insidePoly(mx,my,pts)){const d=Math.hypot(mx-cx,my-cy);if(d<bestD){bestD=d;best={x:mx,y:my}}}
   }
   return best;
 }
 function renderBadges(ps){
   const minW=24,minH=14;
-  const items=ps.map(p=>{
-    const pts=parse(p.points),a=anchorPoint(pts);
-    return{code:p.code,x:a.x,y:a.y,ax:a.x,ay:a.y};
-  });
+  const items=ps.map(p=>{const pts=parse(p.points),a=anchorPoint(pts);return{code:p.code,x:a.x,y:a.y,ax:a.x,ay:a.y}});
   for(let iter=0;iter<24;iter++){
     let movedAny=false;
     for(let i=0;i<items.length;i++){
       for(let j=i+1;j<items.length;j++){
-        const dx=items[j].x-items[i].x,dy=items[j].y-items[i].y;
-        const ox=minW-Math.abs(dx),oy=minH-Math.abs(dy);
+        const dx=items[j].x-items[i].x,dy=items[j].y-items[i].y,ox=minW-Math.abs(dx),oy=minH-Math.abs(dy);
         if(ox>0&&oy>0){
           movedAny=true;
           let pushX=0,pushY=0;
-          if(ox<oy){
-            const sgn=dx===0?(i<j?-1:1):Math.sign(dx);
-            pushX=sgn*(ox/2+0.8);
-          }else{
-            const sgn=dy===0?(i<j?-1:1):Math.sign(dy);
-            pushY=sgn*(oy/2+0.8);
-          }
-          items[i].x=Math.max(14,Math.min(W-14,items[i].x-pushX));
-          items[i].y=Math.max(10,Math.min(H-10,items[i].y-pushY));
-          items[j].x=Math.max(14,Math.min(W-14,items[j].x+pushX));
-          items[j].y=Math.max(10,Math.min(H-10,items[j].y+pushY));
+          if(ox<oy){const sgn=dx===0?(i<j?-1:1):Math.sign(dx);pushX=sgn*(ox/2+0.8)}
+          else{const sgn=dy===0?(i<j?-1:1):Math.sign(dy);pushY=sgn*(oy/2+0.8)}
+          items[i].x=Math.max(14,Math.min(W-14,items[i].x-pushX));items[i].y=Math.max(10,Math.min(H-10,items[i].y-pushY));
+          items[j].x=Math.max(14,Math.min(W-14,items[j].x+pushX));items[j].y=Math.max(10,Math.min(H-10,items[j].y+pushY));
         }
       }
     }
     if(!movedAny)break;
   }
   items.forEach(it=>{
-    const dist=Math.hypot(it.x-it.ax,it.y-it.ay);
-    if(dist>6){
-      $('badges').appendChild(mk('line',{x1:it.ax,y1:it.ay,x2:it.x,y2:it.y,stroke:'rgba(124,45,18,.55)','stroke-width':1}));
-    }
-    const lt=mk('text',{
-      x:r2(it.x),y:r2(it.y+4),
-      'text-anchor':'middle','font-size':11,'font-weight':700,
-      fill:'#7c2d12',stroke:'#fff','stroke-width':3,'paint-order':'stroke'
-    });
-    lt.textContent=it.code;
-    $('badges').appendChild(lt);
+    if(Math.hypot(it.x-it.ax,it.y-it.ay)>6)$('badges').appendChild(mk('line',{x1:it.ax,y1:it.ay,x2:it.x,y2:it.y,stroke:'rgba(124,45,18,.55)','stroke-width':1}));
+    const lt=mk('text',{x:r2(it.x),y:r2(it.y+4),'text-anchor':'middle','font-size':11,'font-weight':700,fill:'#7c2d12',stroke:'#fff','stroke-width':3,'paint-order':'stroke'});
+    lt.textContent=it.code;$('badges').appendChild(lt);
   });
 }
 function renderDraft(){const l=$('drawp');l.innerHTML='';if(!draft.length)return;if(draft.length>1)l.appendChild(mk('polygon',{points:str(draft),fill:'rgba(217,119,6,.35)',stroke:'#d97706','stroke-width':2,'stroke-dasharray':'5,3'}));draft.forEach(([x,y])=>l.appendChild(mk('circle',{cx:x,cy:y,r:4,fill:'#d97706',stroke:'#fff','stroke-width':1.5})))}
 
-function renderAllGrid(){
-  const view=$('all-grid-view');
-  const wrap=$('insta-grid');
-  if(gridIO){gridIO.disconnect();gridIO=null}
-  view.scrollTop=0;
-  gridPhotos=allPhotosLatestFirst();
-  wrap.innerHTML='';
-  if(!gridPhotos.length){
-    wrap.style.background='none';
-    wrap.innerHTML='<div style="grid-column:1/-1;padding:40px 16px;text-align:center;color:var(--mut)">登録された写真がまだありません</div>';
-    return;
-  }
-  wrap.style.background='';
-
-  const isMobile=window.innerWidth<768;
-  const INITIAL_EAGER=isMobile?12:gridPhotos.length;
-  const HIGH_PRIORITY=isMobile?6:0;
-  const deferred=[];
-
-  gridPhotos.forEach((p,idx)=>{
-    const tile=document.createElement('div');
-    tile.className='g-tile';
-    tile.dataset.idx=idx;
-
-    const isInitial=idx<INITIAL_EAGER;
-    const isHigh=idx<HIGH_PRIORITY;
-    const imgAttr=isInitial
-      ? `src="${p.dataUrl}" ${isHigh?'fetchpriority="high"':(!isMobile?'loading="lazy"':'')}`
-      : `data-src="${p.dataUrl}" loading="lazy"`;
-
-    tile.innerHTML=`<img ${imgAttr} alt="${p.parcelLabel}" decoding="async"><div class="g-meta"><span>${p.parcelCode} ${p.parcelLabel}</span><span>${fmtDate(p.postedAt)}</span></div>`;
-    const im=tile.querySelector('img');
-    im.onload=()=>im.classList.add('loaded');
-    if(im.complete&&im.naturalWidth)im.classList.add('loaded');
-    if(!isInitial)deferred.push(im);
-
-    tile.addEventListener('click',()=>openGridLB(idx));
-    wrap.appendChild(tile);
-  });
-
-  if(deferred.length){
-    const loadDeferred=im=>{
-      if(!im.dataset.src)return;
-      im.src=im.dataset.src;
-      im.removeAttribute('data-src');
-    };
-    gridIO=new IntersectionObserver((entries,obs)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          loadDeferred(entry.target);
-          obs.unobserve(entry.target);
-        }
-      });
-    },{root:view,rootMargin:'120px 0px'});
-    deferred.forEach(im=>gridIO.observe(im));
-  }
-}
-
-function escapeHtml(s){
-  return String(s||'')
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;');
-}
-
+function escapeHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function setPhotoComment(parcelId,photoId,newText){
-  const r=S.records[parcelId];
-  if(!r||!Array.isArray(r.photos))return false;
-  const ph=r.photos.find(p=>p.id===photoId);
-  if(!ph)return false;
-  ph.comment=newText;
-  saveSoon();
-  return true;
+  if(!isEditor())return false;
+  const r=S.records[parcelId];if(!r||!Array.isArray(r.photos))return false;
+  const ph=r.photos.find(p=>p.id===photoId);if(!ph)return false;
+  ph.comment=newText;saveSoon();return true;
 }
-
 function truncateToThreeLines(txt){
-  const s=String(txt||'');
-  if(!s)return{truncated:false,preview:''};
-  const lines=s.split(/\r?\n/);
-  const MAX_CHARS_PER_LINE=25;
-  let usedLines=0;
-  const outLines=[];
+  const s=String(txt||'');if(!s)return{truncated:false,preview:''};
+  const lines=s.split(/\r?\n/),MAX=25;let used=0;const out=[];
   for(let i=0;i<lines.length;i++){
-    const line=lines[i];
-    const lineCost=Math.max(1,Math.ceil(line.length/MAX_CHARS_PER_LINE));
-    if(usedLines+lineCost<=3){
-      outLines.push(line);
-      usedLines+=lineCost;
-      if(usedLines===3 && i<lines.length-1){
-        const last=outLines[outLines.length-1];
-        const trimLen=Math.max(0,MAX_CHARS_PER_LINE-6);
-        outLines[outLines.length-1]=last.length>trimLen?last.slice(0,trimLen):last;
-        return{truncated:true,preview:outLines.join('\n')};
-      }
+    const line=lines[i],cost=Math.max(1,Math.ceil(line.length/MAX));
+    if(used+cost<=3){
+      out.push(line);used+=cost;
+      if(used===3&&i<lines.length-1){const last=out[out.length-1],t=Math.max(0,MAX-6);out[out.length-1]=last.length>t?last.slice(0,t):last;return{truncated:true,preview:out.join('\n')}}
     }else{
-      const remLines=3-usedLines;
-      if(remLines>0){
-        const maxTake=Math.max(0,remLines*MAX_CHARS_PER_LINE-6);
-        outLines.push(line.slice(0,maxTake));
-      }else if(outLines.length){
-        const last=outLines[outLines.length-1];
-        const trimLen=Math.max(0,last.length-6);
-        outLines[outLines.length-1]=last.slice(0,trimLen);
-      }
-      return{truncated:true,preview:outLines.join('\n')};
+      const rem=3-used;
+      if(rem>0)out.push(line.slice(0,Math.max(0,rem*MAX-6)));
+      else if(out.length){const last=out[out.length-1],t=Math.max(0,last.length-6);out[out.length-1]=last.slice(0,t)}
+      return{truncated:true,preview:out.join('\n')};
     }
   }
   return{truncated:false,preview:s};
 }
-
-function renderCaptionDisplay(viewEl,text,isStatic){
+function renderCaptionDisplay(viewEl,text,readOnly){
   if(!viewEl)return;
-  const raw=String(text||'');
-  const photoId=viewEl.dataset.photoId;
-  if(!raw){
-    viewEl.classList.add('is-empty');
-    viewEl.textContent=isStatic?'':'キャプションを追加...';
-    return;
-  }
+  const raw=String(text||''),photoId=viewEl.dataset.photoId;
+  if(!raw){viewEl.classList.add('is-empty');viewEl.textContent=readOnly?'':'キャプションを追加...';return}
   viewEl.classList.remove('is-empty');
-  const isExpanded=expandedComments.has(photoId);
   const info=truncateToThreeLines(raw);
-  if(!info.truncated){
-    viewEl.textContent=raw;
-    return;
-  }
-  if(isExpanded){
-    viewEl.innerHTML=`${escapeHtml(raw)} <button type="button" class="ig-more-link" data-ig-toggle="${escapeHtml(photoId)}">閉じる</button>`;
-  }else{
-    viewEl.innerHTML=`${escapeHtml(info.preview)}… <button type="button" class="ig-more-link" data-ig-toggle="${escapeHtml(photoId)}">続きを読む</button>`;
-  }
+  if(!info.truncated){viewEl.textContent=raw;return}
+  if(expandedComments.has(photoId))viewEl.innerHTML=`${escapeHtml(raw)} <button type="button" class="ig-more-link" data-ig-toggle="${escapeHtml(photoId)}">閉じる</button>`;
+  else viewEl.innerHTML=`${escapeHtml(info.preview)}… <button type="button" class="ig-more-link" data-ig-toggle="${escapeHtml(photoId)}">続きを読む</button>`;
 }
-
-function autoResizeCaptionInput(ta){
-  if(!ta)return;
-  ta.style.height='auto';
-  ta.style.height=Math.max(42,ta.scrollHeight)+'px';
-}
-
+function autoResizeCaptionInput(ta){if(!ta)return;ta.style.height='auto';ta.style.height=Math.max(42,ta.scrollHeight)+'px'}
 function openCaptionEditor(areaEl){
-  if(!areaEl)return;
-  const viewEl=areaEl.querySelector('.ig-caption-view');
-  const ta=areaEl.querySelector('.ig-caption-input');
+  if(!isEditor()||!areaEl)return;
+  const viewEl=areaEl.querySelector('.ig-caption-view'),ta=areaEl.querySelector('.ig-caption-input');
   if(!viewEl||!ta||ta.readOnly)return;
-  viewEl.classList.add('hidden');
-  ta.classList.remove('hidden');
-  autoResizeCaptionInput(ta);
-  ta.focus();
-  const len=ta.value.length;
-  ta.setSelectionRange(len,len);
+  viewEl.classList.add('hidden');ta.classList.remove('hidden');autoResizeCaptionInput(ta);ta.focus();
+  const len=ta.value.length;ta.setSelectionRange(len,len);
 }
-
 function closeCaptionEditor(areaEl){
   if(!areaEl)return;
-  const viewEl=areaEl.querySelector('.ig-caption-view');
-  const ta=areaEl.querySelector('.ig-caption-input');
+  const viewEl=areaEl.querySelector('.ig-caption-view'),ta=areaEl.querySelector('.ig-caption-input');
   if(!viewEl||!ta)return;
-  renderCaptionDisplay(viewEl,ta.value,ta.readOnly);
-  ta.classList.add('hidden');
-  viewEl.classList.remove('hidden');
+  renderCaptionDisplay(viewEl,ta.value,ta.readOnly||!isEditor());
+  ta.classList.add('hidden');viewEl.classList.remove('hidden');
 }
 
 function renderInstaFeed(){
-  const view=$('insta-feed-view');
-  const stream=$('insta-stream');
+  const view=$('insta-feed-view'),stream=$('insta-stream');
   if(instaIO){instaIO.disconnect();instaIO=null}
-  view.scrollTop=0;
-  instaPhotos=allPhotosLatestFirst();
-  stream.innerHTML='';
-  if(!instaPhotos.length){
-    stream.innerHTML='<div style="padding:48px 16px;text-align:center;color:var(--mut)">登録された写真がまだありません</div>';
-    return;
-  }
-
-  const isMobile=window.innerWidth<768;
-  const INITIAL_EAGER=isMobile?3:4;
-  const deferred=[];
-
+  view.scrollTop=0;instaPhotos=allPhotosLatestFirst();stream.innerHTML='';
+  if(!instaPhotos.length){stream.innerHTML='<div style="padding:48px 16px;text-align:center;color:var(--mut)">登録された写真がまだありません</div>';return}
+  const ed=isEditor(),deferred=[];
   instaPhotos.forEach((p,idx)=>{
-    const post=document.createElement('article');
-    post.className='ig-post';
-    post.dataset.idx=idx;
-
-    const cropDisp=p.cropName||'作物未登録';
-    const commentVal=p.comment||'';
-    const isEditable=!p.isStatic;
-
-    const isInitial=idx<INITIAL_EAGER;
-    const imgAttr=isInitial
-      ? `src="${p.dataUrl}" ${idx===0?'fetchpriority="high"':''}`
-      : `data-src="${p.dataUrl}" loading="lazy"`;
-
+    const post=document.createElement('article');post.className='ig-post';post.dataset.idx=idx;
+    const cropDisp=p.cropName||'作物未登録',commentVal=p.comment||'',isEditable=!p.isStatic&&ed;
+    const imgAttr=idx<3?`src="${p.dataUrl}" ${idx===0?'fetchpriority="high"':''}`:`data-src="${p.dataUrl}" loading="lazy"`;
     post.innerHTML=`
       <div class="ig-post-hd">
-        <div class="ig-author" data-ig-jump="${escapeHtml(p.parcelId)}" title="タップしてこの農地を表示">
+        <div class="ig-author" data-ig-jump="${escapeHtml(p.parcelId)}">
           <span class="ig-avatar">${escapeHtml(p.parcelCode)}</span>
           <div class="ig-author-meta">
-            <div class="ig-author-line1">
-              <span class="ig-code-inline">${escapeHtml(p.parcelCode)}</span>
-              <span class="ig-lot">${escapeHtml(p.parcelLabel)}</span>
-            </div>
+            <div class="ig-author-line1"><span class="ig-code-inline">${escapeHtml(p.parcelCode)}</span><span class="ig-lot">${escapeHtml(p.parcelLabel)}</span></div>
             <div class="ig-crop-line2">${escapeHtml(cropDisp)}</div>
           </div>
         </div>
-        <span class="ig-post-date">${escapeHtml(fmtDate(p.postedAt))}</span>
+        <div class="ig-hd-right">
+          <span class="ig-post-date">${escapeHtml(fmtDate(p.postedAt))}</span>
+          <button type="button" class="ig-detail-btn" data-detail-parcel="${escapeHtml(p.parcelId)}" data-detail-photo="${escapeHtml(p.id)}">詳細を見る</button>
+        </div>
       </div>
-      <div class="ig-photo-wrap" data-ig-lb="${idx}">
-        <img ${imgAttr} alt="${escapeHtml(p.parcelCode+' '+p.parcelLabel)}" decoding="async">
-      </div>
+      <div class="ig-photo-wrap" data-ig-lb="${idx}"><img ${imgAttr} alt="${escapeHtml(p.parcelCode+' '+p.parcelLabel)}" decoding="async"></div>
       <div class="ig-caption-area">
         <div class="ig-caption-view${isEditable?'':' is-readonly'}" data-parcel-id="${escapeHtml(p.parcelId)}" data-photo-id="${escapeHtml(p.id)}"></div>
         <textarea class="ig-caption-input hidden" data-parcel-id="${escapeHtml(p.parcelId)}" data-photo-id="${escapeHtml(p.id)}" placeholder="文章を入力..." ${isEditable?'':'readonly'}>${escapeHtml(commentVal)}</textarea>
       </div>
     `;
-
     const im=post.querySelector('.ig-photo-wrap img');
     im.onload=()=>im.classList.add('loaded');
     if(im.complete&&im.naturalWidth)im.classList.add('loaded');
-    if(!isInitial)deferred.push(im);
-
-    const viewEl=post.querySelector('.ig-caption-view');
-    renderCaptionDisplay(viewEl,commentVal,p.isStatic);
-
+    if(idx>=3)deferred.push(im);
+    renderCaptionDisplay(post.querySelector('.ig-caption-view'),commentVal,!isEditable);
     stream.appendChild(post);
   });
-
   if(deferred.length){
-    const loadDeferred=im=>{
-      if(!im.dataset.src)return;
-      im.src=im.dataset.src;
-      im.removeAttribute('data-src');
-    };
     instaIO=new IntersectionObserver((entries,obs)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          loadDeferred(entry.target);
-          obs.unobserve(entry.target);
-        }
-      });
+      entries.forEach(entry=>{if(entry.isIntersecting){const im=entry.target;if(im.dataset.src){im.src=im.dataset.src;im.removeAttribute('data-src')}obs.unobserve(im)}});
     },{root:view,rootMargin:'240px 0px'});
     deferred.forEach(im=>instaIO.observe(im));
   }
 }
 
 $('insta-stream').addEventListener('click',e=>{
+  const detBtn=e.target.closest('[data-detail-parcel]');
+  if(detBtn){e.stopPropagation();openDetailModal(detBtn.dataset.detailParcel,detBtn.dataset.detailPhoto);return}
   const toggleBtn=e.target.closest('[data-ig-toggle]');
   if(toggleBtn){
-    e.stopPropagation();
-    const pid=toggleBtn.dataset.igToggle;
-    const area=toggleBtn.closest('.ig-caption-area');
-    const viewEl=area&&area.querySelector('.ig-caption-view');
-    const ta=area&&area.querySelector('.ig-caption-input');
-    if(expandedComments.has(pid))expandedComments.delete(pid);
-    else expandedComments.add(pid);
-    if(viewEl&&ta)renderCaptionDisplay(viewEl,ta.value,ta.readOnly);
-    return;
+    e.stopPropagation();const pid=toggleBtn.dataset.igToggle,area=toggleBtn.closest('.ig-caption-area');
+    if(expandedComments.has(pid))expandedComments.delete(pid);else expandedComments.add(pid);
+    renderCaptionDisplay(area.querySelector('.ig-caption-view'),area.querySelector('.ig-caption-input').value,!isEditor());return;
   }
   const jumpEl=e.target.closest('[data-ig-jump]');
-  if(jumpEl){
-    const pid=jumpEl.dataset.igJump;
-    if(pid&&getP(pid)){
-      setInstaMode(false);
-      selectP(pid,window.USE_SHEET?true:false);
-    }
-    return;
-  }
+  if(jumpEl){const pid=jumpEl.dataset.igJump;if(pid&&getP(pid)){setNav('home');selectP(pid,window.USE_SHEET?true:false)}return}
   const lbEl=e.target.closest('[data-ig-lb]');
-  if(lbEl){
-    const idx=Number(lbEl.dataset.igLb);
-    if(!Number.isNaN(idx))openGridLB(idx);
-    return;
-  }
+  if(lbEl){const idx=Number(lbEl.dataset.igLb);if(!Number.isNaN(idx))openGridLB(idx);return}
   const capView=e.target.closest('.ig-caption-view');
-  if(capView&&!capView.classList.contains('is-readonly')){
-    openCaptionEditor(capView.closest('.ig-caption-area'));
-  }
+  if(capView&&isEditor()&&!capView.classList.contains('is-readonly'))openCaptionEditor(capView.closest('.ig-caption-area'));
 });
-
 $('insta-stream').addEventListener('input',e=>{
   const ta=e.target.closest('.ig-caption-input');
-  if(!ta||ta.readOnly)return;
-  setPhotoComment(ta.dataset.parcelId,ta.dataset.photoId,ta.value);
-  autoResizeCaptionInput(ta);
+  if(!ta||ta.readOnly||!isEditor())return;
+  setPhotoComment(ta.dataset.parcelId,ta.dataset.photoId,ta.value);autoResizeCaptionInput(ta);
 });
-
 $('insta-stream').addEventListener('focusout',e=>{
   const ta=e.target.closest('.ig-caption-input');
-  if(!ta)return;
-  closeCaptionEditor(ta.closest('.ig-caption-area'));
+  if(ta)closeCaptionEditor(ta.closest('.ig-caption-area'));
 });
 
-function setGridMode(on){
-  gridMode=!!on;
-  if(gridMode&&instaMode){
-    instaMode=false;
-    $('b-insta').classList.remove('on');
-    $('insta-feed-view').classList.add('hidden');
-    if(instaIO){instaIO.disconnect();instaIO=null}
-  }
-  $('b-grid').classList.toggle('on',gridMode);
-  $('all-grid-view').classList.toggle('hidden',!gridMode);
-  if(gridMode){
+/* 作業日誌一覧 */
+function renderJournal(){
+  const selEl=$('j-parcel'),q=($('j-q').value||'').trim().toLowerCase(),listEl=$('j-list');
+  const curVal=selEl.value;
+  selEl.innerHTML='<option value="">全区画</option>'+allParcels().map(p=>`<option value="${p.id}">${p.code} ${(S.records[p.id]&&S.records[p.id].lotNumber)||p.defaultLot}</option>`).join('');
+  if([...selEl.options].some(o=>o.value===curVal))selEl.value=curVal;
+  const filterPid=selEl.value;
+  const rows=allPhotosLatestFirst().filter(p=>{
+    if(filterPid&&p.parcelId!==filterPid)return false;
+    if(!q)return true;
+    return [p.parcelCode,p.parcelLabel,p.cropName,p.workLog,p.comment,p.postedAt].join(' ').toLowerCase().includes(q);
+  });
+  listEl.innerHTML='';
+  if(!rows.length){listEl.innerHTML='<div class="j-item" style="text-align:center;color:var(--mut)">該当する記録がありません</div>';return}
+  rows.forEach(p=>{
+    const card=document.createElement('article');card.className='j-item';
+    const workText=p.workLog||'（作業内容の記載なし）';
+    card.innerHTML=`
+      <div class="j-item-top">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+          <span class="j-badge">${escapeHtml(p.parcelCode)} ${escapeHtml(p.parcelLabel)}</span>
+          ${p.cropName?`<span style="font-size:12px;font-weight:700">${escapeHtml(p.cropName)}</span>`:''}
+        </div>
+        <span style="font-size:11px;color:var(--mut)">${escapeHtml(fmtDate(p.postedAt))}</span>
+      </div>
+      <div class="j-work">${escapeHtml(workText)}</div>
+      ${p.comment?`<div class="j-cap">${escapeHtml(p.comment)}</div>`:''}
+      <div class="j-foot">
+        <button type="button" class="nb" data-j-jump="${escapeHtml(p.parcelId)}">区画を表示</button>
+        <button type="button" class="nb" data-detail-parcel="${escapeHtml(p.parcelId)}" data-detail-photo="${escapeHtml(p.id)}">詳細を見る</button>
+      </div>
+    `;
+    listEl.appendChild(card);
+  });
+}
+$('j-parcel').addEventListener('change',renderJournal);
+$('j-q').addEventListener('input',renderJournal);
+$('j-list').addEventListener('click',e=>{
+  const det=e.target.closest('[data-detail-parcel]');
+  if(det)return openDetailModal(det.dataset.detailParcel,det.dataset.detailPhoto);
+  const jmp=e.target.closest('[data-j-jump]');
+  if(jmp&&getP(jmp.dataset.jJump)){setNav('home');selectP(jmp.dataset.jJump,window.USE_SHEET?true:false)}
+});
+
+/* 詳細を見るモーダル */
+function openDetailModal(parcelId,photoId){
+  const r=S.records[parcelId]||{},p=getP(parcelId);
+  const ph=(r.photos||[]).find(x=>x.id===photoId)||photosOf(parcelId).find(x=>x.id===photoId);
+  currentDetailTarget={parcelId,photoId,isStatic:Boolean(ph&&ph.isStatic)};
+  const label=(r.lotNumber||(p&&p.defaultLot)||parcelId);
+  const cropDisp=effectivePhotoCrop(ph,r.cropName||'');
+  $('dm-title').textContent=`${p?p.code+' ':''}${label}（${ph?fmtDate(ph.postedAt):''}）`;
+  const img=$('dm-img');
+  if(ph&&ph.dataUrl){img.src=ph.dataUrl;img.classList.remove('hidden')}else{img.classList.add('hidden')}
+  $('dm-meta').innerHTML=`<span>区画: <b>${escapeHtml((p?p.code+' ':'')+label)}</b></span><span>作物: <b>${escapeHtml(cropDisp||'未登録')}</b></span>`;
+  const workVal=ph?(ph.workLog||''):'';
+  const capVal=ph?(ph.comment||''):'';
+  const canEdit=isEditor()&&!currentDetailTarget.isStatic;
+  $('dm-work').value=workVal;
+  $('dm-cap').value=capVal;
+  $('dm-work-ro').textContent=workVal||'（記載なし）';
+  $('dm-cap-ro').textContent=capVal||'（記載なし）';
+  $('dm-work').classList.toggle('hidden',!canEdit);
+  $('dm-cap').classList.toggle('hidden',!canEdit);
+  $('dm-save').classList.toggle('hidden',!canEdit);
+  $('dm-work-ro').classList.toggle('hidden',canEdit);
+  $('dm-cap-ro').classList.toggle('hidden',canEdit);
+  $('detail-modal').classList.remove('hidden');
+}
+$('dm-close').onclick=()=>$('detail-modal').classList.add('hidden');
+$('detail-modal').addEventListener('click',e=>{if(e.target===$('detail-modal'))$('detail-modal').classList.add('hidden')});
+$('dm-save').onclick=async()=>{
+  if(!currentDetailTarget||!isEditor())return;
+  const r=S.records[currentDetailTarget.parcelId];
+  if(!r||!Array.isArray(r.photos))return;
+  const ph=r.photos.find(x=>x.id===currentDetailTarget.photoId);
+  if(!ph)return;
+  ph.workLog=$('dm-work').value.trim();
+  ph.comment=$('dm-cap').value;
+  $('detail-modal').classList.add('hidden');
+  await saveState();
+  if(sel===currentDetailTarget.parcelId)feed();
+  if(activeNav==='feed')renderInstaFeed();
+  if(activeNav==='journal')renderJournal();
+  toast('詳細内容を保存しました');
+};
+
+/* 事業計画・予算書・作付計画 */
+$('pl-tabs').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-cat]');if(!b)return;
+  planCat=b.dataset.cat;
+  document.querySelectorAll('#pl-tabs .pl-tab').forEach(x=>x.classList.toggle('on',x.dataset.cat===planCat));
+  $('pl-form-title').textContent=planCat+'を追加';
+  renderPlans();
+});
+$('pl-add').onclick=async()=>{
+  if(!isEditor())return;
+  const title=$('pl-title').value.trim(),body=$('pl-body').value.trim(),ref=$('pl-ref').value.trim();
+  if(!title&&!body)return toast('タイトルまたは内容を入力してください');
+  if(!Array.isArray(S.plans))S.plans=[];
+  S.plans.unshift({id:'PL_'+Date.now(),category:planCat,title:title||planCat,ref,body,updatedAt:jpDate(todayISO())});
+  $('pl-title').value='';$('pl-ref').value='';$('pl-body').value='';
+  await saveState();renderPlans();toast(planCat+'を保存しました');
+};
+function renderPlans(){
+  const list=$('pl-list'),ed=isEditor();
+  const items=(S.plans||[]).filter(x=>x.category===planCat);
+  list.innerHTML='';
+  if(!items.length){list.innerHTML=`<div class="pl-card" style="text-align:center;color:var(--mut)">登録された${escapeHtml(planCat)}はまだありません</div>`;return}
+  items.forEach(it=>{
+    const card=document.createElement('article');card.className='pl-card';
+    card.innerHTML=`
+      <h3><span>${escapeHtml(it.title)}</span><span style="font-size:11px;color:var(--mut);font-weight:400">${escapeHtml(it.updatedAt||'')}</span></h3>
+      ${it.ref?`<div style="font-size:12px;color:var(--g2);font-weight:700">📎 ${escapeHtml(it.ref)}</div>`:''}
+      ${it.body?`<div style="font-size:13px;line-height:1.55;white-space:pre-wrap">${escapeHtml(it.body)}</div>`:''}
+      ${ed?`<div style="text-align:right"><button type="button" class="nb" style="color:#dc2626" data-pl-del="${escapeHtml(it.id)}">削除</button></div>`:''}
+    `;
+    list.appendChild(card);
+  });
+}
+$('pl-list').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-pl-del]');if(!b||!isEditor())return;
+  if(!await ask('計画・資料の削除','この項目を削除しますか？'))return;
+  S.plans=(S.plans||[]).filter(x=>x.id!==b.dataset.plDel);
+  await saveState();renderPlans();toast('削除しました');
+});
+
+/* 下部ナビゲーション切替 */
+function setNav(nav){
+  activeNav=nav;
+  document.querySelectorAll('#bottom-nav .bnav-btn').forEach(b=>b.classList.toggle('on',b.dataset.nav===nav));
+  $('insta-feed-view').classList.toggle('hidden',nav!=='feed');
+  $('journal-view').classList.toggle('hidden',nav!=='journal');
+  $('plans-view').classList.toggle('hidden',nav!=='plans');
+  if(nav!=='home'){
     if(drawing)setDraw(false);
     if(adjusting)setAdj(false);
-    renderAllGrid();
-  }else if(gridIO){
-    gridIO.disconnect();
-    gridIO=null;
+    closeCropPicker();
   }
+  if(nav==='feed')renderInstaFeed();
+  else if(instaIO){instaIO.disconnect();instaIO=null}
+  if(nav==='journal')renderJournal();
+  if(nav==='plans')renderPlans();
 }
-
-function setInstaMode(on){
-  instaMode=!!on;
-  if(instaMode&&gridMode){
-    gridMode=false;
-    $('b-grid').classList.remove('on');
-    $('all-grid-view').classList.add('hidden');
-    if(gridIO){gridIO.disconnect();gridIO=null}
-  }
-  $('b-insta').classList.toggle('on',instaMode);
-  $('insta-feed-view').classList.toggle('hidden',!instaMode);
-  if(instaMode){
-    if(drawing)setDraw(false);
-    if(adjusting)setAdj(false);
-    renderInstaFeed();
-  }else if(instaIO){
-    instaIO.disconnect();
-    instaIO=null;
-  }
-}
-
-$('b-grid').onclick=()=>setGridMode(!gridMode);
-$('b-insta').onclick=()=>setInstaMode(!instaMode);
+$('bottom-nav').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-nav]');if(!b)return;
+  setNav(b.dataset.nav);
+});
 
 const panel=$('panel');
-function closeCropPicker(){
-  const cp=$('crop-picker');
-  if(cp)cp.classList.add('hidden');
-}
+function closeCropPicker(){const cp=$('crop-picker');if(cp)cp.classList.add('hidden')}
 function renderCropStrip(){
   const strip=$('crop-strip'),hint=$('crop-multi-hint');
   if(!sel){strip.classList.add('hidden');hint.classList.add('hidden');return}
   const r=rec(sel),crops=parseCrops(r.cropName);
-  if(crops.length<2){
-    cropFilter=null;
-    strip.classList.add('hidden');
-    strip.innerHTML='';
-    hint.classList.add('hidden');
-    return;
-  }
+  if(crops.length<2){cropFilter=null;strip.classList.add('hidden');strip.innerHTML='';hint.classList.add('hidden');return}
   if(cropFilter&&!crops.includes(cropFilter))cropFilter=null;
-  hint.textContent=crops.length+'種登録中';
-  hint.classList.remove('hidden');
-  strip.classList.remove('hidden');
-  const allBtn=`<button type="button" class="crop-chip${cropFilter===null?' on':''}" data-crop-chip="">すべて</button>`;
-  const itemBtns=crops.map(c=>`<button type="button" class="crop-chip${cropFilter===c?' on':''}" data-crop-chip="${c.replace(/"/g,'&quot;')}">${c}</button>`).join('');
-  strip.innerHTML=allBtn+itemBtns;
+  hint.textContent=crops.length+'種登録中';hint.classList.remove('hidden');strip.classList.remove('hidden');
+  strip.innerHTML=`<button type="button" class="crop-chip${cropFilter===null?' on':''}" data-crop-chip="">すべて</button>`+crops.map(c=>`<button type="button" class="crop-chip${cropFilter===c?' on':''}" data-crop-chip="${escapeHtml(c)}">${escapeHtml(c)}</button>`).join('');
 }
 $('crop-strip').addEventListener('click',e=>{
-  const btn=e.target.closest('button[data-crop-chip]');
-  if(!btn||!sel)return;
+  const btn=e.target.closest('button[data-crop-chip]');if(!btn||!sel)return;
   const val=btn.dataset.cropChip;
   cropFilter=(!val||cropFilter===val)?null:val;
-  renderCropStrip();
-  feed();
+  renderCropStrip();feed();
 });
 function selectP(id,center){
-  if(gridMode)setGridMode(false);
-  if(instaMode)setInstaMode(false);
+  if(activeNav!=='home')setNav('home');
   closeCropPicker();
   if(sel!==id)cropFilter=null;
   sel=id;const p=getP(id);if(!p)return;const r=rec(id);
@@ -1176,25 +1155,23 @@ function selectP(id,center){
   if(!adjusting)panel.classList.add('open');
   $('pcode').textContent=p.code||id;
   $('lot').value=r.lotNumber||p.defaultLot;$('crop').value=r.cropName||'';
-  $('cfoot').classList.remove('hidden');
-  renderCropStrip();
-  render();feed();
+  $('cfoot').classList.toggle('hidden',!isEditor());
+  renderCropStrip();render();feed();
   if(center)focusP(id,window.USE_SHEET?.22:.5);
 }
 function closeP(){closeCropPicker();sel=null;cropFilter=null;panel.classList.remove('open');$('empty').classList.remove('hidden');$('active').classList.add('hidden');$('hint').classList.remove('hidden');render()}
+
 function feed(){
   if(!sel)return;
-  const allPh=photosOf(sel),f=$('feed'),curP=getP(sel),r=rec(sel);
+  const allPh=photosOf(sel),f=$('feed'),curP=getP(sel),r=rec(sel),ed=isEditor();
   const parcelCrops=parseCrops(r.cropName);
   renderCropStrip();
-  const ph=cropFilter
-    ? allPh.filter(p=>String(p.cropName||'').trim()===cropFilter)
-    : allPh;
+  const ph=cropFilter?allPh.filter(p=>String(p.cropName||'').trim()===cropFilter):allPh;
   $('pcode').textContent=curP?curP.code:sel;
   $('pcount').textContent=cropFilter?`${ph.length}/${allPh.length}枚`:`${allPh.length}枚`;
   f.innerHTML='';
-  if(!allPh.length){f.innerHTML='<div style="grid-column:1/-1;border:2px dashed var(--bd);border-radius:14px;padding:30px;text-align:center;color:var(--mut)"><b>まだ写真がありません</b><br>上の「＋」ボタンから登録できます</div>';return}
-  if(!ph.length){f.innerHTML=`<div style="grid-column:1/-1;border:2px dashed var(--bd);border-radius:14px;padding:24px;text-align:center;color:var(--mut)"><b>「${cropFilter}」が登録された写真はありません</b><br><span style="font-size:12px">各写真の「＋作物」からワンタップで登録できます</span></div>`;return}
+  if(!allPh.length){f.innerHTML='<div style="grid-column:1/-1;border:2px dashed var(--bd);border-radius:14px;padding:30px;text-align:center;color:var(--mut)"><b>まだ写真がありません</b></div>';return}
+  if(!ph.length){f.innerHTML=`<div style="grid-column:1/-1;border:2px dashed var(--bd);border-radius:14px;padding:24px;text-align:center;color:var(--mut)"><b>「${escapeHtml(cropFilter)}」が登録された写真はありません</b></div>`;return}
   const eagerCount=innerWidth<768?2:4;
   ph.forEach((p,i)=>{
     const realIdx=allPh.findIndex(x=>x.id===p.id);
@@ -1206,20 +1183,17 @@ function feed(){
     const isoParts=toISO(p.postedAt).split('-');
     const yVal=isoParts[0],mVal=String(Number(isoParts[1])),dVal=String(Number(isoParts[2]));
     const missCls=p.exifMissing?' no-exif':'';
-    const missTitle=p.exifMissing?' title="写真から撮影日を取得できなかったため投稿日を設定しています"':'';
-    const dateUI=p.isStatic
-      ? `<span style="font-size:10px;color:#f8fafc;text-shadow:0 1px 2px rgba(0,0,0,.7)">${fmtDate(p.postedAt)}</span>`
-      : `<input type="date" class="card-date${missCls}" data-id="${p.id}" value="${toISO(p.postedAt)}" aria-label="投稿日を変更"${missTitle}><span class="card-date-wrap${missCls}" data-id="${p.id}" data-orig="${yVal}-${mVal}-${dVal}"${missTitle}><input type="text" inputmode="numeric" maxlength="4" class="dy" value="${yVal}" aria-label="年"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dm" value="${mVal}" aria-label="月"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dd" value="${dVal}" aria-label="日"></span>`;
-    const cropBtnCls='card-crop-btn'+(isWarn?' warn':(!photoCrop?' unset':''));
-    const cropBtnText=photoCrop?(isWarn?`⚠ ${photoCrop}`:`🌱 ${photoCrop}`):'＋作物';
-    const cropBtnUI=p.isStatic
-      ? (photoCrop?`<span class="card-crop-btn">${photoCrop}</span>`:'')
-      : `<button type="button" class="${cropBtnCls}" data-a="crop" data-id="${p.id}" title="ワンタップで作物を登録・変更">${cropBtnText}</button>`;
-    const warnBanner=isWarn
-      ? `<div class="card-warn-banner" data-a="crop" data-id="${p.id}" title="農地の作物名欄から削除されています。タップして修正"><span>⚠ 作物名欄から削除済: ${photoCrop}</span><span>修正</span></div>`
+    const dateUI=(p.isStatic||!ed)
+      ? `<span style="font-size:10px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.75)">${fmtDate(p.postedAt)}</span>`
+      : `<input type="date" class="card-date${missCls}" data-id="${p.id}" value="${toISO(p.postedAt)}" aria-label="投稿日を変更"><span class="card-date-wrap${missCls}" data-id="${p.id}" data-orig="${yVal}-${mVal}-${dVal}"><input type="text" inputmode="numeric" maxlength="4" class="dy" value="${yVal}"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dm" value="${mVal}"><span>/</span><input type="text" inputmode="numeric" maxlength="2" class="dd" value="${dVal}"></span>`;
+    const cropBtnUI=(p.isStatic||!ed)
+      ? (photoCrop?`<span class="card-crop-static">${escapeHtml(photoCrop)}</span>`:'')
+      : `<button type="button" class="card-crop-btn${isWarn?' warn':(!photoCrop?' unset':'')}" data-a="crop" data-id="${p.id}">${escapeHtml(photoCrop?(isWarn?`⚠ ${photoCrop}`:`🌱 ${photoCrop}`):'＋作物')}</button>`;
+    const warnBanner=(isWarn&&ed)
+      ? `<div class="card-warn-banner" data-a="crop" data-id="${p.id}"><span>⚠ 作物名欄から削除済: ${escapeHtml(photoCrop)}</span><span>修正</span></div>`
       : '';
     const isEager=i<eagerCount;
-    c.innerHTML=`${warnBanner}<div class="ch"><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;min-width:0"><span class="tag ${fsIdx?'old':''}">${fsIdx?'履歴 #'+(allPh.length-fsIdx):'最新'}</span>${dateUI}${cropBtnUI}${p.local?' <span style="font-size:11px;color:var(--mut)">📱この端末のみ</span>':''}</div><div style="display:flex;gap:4px"><button class="nb" data-a="fs" data-i="${fsIdx}">全画面</button>${p.isStatic?'':`<button class="nb" data-a="del" data-id="${p.id}" aria-label="削除">🗑</button>`}</div></div><img ${isEager?`src="${p.dataUrl}" fetchpriority="high"`:`data-src="${p.dataUrl}"`} alt="農地写真" decoding="async" data-a="fs" data-i="${fsIdx}">`;
+    c.innerHTML=`${warnBanner}<div class="ch"><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;min-width:0"><span class="tag ${fsIdx?'old':''}">${fsIdx?'履歴 #'+(allPh.length-fsIdx):'最新'}</span>${dateUI}${cropBtnUI}</div><div style="display:flex;gap:3px"><button class="nb" type="button" data-a="detail" data-id="${p.id}">詳細を見る</button><button class="nb" type="button" data-a="fs" data-i="${fsIdx}">全画面</button>${(!p.isStatic&&ed)?`<button class="nb" type="button" data-a="del" data-id="${p.id}" aria-label="削除">🗑</button>`:''}</div></div><img ${isEager?`src="${p.dataUrl}" fetchpriority="high"`:`data-src="${p.dataUrl}"`} alt="農地写真" decoding="async" data-a="fs" data-i="${fsIdx}">`;
     const im=c.querySelector('img');
     im.onload=()=>im.classList.add('loaded');
     if(im.complete&&im.naturalWidth)im.classList.add('loaded');
@@ -1229,18 +1203,13 @@ function feed(){
   if(lazyImgs.length){
     const loadImg=im=>{if(!im.dataset.src)return;im.src=im.dataset.src;im.removeAttribute('data-src')};
     const io=new IntersectionObserver((es,o)=>{es.forEach(e=>{if(e.isIntersecting){loadImg(e.target);o.unobserve(e.target)}})},{root:f,rootMargin:'250px'});
-    lazyImgs.forEach((im,idx)=>{
-      io.observe(im);
-      setTimeout(()=>{if(sel&&im.dataset.src){loadImg(im);io.unobserve(im)}},300+idx*160);
-    });
+    lazyImgs.forEach((im,idx)=>{io.observe(im);setTimeout(()=>{if(sel&&im.dataset.src){loadImg(im);io.unobserve(im)}},300+idx*160)});
   }
 }
 
 async function applyPhotoCrop(photoId,cropStr,alsoAddToParcel){
-  if(!sel)return;
-  const r=rec(sel);
-  const ph=r.photos.find(p=>p.id===photoId);
-  if(!ph)return;
+  if(!sel||!isEditor())return;
+  const r=rec(sel),ph=r.photos.find(p=>p.id===photoId);if(!ph)return;
   const clean=String(cropStr||'').trim();
   ph.cropName=clean;
   if(clean&&alsoAddToParcel){
@@ -1251,50 +1220,18 @@ async function applyPhotoCrop(photoId,cropStr,alsoAddToParcel){
       $('crop').value=r.cropName;
     }
   }
-  closeCropPicker();
-  await saveState();
-  renderCropStrip();
-  feed();
-  render();
-  if(!clean)toast('写真の作物登録を解除しました');
-  else if(alsoAddToParcel)toast(`「${clean}」を写真と農地の作物名に登録しました`);
-  else toast(`「${clean}」を写真に登録しました`);
+  closeCropPicker();await saveState();renderCropStrip();feed();render();
+  toast(clean?`「${clean}」を登録しました`:'写真の作物登録を解除しました');
 }
-
 function openCropPicker(photoId,anchorEl){
-  if(!sel)return;
-  const r=rec(sel);
-  const ph=r.photos.find(p=>p.id===photoId);
-  if(!ph)return;
-  const parcelCrops=parseCrops(r.cropName);
-  const currentPhotoCrop=String(ph.cropName||'').trim();
-  const isWarn=Boolean(currentPhotoCrop)&&!parcelCrops.includes(currentPhotoCrop);
-
-  const otherCrops=[];
-  allParcels().forEach(p=>{
-    const pr=S.records[p.id];
-    if(pr&&pr.cropName)parseCrops(pr.cropName).forEach(c=>{if(!parcelCrops.includes(c)&&!otherCrops.includes(c))otherCrops.push(c)});
-  });
-
+  if(!sel||!isEditor())return;
+  const r=rec(sel),ph=r.photos.find(p=>p.id===photoId);if(!ph)return;
+  const parcelCrops=parseCrops(r.cropName),currentPhotoCrop=String(ph.cropName||'').trim();
   const cp=$('crop-picker');
-  const warnHtml=isWarn
-    ? `<div class="cp-warn-box">⚠ <b>「${currentPhotoCrop}」</b>は現在、農地の作物名欄から削除されています。<br><button type="button" class="cp-act primary" style="margin-top:5px" data-cp-restore="${currentPhotoCrop.replace(/"/g,'&quot;')}">農地の作物名欄に戻す</button></div>`
-    : '';
-  const parcelChipsHtml=parcelCrops.length
-    ? `<div class="mut">この農地の作物（ワンタップで登録）</div><div class="cp-chips">${parcelCrops.map(c=>`<button type="button" class="cp-chip${currentPhotoCrop===c?' on':''}" data-cp-pick="${c.replace(/"/g,'&quot;')}">${c}</button>`).join('')}</div>`
-    : `<div class="mut">農地の作物名欄は未入力です。下から入力すると農地の作物名にも同時登録できます。</div>`;
-  const otherChipsHtml=otherCrops.length
-    ? `<div class="mut">他の農地の作物</div><div class="cp-chips">${otherCrops.slice(0,8).map(c=>`<button type="button" class="cp-chip${currentPhotoCrop===c?' on':''}" data-cp-pick-other="${c.replace(/"/g,'&quot;')}">${c}</button>`).join('')}</div>`
-    : '';
-
   cp.innerHTML=`
-    <h4><span>🌱 写真の作物を登録</span><button type="button" class="nb" id="cp-close" style="height:24px;padding:0 7px">✕</button></h4>
-    ${warnHtml}
-    ${parcelChipsHtml}
-    ${otherChipsHtml}
-    <div class="cp-input-row">
-      <input type="text" id="cp-custom" placeholder="新しい作物名を入力" value="${currentPhotoCrop.replace(/"/g,'&quot;')}">
-    </div>
+    <h4><span>🌱 写真の作物を登録</span><button type="button" class="nb" id="cp-close">✕</button></h4>
+    ${parcelCrops.length?`<div class="cp-chips">${parcelCrops.map(c=>`<button type="button" class="cp-chip${currentPhotoCrop===c?' on':''}" data-cp-pick="${escapeHtml(c)}">${escapeHtml(c)}</button>`).join('')}</div>`:''}
+    <div class="cp-input-row"><input type="text" id="cp-custom" placeholder="作物名を入力" value="${escapeHtml(currentPhotoCrop)}"></div>
     <div class="cp-actions">
       <button type="button" class="cp-act primary" id="cp-save-both">写真＋農地に登録</button>
       <button type="button" class="cp-act" id="cp-save-photo">写真のみ登録</button>
@@ -1302,257 +1239,168 @@ function openCropPicker(photoId,anchorEl){
     </div>
   `;
   cp.classList.remove('hidden');
-
-  const rect=anchorEl.getBoundingClientRect();
-  const pw=cp.offsetWidth||280,phH=cp.offsetHeight||220;
-  let left=Math.min(Math.max(12,rect.left),window.innerWidth-pw-12);
-  let top=rect.bottom+6;
+  const rect=anchorEl.getBoundingClientRect(),pw=cp.offsetWidth||280,phH=cp.offsetHeight||180;
+  let left=Math.min(Math.max(12,rect.left),window.innerWidth-pw-12),top=rect.bottom+6;
   if(top+phH>window.innerHeight-12)top=Math.max(12,rect.top-phH-6);
-  cp.style.left=left+'px';
-  cp.style.top=top+'px';
-
+  cp.style.left=left+'px';cp.style.top=top+'px';
   cp.querySelector('#cp-close').onclick=closeCropPicker;
   cp.querySelectorAll('[data-cp-pick]').forEach(b=>b.onclick=()=>applyPhotoCrop(photoId,b.dataset.cpPick,false));
-  cp.querySelectorAll('[data-cp-pick-other]').forEach(b=>b.onclick=()=>applyPhotoCrop(photoId,b.dataset.cpPickOther,true));
-  const restBtn=cp.querySelector('[data-cp-restore]');
-  if(restBtn)restBtn.onclick=()=>applyPhotoCrop(photoId,restBtn.dataset.cpRestore,true);
   const inp=cp.querySelector('#cp-custom');
   cp.querySelector('#cp-save-both').onclick=()=>{const v=inp.value.trim();if(!v)return toast('作物名を入力してください');applyPhotoCrop(photoId,v,true)};
   cp.querySelector('#cp-save-photo').onclick=()=>{const v=inp.value.trim();if(!v)return toast('作物名を入力してください');applyPhotoCrop(photoId,v,false)};
-  const clrBtn=cp.querySelector('#cp-clear');
-  if(clrBtn)clrBtn.onclick=()=>applyPhotoCrop(photoId,'',false);
+  const clr=cp.querySelector('#cp-clear');if(clr)clr.onclick=()=>applyPhotoCrop(photoId,'',false);
 }
 
 async function commitCardDate(wrap){
-  if(!wrap||!sel||wrap.dataset.saving==='1')return;
+  if(!wrap||!sel||!isEditor()||wrap.dataset.saving==='1')return;
   const yIn=wrap.querySelector('.dy'),mIn=wrap.querySelector('.dm'),dIn=wrap.querySelector('.dd');
   const yRaw=yIn.value.replace(/\D/g,''),mRaw=mIn.value.replace(/\D/g,''),dRaw=dIn.value.replace(/\D/g,'');
   const orig=(wrap.dataset.orig||'').split('-');
-  if(yRaw.length!==4){toast('年は数字4文字で入力してください');if(orig.length===3){yIn.value=orig[0];mIn.value=orig[1];dIn.value=orig[2]}return}
-  const yNum=Number(yRaw),mNum=Number(mRaw),dNum=Number(dRaw);
-  const maxDay=(yNum&&mNum>=1&&mNum<=12)?new Date(yNum,mNum,0).getDate():31;
-  if(!mRaw||mNum<1||mNum>12||!dRaw||dNum<1||dNum>maxDay){toast('正しい月日を入力してください');if(orig.length===3){yIn.value=orig[0];mIn.value=orig[1];dIn.value=orig[2]}return}
+  if(yRaw.length!==4){if(orig.length===3){yIn.value=orig[0];mIn.value=orig[1];dIn.value=orig[2]}return toast('年は数字4文字で入力してください')}
+  const yNum=Number(yRaw),mNum=Number(mRaw),dNum=Number(dRaw),maxDay=new Date(yNum,mNum,0).getDate();
+  if(!mRaw||mNum<1||mNum>12||!dRaw||dNum<1||dNum>maxDay){if(orig.length===3){yIn.value=orig[0];mIn.value=orig[1];dIn.value=orig[2]}return toast('正しい月日を入力してください')}
   const normKey=`${yNum}-${mNum}-${dNum}`;
   yIn.value=String(yNum);mIn.value=String(mNum);dIn.value=String(dNum);
   if(normKey===wrap.dataset.orig)return;
   wrap.dataset.saving='1';
   try{
     const r=rec(sel),ph=r.photos.find(p=>p.id===wrap.dataset.id);
-    if(ph){
-      ph.postedAt=`${yNum}/${String(mNum).padStart(2,'0')}/${String(dNum).padStart(2,'0')}`;
-      ph.exifMissing=false;
-      await saveState();
-      feed();
-      toast('投稿日を変更しました');
-    }
+    if(ph){ph.postedAt=`${yNum}/${String(mNum).padStart(2,'0')}/${String(dNum).padStart(2,'0')}`;ph.exifMissing=false;await saveState();feed();toast('投稿日を変更しました')}
   }finally{wrap.dataset.saving='0'}
 }
-
-$('feed').addEventListener('input',e=>{
-  const inp=e.target.closest('.card-date-wrap input');if(!inp)return;
-  const max=inp.classList.contains('dy')?4:2;
-  const clean=inp.value.replace(/\D/g,'').slice(0,max);
-  if(inp.value!==clean)inp.value=clean;
-});
+$('feed').addEventListener('input',e=>{const inp=e.target.closest('.card-date-wrap input');if(!inp)return;inp.value=inp.value.replace(/\D/g,'').slice(0,inp.classList.contains('dy')?4:2)});
 $('feed').addEventListener('focusin',e=>{const inp=e.target.closest('.card-date-wrap input');if(inp)requestAnimationFrame(()=>inp.select())});
 $('feed').addEventListener('keydown',async e=>{
   const inp=e.target.closest('.card-date-wrap input');if(!inp)return;
   if(e.key==='Enter'){
-    e.preventDefault();
-    const wrap=inp.closest('.card-date-wrap');
+    e.preventDefault();const wrap=inp.closest('.card-date-wrap');
     if(inp.classList.contains('dy')){const m=wrap.querySelector('.dm');m.focus();m.select()}
     else if(inp.classList.contains('dm')){const d=wrap.querySelector('.dd');d.focus();d.select()}
     else if(inp.classList.contains('dd')){await commitCardDate(wrap);inp.blur()}
   }
 });
 $('feed').addEventListener('change',async e=>{
-  const t=e.target.closest('.card-date');if(!t||!sel||!t.value)return;
+  const t=e.target.closest('.card-date');if(!t||!sel||!isEditor()||!t.value)return;
   const r=rec(sel),ph=r.photos.find(p=>p.id===t.dataset.id);
   if(ph){ph.postedAt=jpDate(t.value);ph.exifMissing=false;await saveState();feed();toast('投稿日を変更しました')}
 });
 $('feed').addEventListener('click',async e=>{
   const t=e.target.closest('[data-a]');if(!t||!sel)return;
-  if(t.dataset.a==='crop'){e.stopPropagation();return openCropPicker(t.dataset.id,t)}
+  if(t.dataset.a==='detail')return openDetailModal(sel,t.dataset.id);
+  if(t.dataset.a==='crop'){if(!isEditor())return;e.stopPropagation();return openCropPicker(t.dataset.id,t)}
   if(t.dataset.a==='fs')return openLB(+t.dataset.i);
-  if(t.dataset.a==='del'){if(!await ask('写真の削除','この履歴写真を削除してもよろしいですか？'))return;const r=rec(sel),dp=r.photos.find(p=>p.id===t.dataset.id);r.photos=r.photos.filter(p=>p.id!==t.dataset.id);if(dp&&dp.assetId&&ASS){try{await ASS.delete(dp.assetId)}catch(x){}}await saveState();feed();render();toast('写真を削除しました')}
+  if(t.dataset.a==='del'){
+    if(!isEditor())return;
+    if(!await ask('写真の削除','この履歴写真を削除してもよろしいですか？'))return;
+    const r=rec(sel),dp=r.photos.find(p=>p.id===t.dataset.id);
+    r.photos=r.photos.filter(p=>p.id!==t.dataset.id);
+    if(dp&&dp.assetId&&ASS){try{await ASS.delete(dp.assetId)}catch(x){}}
+    await saveState();feed();render();toast('写真を削除しました');
+  }
 });
-document.addEventListener('click',e=>{
-  const cp=$('crop-picker');
-  if(cp&&!cp.classList.contains('hidden')&&!e.target.closest('#crop-picker')&&!e.target.closest('[data-a="crop"]'))closeCropPicker();
-});
-function meta(){
-  if(!sel)return;
-  const r=rec(sel);
-  r.lotNumber=$('lot').value.trim();
-  r.cropName=$('crop').value.trim();
-  renderCropStrip();feed();render();saveSoon();
-}
+document.addEventListener('click',e=>{const cp=$('crop-picker');if(cp&&!cp.classList.contains('hidden')&&!e.target.closest('#crop-picker')&&!e.target.closest('[data-a="crop"]'))closeCropPicker()});
+function meta(){if(!sel||!isEditor())return;const r=rec(sel);r.lotNumber=$('lot').value.trim();r.cropName=$('crop').value.trim();renderCropStrip();feed();render();saveSoon()}
 $('lot').addEventListener('input',meta);$('crop').addEventListener('input',meta);
 $('i-photos').addEventListener('change',async e=>{
+  if(!isEditor())return;
   const files=[...e.target.files];if(!files.length||!sel)return;const r=rec(sel),fallbackISO=todayISO();
   toast('写真を処理中... ('+files.length+'枚)');
   try{
-    if(!ASS&&DBH){toast('この環境では写真を追加できません（編集権限が必要です）');return}
-    let exifCount=0,missCount=0;
+    if(!ASS&&DBH)return toast('この環境では写真を追加できません');
     for(const f of files){
-      const exifISO=await extractExifDateISO(f);
-      const hasExif=Boolean(exifISO);
-      const iso=exifISO||fallbackISO;
-      if(hasExif)exifCount++;else missCount++;
-      const when=jpDate(iso);
-      const bl=await compress(f);let url,aid,loc=false;
+      const exifISO=await extractExifDateISO(f),iso=exifISO||fallbackISO,bl=await compress(f);
+      let url,aid,loc=false;
       if(ASS){try{const a=await ASS.upload(bl);url=a.url;aid=a.id}catch(x){}}
       if(!url){if(DBH)throw new Error('upload');url=await new Promise((ok,ng)=>{const fr=new FileReader();fr.onload=()=>ok(fr.result);fr.onerror=ng;fr.readAsDataURL(bl)});loc=true}
-      r.photos.unshift({id:'PH_'+Date.now()+Math.random().toString(36).slice(2,7),dataUrl:url,assetId:aid,local:loc,postedAt:when,exifMissing:!hasExif,comment:'',timestamp:Date.now()});
+      r.photos.unshift({id:'PH_'+Date.now()+Math.random().toString(36).slice(2,7),dataUrl:url,assetId:aid,local:loc,postedAt:jpDate(iso),exifMissing:!exifISO,workLog:'',comment:'',timestamp:Date.now()});
     }
-    await saveState();feed();render();
-    toast(missCount?`${files.length}枚追加（撮影日取得：${exifCount}枚／取得不可：${missCount}枚）`:`${files.length}枚の写真を追加しました`);
+    await saveState();feed();render();toast(files.length+'枚の写真を追加しました');
   }catch(x){toast('画像の読み込みに失敗しました')}finally{e.target.value=''}
 });
 function step(d){const ps=allParcels(),i=ps.findIndex(p=>p.id===sel);selectP(ps[(i<0?0:(i+d+ps.length)%ps.length)].id,true)}
 $('b-delc').onclick=async()=>{
-  if(!sel)return;
+  if(!sel||!isEditor())return;
   if(!await ask('区画の削除','この区画と登録写真を削除しますか？'))return;
   const r=S.records[sel];
   if(r&&r.photos&&ASS){for(const ph of r.photos){if(ph.assetId){try{await ASS.delete(ph.assetId)}catch(x){}}}}
-  if(sel.startsWith('C_')){S.customParcels=S.customParcels.filter(p=>p.id!==sel)}
+  if(sel.startsWith('C_'))S.customParcels=S.customParcels.filter(p=>p.id!==sel);
   else{if(!S.deletedParcels)S.deletedParcels=[];if(!S.deletedParcels.includes(sel))S.deletedParcels.push(sel)}
   delete S.records[sel];delete S.parcelOverrides[sel];
   await saveState();closeP();toast('区画を削除しました');
 };
 
+/* ライトボックス */
 let lbP=[],lbI=0,lbPeriod='all',lbIsGrid=false,lbTargetParcelId=null;
 function syncLbTitle(targetId,code,lot,crop){
-  lbTargetParcelId=targetId||null;
-  const el=$('lb-t');
-  const head=[code,lot].filter(Boolean).join(' ');
+  lbTargetParcelId=targetId||null;const el=$('lb-t'),head=[code,lot].filter(Boolean).join(' ');
   el.textContent=(head||targetId||'')+(crop?'（'+crop+'）':'');
-  if(lbTargetParcelId&&getP(lbTargetParcelId)){
-    el.classList.add('jumpable');el.setAttribute('role','button');el.setAttribute('tabindex','0');
-  }else{
-    el.classList.remove('jumpable');el.removeAttribute('role');el.removeAttribute('tabindex');
-  }
+  if(lbTargetParcelId&&getP(lbTargetParcelId)){el.classList.add('jumpable');el.setAttribute('role','button');el.setAttribute('tabindex','0')}
+  else{el.classList.remove('jumpable');el.removeAttribute('role');el.removeAttribute('tabindex')}
 }
 function jumpFromLbToParcel(){
-  if(!lbTargetParcelId)return;
-  const targetId=lbTargetParcelId,p=getP(targetId);if(!p)return;
-  const wasGrid=gridMode,wasInsta=instaMode;
-  closeLB(false);
-  if(wasGrid)setGridMode(false);
-  if(wasInsta)setInstaMode(false);
-  selectP(targetId,window.USE_SHEET?true:false);
+  if(!lbTargetParcelId)return;const tid=lbTargetParcelId,p=getP(tid);if(!p)return;
+  closeLB(false);setNav('home');selectP(tid,window.USE_SHEET?true:false);
 }
 const fmtISO=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 function getPeriodRange(mode){
   if(mode==='all')return null;
   const now=new Date(),to=fmtISO(now),st=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-  if(mode==='7')st.setDate(st.getDate()-6);
-  else if(mode==='14')st.setDate(st.getDate()-13);
-  else if(mode==='month')st.setDate(1);
-  else if(mode==='year')st.setMonth(0,1);
+  if(mode==='7')st.setDate(st.getDate()-6);else if(mode==='14')st.setDate(st.getDate()-13);else if(mode==='month')st.setDate(1);else if(mode==='year')st.setMonth(0,1);
   return{from:fmtISO(st),to};
 }
-function filteredPhotos(id){
-  const list=photosOf(id),rng=getPeriodRange(lbPeriod);
-  if(!rng)return list;
-  return list.filter(p=>{const d=toISO(p.postedAt);return d>=rng.from&&d<=rng.to});
-}
+function filteredPhotos(id){const list=photosOf(id),rng=getPeriodRange(lbPeriod);return !rng?list:list.filter(p=>{const d=toISO(p.postedAt);return d>=rng.from&&d<=rng.to})}
 function setLBPeriod(mode,label){
-  lbPeriod=mode;
-  const btn=$('lb-pbtn');btn.textContent=label+' ▾';btn.classList.toggle('active',mode!=='all');
+  lbPeriod=mode;$('lb-pbtn').textContent=label+' ▾';$('lb-pbtn').classList.toggle('active',mode!=='all');
   document.querySelectorAll('#lb-pmenu button').forEach(b=>b.classList.toggle('on',b.dataset.p===mode));
   $('lb-pmenu').classList.add('hidden');
-  if((gridMode||instaMode)&&lbIsGrid){
-    const rng=getPeriodRange(mode),all=allPhotosLatestFirst();
-    const list=!rng?all:all.filter(p=>{const d=toISO(p.postedAt);return d>=rng.from&&d<=rng.to});
+  if(activeNav==='feed'&&lbIsGrid){
+    const rng=getPeriodRange(mode),all=allPhotosLatestFirst(),list=!rng?all:all.filter(p=>{const d=toISO(p.postedAt);return d>=rng.from&&d<=rng.to});
     if(list.length){lbP=list;lbI=0;updGridLB();return}
     return toast(label+'に該当する写真がありません');
   }
   if(!sel)return toast(label+'に該当する写真がありません');
-  let cur=filteredPhotos(sel);
-  if(cur.length){lbP=cur;lbI=0;updLB();return}
+  let cur=filteredPhotos(sel);if(cur.length){lbP=cur;lbI=0;updLB();return}
   const ps=allParcels(),ci=Math.max(0,ps.findIndex(p=>p.id===sel));
-  for(let k=1;k<=ps.length;k++){
-    const np=ps[(ci+k)%ps.length],nph=filteredPhotos(np.id);
-    if(nph.length){selectP(np.id,false);lbP=nph;lbI=0;updLB();return}
-  }
+  for(let k=1;k<=ps.length;k++){const np=ps[(ci+k)%ps.length],nph=filteredPhotos(np.id);if(nph.length){selectP(np.id,false);lbP=nph;lbI=0;updLB();return}}
   toast(label+'に該当する写真がありません');
 }
 $('lb-pbtn').onclick=e=>{e.stopPropagation();$('lb-pmenu').classList.toggle('hidden')};
 $('lb-pmenu').addEventListener('click',e=>{const b=e.target.closest('button[data-p]');if(b)setLBPeriod(b.dataset.p,b.textContent.trim())});
 document.addEventListener('click',e=>{if(!e.target.closest('.lb-pwrap'))$('lb-pmenu').classList.add('hidden')});
 
-let lbS=1,lbX=0,lbY=0,lbHadMulti=false,lbPinchD=0,lbPinchS=1,lbPan0={x:0,y:0},lbPos0={x:0,y:0};
-let tx0=0,ty0=0,ldx=0,ldy=0,ldir=null,lbLastTap=0,lbDrag=false;
+let lbS=1,lbX=0,lbY=0,lbHadMulti=false,lbPinchD=0,lbPinchS=1,lbPan0={x:0,y:0},lbPos0={x:0,y:0},tx0=0,ty0=0,ldx=0,ldy=0,ldir=null,lbLastTap=0,lbDrag=false;
 function applyLB(){$('lb-i').style.transform=`translate3d(${lbX}px,${lbY}px,0) scale(${lbS})`}
-function resetLBView(anim){
-  const im=$('lb-i');
-  if(anim){im.style.transition='transform .25s ease-out';setTimeout(()=>{im.style.transition=''},260)}
-  else{im.style.transition=''}
-  lbS=1;lbX=0;lbY=0;applyLB();
-}
-const isMobGridLB=()=>window.innerWidth<768&&(gridMode||instaMode)&&lbIsGrid;
-function syncLbGuide(){
-  const g=$('lb-guide');
-  if(!g)return;
-  g.textContent=isMobGridLB()?'上スワイプ: 次へ ／ 下スワイプ: 前へ ／ 右スワイプ: 一覧に戻る':'左右ボタン／スワイプで切替';
-}
+function resetLBView(anim){const im=$('lb-i');if(anim){im.style.transition='transform .25s ease-out';setTimeout(()=>{im.style.transition=''},260)}else im.style.transition='';lbS=1;lbX=0;lbY=0;applyLB()}
 function openLB(i){
   lbPeriod='all';$('lb-pbtn').textContent='全期間 ▾';$('lb-pbtn').classList.remove('active');
   document.querySelectorAll('#lb-pmenu button').forEach(b=>b.classList.toggle('on',b.dataset.p==='all'));
-  $('lb-pmenu').classList.add('hidden');
-  lbIsGrid=false;syncLbGuide();
+  $('lb-pmenu').classList.add('hidden');lbIsGrid=false;
   lbP=photosOf(sel);if(!lbP.length)return;lbI=Math.min(i,lbP.length-1);updLB();
   const lb=$('lb');lb.classList.remove('hidden','closing');lb.style.opacity='0';lb.style.transform='';
   requestAnimationFrame(()=>requestAnimationFrame(()=>{lb.style.opacity=''}));
 }
 function openGridLB(idx){
   const list=allPhotosLatestFirst();if(!list.length)return;
-  lbIsGrid=true;syncLbGuide();
-  lbPeriod='all';$('lb-pbtn').textContent='全期間 ▾';$('lb-pbtn').classList.remove('active');
+  lbIsGrid=true;lbPeriod='all';$('lb-pbtn').textContent='全期間 ▾';$('lb-pbtn').classList.remove('active');
   document.querySelectorAll('#lb-pmenu button').forEach(b=>b.classList.toggle('on',b.dataset.p==='all'));
-  $('lb-pmenu').classList.add('hidden');
-  gridPhotos=list;instaPhotos=list;lbP=list;lbI=Math.max(0,Math.min(idx,list.length-1));updGridLB();
+  $('lb-pmenu').classList.add('hidden');instaPhotos=list;lbP=list;lbI=Math.max(0,Math.min(idx,list.length-1));updGridLB();
   const lb=$('lb');lb.classList.remove('hidden','closing');lb.style.opacity='0';lb.style.transform='';
   requestAnimationFrame(()=>requestAnimationFrame(()=>{lb.style.opacity=''}));
 }
 function closeLB(slideDown){const lb=$('lb');if(lb.classList.contains('hidden')||lb.classList.contains('closing'))return;$('lb-pmenu').classList.add('hidden');lb.style.transition='opacity .38s ease,transform .38s ease';if(slideDown)lb.style.transform='translateY(48px)';lb.classList.add('closing');setTimeout(()=>{lb.classList.add('hidden');lb.classList.remove('closing');lb.style.transform='';lb.style.transition=''},390)}
-function updLB(){
-  resetLBView(false);
-  const p=lbP[lbI],r=rec(sel),cp=getP(sel);
-  syncLbTitle(sel,cp?cp.code:'',r.lotNumber||(cp?cp.defaultLot:sel),effectivePhotoCrop(p,r.cropName||''));
-  $('lb-d').textContent='投稿日: '+fmtDate(p.postedAt);$('lb-c').textContent=(lbI+1)+' / '+lbP.length;$('lb-i').src=p.dataUrl;
-}
-function updGridLB(){
-  resetLBView(false);
-  const p=lbP[lbI];if(!p)return;
-  const pid=p.parcelId||null,cp=pid?getP(pid):null,r=(pid&&S.records[pid])?S.records[pid]:{};
-  syncLbTitle(pid,cp?cp.code:(p.parcelCode||''),r.lotNumber||(cp?cp.defaultLot:p.parcelLabel)||pid||'',effectivePhotoCrop(p,r.cropName!==undefined?r.cropName:(p.parcelCropName||'')));
-  $('lb-d').textContent='投稿日: '+fmtDate(p.postedAt);$('lb-c').textContent=(lbI+1)+' / '+lbP.length;$('lb-i').src=p.dataUrl;
-}
+function updLB(){resetLBView(false);const p=lbP[lbI],r=rec(sel),cp=getP(sel);syncLbTitle(sel,cp?cp.code:'',r.lotNumber||(cp?cp.defaultLot:sel),effectivePhotoCrop(p,r.cropName||''));$('lb-d').textContent='投稿日: '+fmtDate(p.postedAt);$('lb-c').textContent=(lbI+1)+' / '+lbP.length;$('lb-i').src=p.dataUrl}
+function updGridLB(){resetLBView(false);const p=lbP[lbI];if(!p)return;const pid=p.parcelId||null,cp=pid?getP(pid):null,r=(pid&&S.records[pid])?S.records[pid]:{};syncLbTitle(pid,cp?cp.code:(p.parcelCode||''),r.lotNumber||(cp?cp.defaultLot:p.parcelLabel)||pid||'',effectivePhotoCrop(p,r.cropName!==undefined?r.cropName:(p.parcelCropName||'')));$('lb-d').textContent='投稿日: '+fmtDate(p.postedAt);$('lb-c').textContent=(lbI+1)+' / '+lbP.length;$('lb-i').src=p.dataUrl}
 const lbStep=d=>{
-  if((gridMode||instaMode)&&lbIsGrid){if(!lbP.length)return;lbI=(lbI+d+lbP.length)%lbP.length;updGridLB();return}
+  if(activeNav==='feed'&&lbIsGrid){if(!lbP.length)return;lbI=(lbI+d+lbP.length)%lbP.length;updGridLB();return}
   const ni=lbI+d;if(ni>=0&&ni<lbP.length){lbI=ni;updLB();return}
   const ps=allParcels(),ci=ps.findIndex(p=>p.id===sel);if(ci<0)return;
-  for(let k=1;k<=ps.length;k++){
-    const np=ps[(ci+d*k+ps.length*k)%ps.length],nph=filteredPhotos(np.id);
-    if(nph.length){selectP(np.id,false);lbP=nph;lbI=d>0?0:nph.length-1;updLB();return}
-  }
+  for(let k=1;k<=ps.length;k++){const np=ps[(ci+d*k+ps.length*k)%ps.length],nph=filteredPhotos(np.id);if(nph.length){selectP(np.id,false);lbP=nph;lbI=d>0?0:nph.length-1;updLB();return}}
 };
 $('lb-t').addEventListener('click',e=>{e.stopPropagation();jumpFromLbToParcel()});
 $('lb-t').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();jumpFromLbToParcel()}});
 $('lb-x').onclick=()=>closeLB(false);$('lb-p').onclick=()=>lbStep(-1);$('lb-n').onclick=()=>lbStep(1);
 addEventListener('keydown',e=>{if($('lb').classList.contains('hidden'))return;if(e.key==='Escape')closeLB(false);if(e.key==='ArrowLeft')lbStep(-1);if(e.key==='ArrowRight')lbStep(1)});
-
-$('lb-s').addEventListener('wheel',e=>{
-  if($('lb').classList.contains('hidden'))return;
-  e.preventDefault();
-  const r=$('lb-s').getBoundingClientRect(),cx=e.clientX-(r.left+r.width/2),cy=e.clientY-(r.top+r.height/2);
-  const f=Math.pow(1.0025,-Math.max(-200,Math.min(200,e.deltaY)));
-  const ns=Math.min(Math.max(lbS*f,1),5);
-  if(ns<=1.01){lbS=1;lbX=0;lbY=0}else{const k=ns/lbS;lbX=cx-(cx-lbX)*k;lbY=cy-(cy-lbY)*k;lbS=ns}
-  applyLB();
-},{passive:false});
+$('lb-s').addEventListener('wheel',e=>{if($('lb').classList.contains('hidden'))return;e.preventDefault();const r=$('lb-s').getBoundingClientRect(),cx=e.clientX-(r.left+r.width/2),cy=e.clientY-(r.top+r.height/2),f=Math.pow(1.0025,-Math.max(-200,Math.min(200,e.deltaY))),ns=Math.min(Math.max(lbS*f,1),5);if(ns<=1.01){lbS=1;lbX=0;lbY=0}else{const k=ns/lbS;lbX=cx-(cx-lbX)*k;lbY=cy-(cy-lbY)*k;lbS=ns}applyLB()},{passive:false});
 $('lb-i').addEventListener('mousedown',e=>{if(e.button!==0||lbS<=1.01)return;e.preventDefault();lbDrag=true;tx0=e.clientX;ty0=e.clientY;lbPos0={x:lbX,y:lbY}});
 addEventListener('mousemove',e=>{if(!lbDrag)return;lbX=lbPos0.x+(e.clientX-tx0);lbY=lbPos0.y+(e.clientY-ty0);applyLB()});
 addEventListener('mouseup',()=>{lbDrag=false});
@@ -1564,27 +1412,27 @@ $('lb-s').addEventListener('touchstart',e=>{
 },{passive:true});
 $('lb-s').addEventListener('touchmove',e=>{
   if(e.target.closest('button'))return;
-  if(e.touches.length>=2){lbHadMulti=true;const a=e.touches.item(0),b=e.touches.item(1);const d=Math.hypot(b.clientX-a.clientX,b.clientY-a.clientY);if(lbPinchD>0)lbS=Math.min(Math.max(lbPinchS*(d/lbPinchD),1),5);const cx=(a.clientX+b.clientX)/2,cy=(a.clientY+b.clientY)/2;if(lbS<=1.01){lbX=0;lbY=0}else{lbX=lbPos0.x+(cx-lbPan0.x);lbY=lbPos0.y+(cy-lbPan0.y)}applyLB();return}
-  if(e.touches.length===1&&!lbHadMulti){const t0=e.touches.item(0);ldx=t0.clientX-tx0;ldy=t0.clientY-ty0;if(lbS>1.01){lbX=lbPos0.x+ldx;lbY=lbPos0.y+ldy;applyLB();return}if(!ldir&&(Math.abs(ldx)>12||Math.abs(ldy)>12))ldir=Math.abs(ldx)>Math.abs(ldy)?'x':'y';if(!isMobGridLB()&&ldir==='y'&&ldy>0){$('lb').style.transform=`translateY(${ldy}px)`;$('lb').style.opacity=String(Math.max(0.35,1-ldy/320))}}
+  if(e.touches.length>=2){lbHadMulti=true;const a=e.touches.item(0),b=e.touches.item(1),d=Math.hypot(b.clientX-a.clientX,b.clientY-a.clientY);if(lbPinchD>0)lbS=Math.min(Math.max(lbPinchS*(d/lbPinchD),1),5);const cx=(a.clientX+b.clientX)/2,cy=(a.clientY+b.clientY)/2;if(lbS<=1.01){lbX=0;lbY=0}else{lbX=lbPos0.x+(cx-lbPan0.x);lbY=lbPos0.y+(cy-lbPan0.y)}applyLB();return}
+  if(e.touches.length===1&&!lbHadMulti){const t0=e.touches.item(0);ldx=t0.clientX-tx0;ldy=t0.clientY-ty0;if(lbS>1.01){lbX=lbPos0.x+ldx;lbY=lbPos0.y+ldy;applyLB();return}if(!ldir&&(Math.abs(ldx)>12||Math.abs(ldy)>12))ldir=Math.abs(ldx)>Math.abs(ldy)?'x':'y';if(ldir==='y'&&ldy>0){$('lb').style.transform=`translateY(${ldy}px)`;$('lb').style.opacity=String(Math.max(0.35,1-ldy/320))}}
 },{passive:false});
 $('lb-s').addEventListener('touchend',e=>{
   if(e.target.closest('button'))return;$('lb').style.transition='';
   if(lbS<=1.02){lbS=1;lbX=0;lbY=0;applyLB()}
   if(e.touches.length>0)return;
   if(lbHadMulti){lbHadMulti=false;$('lb').style.transform='';$('lb').style.opacity='';return}
-  if(lbS>1.01){$('lb').style.transform='';$('lb').style.opacity='';if(Math.abs(ldx)<10&&Math.abs(ldy)<10){const now=Date.now();if(now-lbLastTap<300){resetLBView(true);lbLastTap=0}else{lbLastTap=now}}return}
+  if(lbS>1.01){$('lb').style.transform='';$('lb').style.opacity='';return}
   $('lb').style.transform='';$('lb').style.opacity='';
-  if(isMobGridLB()){if(ldir==='x'&&ldx>65){closeLB(false);return}if(ldir==='y'&&ldy<-55){lbStep(1);return}if(ldir==='y'&&ldy>55){lbStep(-1);return}}
-  else if(ldir==='y'&&ldy>95){closeLB(true);return}
+  if(ldir==='y'&&ldy>95){closeLB(true);return}
   if(ldir==='x'&&Math.abs(ldx)>55)lbStep(ldx>0?-1:1);
-  else if(Math.abs(ldx)<10&&Math.abs(ldy)<10){const now=Date.now();if(now-lbLastTap<300){resetLBView(true);lbLastTap=0}else{lbLastTap=now}}
+  else if(Math.abs(ldx)<10&&Math.abs(ldy)<10){const now=Date.now();if(now-lbLastTap<300){resetLBView(true);lbLastTap=0}else lbLastTap=now}
 });
 
-function setDraw(on){if(on&&(gridMode||instaMode)){setGridMode(false);setInstaMode(false)}drawing=on;draft=[];renderDraft();$('draw-banner').classList.toggle('hidden',!on);vp.classList.toggle('draw',on);$('b-draw').classList.toggle('on',on)}
-$('b-draw').onclick=()=>{if(adjusting)setAdj(false);setDraw(!drawing)};
+/* 区画追加・位置調整 */
+function setDraw(on){if(!isEditor()&&on)return;if(on&&activeNav!=='home')setNav('home');drawing=on;draft=[];renderDraft();$('draw-banner').classList.toggle('hidden',!on);vp.classList.toggle('draw',on);$('b-draw').classList.toggle('on',on)}
+$('b-draw').onclick=()=>{if(!isEditor())return;if(adjusting)setAdj(false);setDraw(!drawing)};
 $('d-cancel').onclick=()=>setDraw(false);
 $('d-undo').onclick=()=>{draft.pop();renderDraft()};
-$('d-ok').onclick=async()=>{if(draft.length<3)return toast('3点以上タップして囲んでください');const id='C_'+Date.now(),pts=str(draft);S.customParcels.push({id,defaultLot:'区画 #00',points:pts});await saveState();setDraw(false);selectP(id,false);const added=getP(id);toast('新しい農地区画（'+(added?added.code:'')+'）を追加しました')};
+$('d-ok').onclick=async()=>{if(!isEditor())return;if(draft.length<3)return toast('3点以上タップして囲んでください');const id='C_'+Date.now(),pts=str(draft);S.customParcels.push({id,defaultLot:'区画 #00',points:pts});await saveState();setDraw(false);selectP(id,false);const added=getP(id);toast('新しい農地区画（'+(added?added.code:'')+'）を追加しました')};
 
 function syncAdjLayout(){
   const ap=$('adj-panel'),mapSec=$('map-section'),mainEl=document.querySelector('main'),isMob=window.innerWidth<768;
@@ -1593,23 +1441,24 @@ function syncAdjLayout(){
   else{ap.classList.remove('adj-mobile-dock','collapsed');const foldBtn=$('adj-fold');if(foldBtn)foldBtn.textContent='たたむ';if(ap.parentElement!==mapSec)mapSec.appendChild(ap)}
 }
 function setAdj(on){
-  if(on&&(gridMode||instaMode)){setGridMode(false);setInstaMode(false)}
+  if(!isEditor()&&on)return;
+  if(on&&activeNav!=='home')setNav('home');
   adjusting=on;if(on&&drawing)setDraw(false);
   $('adj-panel').classList.toggle('hidden',!on);$('layer').parentElement.classList.toggle('adj',on);$('b-adj').classList.toggle('on',on);
   if(on){panel.classList.remove('open');$('hint').classList.add('hidden');if(innerWidth>=768)panel.classList.add('hidden')}
   else{panel.classList.remove('hidden');if(!sel)$('hint').classList.remove('hidden')}
   syncAdjLayout();setTimeout(()=>{fit(false);render()},40);
 }
-$('adj-fold').addEventListener('click',e=>{e.stopPropagation();const ap=$('adj-panel'),btn=$('adj-fold');const isCol=ap.classList.toggle('collapsed');btn.textContent=isCol?'開く':'たたむ';setTimeout(()=>{fit(false);renderHandles()},30)});
-$('b-adj').onclick=()=>setAdj(!adjusting);
+$('adj-fold').addEventListener('click',e=>{e.stopPropagation();const ap=$('adj-panel'),btn=$('adj-fold'),isCol=ap.classList.toggle('collapsed');btn.textContent=isCol?'開く':'たたむ';setTimeout(()=>{fit(false);renderHandles()},30)});
+$('b-adj').onclick=()=>{if(isEditor())setAdj(!adjusting)};
 $('b-num').onclick=()=>{showNum=!showNum;$('b-num').classList.toggle('on',showNum);render()};
 function updAdj(){
   const g=S.globalAdjust;$('gread').textContent=`全体: X${g.dx>=0?'+':''}${r2(g.dx)} Y${g.dy>=0?'+':''}${r2(g.dy)} 横${(g.sx*100).toFixed(2)}% 縦${(g.sy*100).toFixed(2)}%`;
   const p=sel&&getP(sel);$('sread').textContent=p?'選択中: '+((S.records[sel]&&S.records[sel].lotNumber)||p.defaultLot)+(S.parcelOverrides[sel]?'（個別調整済み）':''):'地図で区画をタップして選択';
-  const im=$('mapimg');$('imgsz').textContent=im.naturalWidth?`地図画像: ${im.naturalWidth}×${im.naturalHeight}px → 座標系 ${W}×${H} に合わせて表示`:'';
+  const im=$('mapimg');$('imgsz').textContent=im.naturalWidth?`地図画像: ${im.naturalWidth}×${im.naturalHeight}px`:'';
 }
 function renderHandles(){
-  const l=$('adjl');l.innerHTML='';if(!adjusting||!sel)return;const p=getP(sel);if(!p)return;
+  const l=$('adjl');l.innerHTML='';if(!adjusting||!isEditor()||!sel)return;const p=getP(sel);if(!p)return;
   const pts=parse(p.points),k=1/V.s;
   pts.forEach((pt,i)=>{
     const c=mk('circle',{cx:pt[0],cy:pt[1],r:8*k,fill:'#facc15',stroke:'#dc2626','stroke-width':2*k});c.style.cursor='move';c.style.touchAction='none';
@@ -1620,11 +1469,11 @@ function renderHandles(){
       const up=()=>{c.removeEventListener('pointermove',mv);c.removeEventListener('pointerup',up);S.parcelOverrides[sel]=str(pts);saveSoon();updAdj()};
       c.addEventListener('pointermove',mv);c.addEventListener('pointerup',up);
     });
-    c.addEventListener('pointerup',e=>e.stopPropagation());
     l.appendChild(c);
   });
 }
 $('adj-panel').addEventListener('click',async e=>{
+  if(!isEditor())return;
   const b=e.target.closest('button[data-a]');if(!b)return;
   const st=Number($('step').value),a=b.dataset.a,x=Number(b.dataset.x||0),y=Number(b.dataset.y||0),g=S.globalAdjust;
   if(a==='done')return setAdj(false);
@@ -1641,40 +1490,30 @@ $('adj-panel').addEventListener('click',async e=>{
   saveSoon();render();
 });
 
-$('b-menu').onclick=e=>{e.stopPropagation();$('menu').classList.toggle('hidden')};
+$('b-menu').onclick=e=>{if(!isEditor())return;e.stopPropagation();$('menu').classList.toggle('hidden')};
 document.addEventListener('click',e=>{if(!e.target.closest('#menu'))$('menu').classList.add('hidden')});
-$('b-export').onclick=()=>{const u=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'})),a=document.createElement('a');a.href=u;a.download='farmland-photos-'+todayISO()+'.json';a.click();URL.revokeObjectURL(u);toast('バックアップを書き出しました')};
+$('b-export').onclick=()=>{if(!isEditor())return;const u=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'})),a=document.createElement('a');a.href=u;a.download='farmland-photos-'+todayISO()+'.json';a.click();URL.revokeObjectURL(u);toast('バックアップを書き出しました')};
 $('i-import').addEventListener('change',async e=>{
+  if(!isEditor())return;
   const f=e.target.files[0];if(!f)return;
-  try{const o=JSON.parse(await f.text());if(o&&typeof o.records==='object'){const m=S.customMapDataUrl;S=normState(o);S.customMapDataUrl=o.customMapDataUrl||m;await saveState();if(S.customMapDataUrl)$('mapimg').src=S.customMapDataUrl;render();if(sel)selectP(sel,false);toast('データを復元しました')}else toast('無効なバックアップです')}catch(x){toast('読み込みに失敗しました')}finally{e.target.value=''}
+  try{const o=JSON.parse(await f.text());if(o&&typeof o.records==='object'){const m=S.customMapDataUrl;S=normState(o);S.customMapDataUrl=o.customMapDataUrl||m;applyRoleUI();await saveState();if(S.customMapDataUrl)$('mapimg').src=S.customMapDataUrl;render();if(sel)selectP(sel,false);toast('データを復元しました')}else toast('無効なバックアップです')}catch(x){toast('読み込みに失敗しました')}finally{e.target.value=''}
 });
-const pickMap=()=>$('i-map').click();$('b-remap').onclick=pickMap;$('b-upload').onclick=pickMap;
-$('i-map').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;if(!ASS){toast('地図の保存には編集権限が必要です');return}(async()=>{try{const u=(await ASS.upload(f)).url;S.customMapDataUrl=u;$('mapimg').src=u;await saveState();toast('地図を保存しました（以後は自動表示）')}catch(x){toast('地図の保存に失敗しました')}})()});
-$('mapimg').addEventListener('error',()=>{if(window._appLoaded&&!S.customMapDataUrl&&!$('mapimg').naturalWidth)$('upload').classList.remove('hidden')});
+const pickMap=()=>{if(isEditor())$('i-map').click()};$('b-remap').onclick=pickMap;$('b-upload').onclick=pickMap;
+$('i-map').addEventListener('change',e=>{const f=e.target.files[0];if(!f||!isEditor())return;if(!ASS)return toast('地図の保存には編集権限が必要です');(async()=>{try{const u=(await ASS.upload(f)).url;S.customMapDataUrl=u;$('mapimg').src=u;await saveState();toast('地図を保存しました')}catch(x){toast('地図の保存に失敗しました')}})()});
+$('mapimg').addEventListener('error',()=>{if(window._appLoaded&&!S.customMapDataUrl&&!$('mapimg').naturalWidth&&isEditor())$('upload').classList.remove('hidden')});
 $('mapimg').addEventListener('load',()=>{$('upload').classList.add('hidden');updAdj()});
 
 function detectDevice(){
   const w=window.innerWidth,h=window.innerHeight;
   const isTouch=('ontouchstart' in window)||(navigator.maxTouchPoints>0)||window.matchMedia('(pointer:coarse)').matches;
-  const ua=navigator.userAgent;
-  const isIpad=/iPad/.test(ua)||(/Macintosh/.test(ua)&&isTouch);
-  const isAndroidTab=/Android/.test(ua)&&!/Mobile/.test(ua);
-  const isMobPhone=/iPhone|iPod|BlackBerry|IEMobile|Opera Mini/.test(ua)||(/Android/.test(ua)&&/Mobile/.test(ua));
-  let dev='pc';
-  if(isMobPhone||(isTouch&&Math.min(w,h)<600))dev='mobile';
-  else if(isIpad||isAndroidTab||(isTouch&&Math.min(w,h)>=600))dev='tablet';
-  const useSheet=(dev==='mobile')||(dev==='tablet'&&w<h)||(w<768);
-  let sz='md';
-  if(w<380)sz='xs';else if(w<768)sz='sm';else if(w>=1440)sz='lg';
-  const b=document.body;
-  b.classList.remove('dev-mobile','dev-tablet','dev-pc','is-touch','layout-sheet','layout-split','sz-xs','sz-sm','sz-md','sz-lg');
-  b.classList.add('dev-'+dev,useSheet?'layout-sheet':'layout-split','sz-'+sz);
-  if(isTouch)b.classList.add('is-touch');
+  const useSheet=(w<768);
+  document.body.classList.toggle('layout-sheet',useSheet);
+  document.body.classList.toggle('layout-split',!useSheet);
+  document.body.classList.toggle('is-touch',isTouch);
   window.USE_SHEET=useSheet;
 }
 detectDevice();
 window.addEventListener('resize',()=>{detectDevice();syncAdjLayout();fit(false)});
-window.addEventListener('orientationchange',()=>setTimeout(()=>{detectDevice();syncAdjLayout();fit(false)},100));
 
 let px0=0,py0=0,pdx=0,pdy=0,pswipe=false,pdir=null;
 panel.addEventListener('touchstart',e=>{
@@ -1689,21 +1528,7 @@ panel.addEventListener('touchmove',e=>{
 panel.addEventListener('touchend',()=>{
   if(!pswipe)return;pswipe=false;panel.style.transition='';
   if(pdir==='y'&&pdy>90){panel.style.transform='';closeP()}
-  else{panel.style.transform='';if(pdir==='x'&&Math.abs(pdx)>65){step(pdx<0?1:-1)}}
-});
-
-let lastTap=0;
-vp.addEventListener('touchend',e=>{
-  if(innerWidth>=768||drawing||moved||e.touches.length>0)return;
-  const now=Date.now();if(now-lastTap<300){e.preventDefault();fit(true);lastTap=0}else{lastTap=now}
-});
-
-addEventListener('keydown',e=>{
-  if(!sel||drawing||adjusting)return;
-  if(!$('lb').classList.contains('hidden')||!$('confirm').classList.contains('hidden'))return;
-  if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;
-  if(e.key==='ArrowLeft'){e.preventDefault();step(-1)}
-  else if(e.key==='ArrowRight'){e.preventDefault();step(1)}
+  else{panel.style.transform='';if(pdir==='x'&&Math.abs(pdx)>65)step(pdx<0?1:-1)}
 });
 
 addEventListener('DOMContentLoaded',async()=>{
@@ -1715,10 +1540,11 @@ addEventListener('DOMContentLoaded',async()=>{
       if(S.customMapDataUrl)$('mapimg').src=S.customMapDataUrl;
     }
   }catch(err){console.error(err)}
+  applyRoleUI();
   window._appLoaded=true;
   const im=$('mapimg');
   if(im.complete&&im.naturalWidth>0)$('upload').classList.add('hidden');
-  else if(!im.src||im.src===location.href)$('upload').classList.remove('hidden');
+  else if((!im.src||im.src===location.href)&&isEditor())$('upload').classList.remove('hidden');
   render();fit(false);
 });
 </script>
