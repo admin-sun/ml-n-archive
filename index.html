@@ -197,7 +197,6 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .card-date.no-exif,.card-date-wrap.no-exif{box-shadow:0 0 0 1.5px #ea580c;background:rgba(255,247,237,.95)}
 .card .ch .nb{height:22px;padding:0 6px;font-size:10px;font-weight:700;background:rgba(255,255,255,.9);color:#0f172a;border:none;border-radius:4px}
 
-/* フィード: PCはグリッド/フィード切替式（グリッド4列・画面幅ギリギリ）、スマホはグリッド→タップでフィード（左→右スワイプでグリッドへ戻る） */
 #insta-feed-view{
   position:absolute;inset:0;z-index:25;background:var(--bg);
   overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;overscroll-behavior-y:none;
@@ -242,31 +241,33 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
   display:grid;gap:2px;
 }
 @media(max-width:767px){
-  .ig-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:1.5px}
-  .ig-grid-item{aspect-ratio:3 / 4}
+  .ig-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;padding:2px}
+  .ig-grid-item{aspect-ratio:2 / 3;border-radius:2px}
 }
 @media(min-width:768px){
   .ig-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:2px}
   .ig-grid-item{aspect-ratio:1 / 1}
 }
-.ig-grid-item{position:relative;overflow:hidden;background:#0f172a;cursor:pointer;border-radius:0}
+.ig-grid-item{position:relative;overflow:hidden;background:#0f172a;cursor:pointer}
 .ig-grid-item img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .2s ease}
 .ig-grid-item img.loaded{opacity:1}
 .ig-grid-meta{
   position:absolute;left:0;right:0;bottom:0;
   display:flex;align-items:center;justify-content:space-between;gap:4px;
-  padding:4px 6px;
-  background:linear-gradient(to top,rgba(15,23,42,.85),rgba(15,23,42,0));
+  padding:5px 6px;
+  background:linear-gradient(to top,rgba(15,23,42,.88),rgba(15,23,42,0));
   font-size:10px;font-weight:700;font-variant-numeric:tabular-nums;
   pointer-events:none;
 }
-.ig-grid-num{
-  background:rgba(15,23,42,.78);color:#fff;
-  padding:1px 5px;border-radius:4px;line-height:1.25;white-space:nowrap;
+.ig-grid-code{
+  background:var(--g);color:#fff;
+  padding:1px 6px;border-radius:4px;line-height:1.3;white-space:nowrap;
 }
+:root[data-theme=dark] .ig-grid-code{color:#0f172a}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .ig-grid-code{color:#0f172a}}
 .ig-grid-date{
   background:rgba(255,255,255,.92);color:#0f172a;
-  padding:1px 5px;border-radius:4px;line-height:1.25;white-space:nowrap;
+  padding:1px 5px;border-radius:4px;line-height:1.3;white-space:nowrap;
 }
 
 .ig-stream{width:100%;max-width:540px;margin:12px auto 0;display:flex;flex-direction:column;gap:14px}
@@ -304,21 +305,22 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .ig-caption-input{width:100%;min-height:42px;border:0;outline:0;background:transparent;color:var(--tx);padding:0;margin:0;font-size:13.5px;line-height:1.5;resize:none;display:block;overflow:hidden}
 @media(max-width:767px){.ig-caption-input{font-size:16px}}
 
-/* ◯ 最新: 日付ごとにまとめて大きめのパネルで表示 */
+/* ◯ 最新: 日付ごとにまとめて大きめパネルで表示 */
 #circle-view{position:absolute;inset:0;z-index:25;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 32px}
-.c-wrap{max-width:740px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
-.c-panel{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:12px;box-shadow:0 2px 10px rgba(15,23,42,.05)}
+.c-wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.c-panel{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 2px 10px rgba(15,23,42,.05)}
 .c-panel-hd{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:8px;border-bottom:1px solid var(--bd)}
 .c-panel-date{font-size:15px;font-weight:700;color:var(--g2);font-variant-numeric:tabular-nums}
-.c-panel-tag{font-size:11px;font-weight:700;padding:2px 9px;border-radius:99px;background:var(--bg);border:1px solid var(--bd);color:var(--mut)}
-.c-day-entries{display:flex;flex-direction:column;gap:8px}
-.c-entry-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;background:var(--bg);border-radius:10px;padding:9px 11px}
-.c-entry-text{font-size:13.5px;font-weight:700;line-height:1.5;white-space:pre-wrap;word-break:break-word;flex:1}
-.c-day-photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.c-panel-tag{font-size:11px;font-weight:700;padding:2px 9px;border-radius:99px;background:var(--bg);border:1px solid var(--bd);color:var(--mut);font-variant-numeric:tabular-nums}
+.c-sec-title{font-size:11px;font-weight:700;color:var(--mut)}
+.c-day-entries{display:flex;flex-direction:column;gap:6px}
+.c-entry-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;background:var(--bg);border-radius:10px;padding:8px 11px}
+.c-entry-text{font-size:13px;font-weight:700;line-height:1.45;white-space:pre-wrap;word-break:break-word;flex:1}
+.c-day-photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px}
 .c-photo-box{position:relative;border-radius:10px;overflow:hidden;background:#0f172a;aspect-ratio:4 / 3;cursor:zoom-in}
 .c-photo-box img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .2s ease}
 .c-photo-box img.loaded{opacity:1}
-.c-photo-cap{position:absolute;left:0;right:0;bottom:0;padding:4px 7px;background:linear-gradient(to top,rgba(15,23,42,.78),rgba(15,23,42,0));color:#fff;font-size:10px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+.c-photo-cap{position:absolute;left:0;right:0;bottom:0;padding:4px 7px;background:linear-gradient(to top,rgba(15,23,42,.82),rgba(15,23,42,0));color:#fff;font-size:10px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
 
 /* 日誌（写真なしでも作成・編集・削除可能） */
 #journal-view{position:absolute;inset:0;z-index:25;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 32px}
@@ -546,7 +548,6 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
   </div>
 </aside>
 
-<!-- フィード: PCはグリッド/フィード切替式、スマホはグリッド→タップでフィード（左→右スワイプでグリッドへ戻る） -->
 <section id="insta-feed-view" class="hidden" aria-label="フィード">
   <div class="feed-pc-bar">
     <button type="button" class="feed-mode-btn on" id="pc-mode-grid">グリッド</button>
@@ -560,12 +561,10 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
   <div id="insta-stream" class="ig-stream hidden"></div>
 </section>
 
-<!-- ◯ 最新: 日付ごとにまとめて大きめパネルで表示 -->
 <section id="circle-view" class="hidden" aria-label="◯ 最新情報・写真・作業日誌一覧">
   <div class="c-wrap" id="c-list"></div>
 </section>
 
-<!-- 作業日誌（写真なしでも作成・編集・削除可能） -->
 <section id="journal-view" class="hidden" aria-label="作業日誌">
   <div class="j-wrap">
     <div class="j-editor edit-only">
@@ -589,7 +588,6 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
   </div>
 </section>
 
-<!-- 計画・資料 -->
 <section id="plans-view" class="hidden" aria-label="計画・資料">
   <div class="pl-wrap">
     <div class="pl-card edit-only" id="pl-editor-card">
@@ -1207,7 +1205,6 @@ function closeCaptionEditor(areaEl){
   ta.classList.add('hidden');viewEl.classList.remove('hidden');
 }
 
-/* フィード: PCはグリッド/フィード切替、スマホはグリッド→タップでフィード（左→右スワイプでグリッドへ戻る） */
 function applyFeedViewState(scrollTargetPost){
   const isMob=window.innerWidth<768;
   const mode=isMob?mobFeedMode:pcFeedMode;
@@ -1307,7 +1304,7 @@ function renderInstaFeed(keepScroll){
     im.dataset.src=p.dataUrl;
     const meta=document.createElement('div');
     meta.className='ig-grid-meta';
-    meta.innerHTML=`<span class="ig-grid-num">#${idx+1}</span><span class="ig-grid-date">${escapeHtml(fmtDate(p.postedAt))}</span>`;
+    meta.innerHTML=`<span class="ig-grid-code">${escapeHtml(p.parcelCode)}</span><span class="ig-grid-date">${escapeHtml(fmtDate(p.postedAt))}</span>`;
     item.appendChild(im);
     item.appendChild(meta);
     return item;
@@ -1383,7 +1380,7 @@ function renderCircleStream(){
   const byDate=new Map();
 
   const ensureDay=iso=>{
-    if(!byDate.has(iso))byDate.set(iso,{iso,dateDisp:fmtDate(iso),entries:[],photos:[]});
+    if(!byDate.has(iso))byDate.set(iso,{iso,dateDisp:fmtDate(iso),notes:[],photos:[]});
     return byDate.get(iso);
   };
 
@@ -1392,7 +1389,7 @@ function renderCircleStream(){
     const day=ensureDay(iso);
     const head=`[日誌] ${n.parcelCode} ${n.parcelLabel}${n.cropName?'（'+n.cropName+'）':''}`;
     const body=[n.workLog,n.comment].filter(Boolean).join(' / ');
-    day.entries.push({
+    day.notes.push({
       text:body?`${head}\n${body}`:head,
       parcelId:n.parcelId
     });
@@ -1401,13 +1398,14 @@ function renderCircleStream(){
   photos.forEach(ph=>{
     const iso=toISO(ph.postedAt);
     const day=ensureDay(iso);
-    const head=`[写真] ${ph.parcelCode} ${ph.parcelLabel}${ph.cropName?'（'+ph.cropName+'）':''}`;
-    const body=[ph.workLog,ph.comment].filter(Boolean).join(' / ');
-    day.entries.push({
-      text:body?`${head}\n${body}`:head,
-      parcelId:ph.parcelId,
-      photoId:ph.id
-    });
+    if(ph.workLog||ph.comment){
+      const head=`[写真メモ] ${ph.parcelCode} ${ph.parcelLabel}${ph.cropName?'（'+ph.cropName+'）':''}`;
+      const body=[ph.workLog,ph.comment].filter(Boolean).join(' / ');
+      day.notes.push({
+        text:`${head}\n${body}`,
+        parcelId:ph.parcelId
+      });
+    }
     day.photos.push({
       dataUrl:ph.dataUrl,
       label:`${ph.parcelCode} ${ph.parcelLabel}${ph.cropName?' · '+ph.cropName:''}`,
@@ -1422,26 +1420,29 @@ function renderCircleStream(){
   renderBatched(days,wrap,day=>{
     const card=document.createElement('article');
     card.className='c-panel';
-    const entriesHtml=day.entries.map(en=>`
-      <div class="c-entry-row">
-        <div class="c-entry-text">${escapeHtml(en.text)}</div>
-        ${en.parcelId?`<button type="button" class="nb" data-c-jump="${escapeHtml(en.parcelId)}">区画</button>`:''}
-      </div>
-    `).join('');
+    const notesHtml=day.notes.length?`
+      <div class="c-sec-title">日誌・メモ（${day.notes.length}件）</div>
+      <div class="c-day-entries">${day.notes.map(en=>`
+        <div class="c-entry-row">
+          <div class="c-entry-text">${escapeHtml(en.text)}</div>
+          ${en.parcelId?`<button type="button" class="nb" data-c-jump="${escapeHtml(en.parcelId)}">区画</button>`:''}
+        </div>
+      `).join('')}</div>
+    `:'';
     const photosHtml=day.photos.length?`
+      <div class="c-sec-title">写真（${day.photos.length}枚）</div>
       <div class="c-day-photos">
-        ${day.photos.map(ph=>{
-          const imHtml=`<div class="c-photo-box" data-c-lb="${ph.photoIdx}"><img data-src="${escapeHtml(ph.dataUrl)}" alt="${escapeHtml(ph.label)}" decoding="async"><div class="c-photo-cap">${escapeHtml(ph.label)}</div></div>`;
-          return imHtml;
-        }).join('')}
+        ${day.photos.map(ph=>`
+          <div class="c-photo-box" data-c-lb="${ph.photoIdx}"><img data-src="${escapeHtml(ph.dataUrl)}" alt="${escapeHtml(ph.label)}" decoding="async"><div class="c-photo-cap">${escapeHtml(ph.label)}</div></div>
+        `).join('')}
       </div>
     `:'';
     card.innerHTML=`
       <div class="c-panel-hd">
         <span class="c-panel-date">${escapeHtml(day.dateDisp)}</span>
-        <span class="c-panel-tag">記録 ${day.entries.length}件 / 写真 ${day.photos.length}枚</span>
+        <span class="c-panel-tag">日誌 ${day.notes.length}件 · 写真 ${day.photos.length}枚</span>
       </div>
-      <div class="c-day-entries">${entriesHtml}</div>
+      ${notesHtml}
       ${photosHtml}
     `;
     card.querySelectorAll('img').forEach(im=>imgs.push(im));
