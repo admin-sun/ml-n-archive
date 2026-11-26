@@ -164,7 +164,6 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .cp-act.primary{background:var(--g2);border-color:var(--g2);color:#fff}
 .cp-act.danger{color:#dc2626}
 
-/* サムネイル写真一覧：PCでは2列 */
 #feed{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;overscroll-behavior-y:none;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:max-content;gap:2px;background:rgba(148,163,184,.28);align-content:start}
 @media(min-width:768px){
   #feed{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px;padding:14px;background:var(--bg)}
@@ -192,7 +191,6 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .card-date.no-exif,.card-date-wrap.no-exif{box-shadow:0 0 0 1.5px #ea580c;background:rgba(255,247,237,.95)}
 .card .ch .nb{height:22px;padding:0 6px;font-size:10px;font-weight:700;background:rgba(255,255,255,.9);color:#0f172a;border:none;border-radius:4px}
 
-/* インスタグラム風シームレス縦スクロール表示 */
 #insta-feed-view{
   position:absolute;inset:0;z-index:25;background:var(--sf);
   overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;overscroll-behavior-y:none;
@@ -229,7 +227,6 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .ig-caption-input{width:100%;min-height:42px;border:0;outline:0;background:transparent;color:var(--tx);padding:0;margin:0;font-size:13.5px;line-height:1.5;resize:none;display:block;overflow:hidden}
 @media(max-width:767px){.ig-caption-input{font-size:16px}}
 
-/* 作業日誌ビュー */
 #journal-view{position:absolute;inset:0;z-index:25;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 28px}
 .j-wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
 .j-filter{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:8px 10px}
@@ -241,7 +238,6 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .j-cap{font-size:12.5px;color:var(--mut);line-height:1.45;white-space:pre-wrap}
 .j-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;padding-top:4px}
 
-/* 事業計画・予算書・作付計画ビュー */
 #plans-view{position:absolute;inset:0;z-index:25;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 28px}
 .pl-wrap{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
 .pl-tabs{display:flex;gap:6px;flex-wrap:wrap}
@@ -256,7 +252,6 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .pl-form textarea{min-height:66px;resize:vertical}
 @media(max-width:600px){.pl-form{grid-template-columns:1fr}}
 
-/* 詳細モーダル */
 #detail-modal{position:fixed;inset:0;z-index:75;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:14px}
 .dm-box{background:var(--sf);color:var(--tx);border:1px solid var(--bd);border-radius:14px;max-width:520px;width:100%;max-height:90dvh;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 16px 40px rgba(0,0,0,.35)}
 .dm-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -269,7 +264,6 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .dm-field textarea{min-height:76px;resize:vertical}
 .dm-ro{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;font-size:13px;line-height:1.5;white-space:pre-wrap;min-height:42px}
 
-/* Instagram風ミニマルボトムバー（画像なし・線画SVGアイコン） */
 nav#bottom-nav{
   flex-shrink:0;
   width:100%;
@@ -596,7 +590,6 @@ async function saveState(){
 }
 let saveT;const saveSoon=()=>{clearTimeout(saveT);saveT=setTimeout(saveState,300)};
 
-// 初期起動時は常に閲覧者モード（role: 'viewer'）
 let S={records:{},customParcels:[],deletedParcels:[],customMapDataUrl:null,parcelOverrides:{},globalAdjust:{dx:0,dy:0,sx:1,sy:1},plans:[],role:'viewer'};
 const normState=o=>({
   records:o.records||{},
@@ -650,6 +643,7 @@ function applyRoleUI(){
     closeCropPicker();
     $('menu').classList.add('hidden');
   }
+}
 
 $('b-role').onclick=()=>{
   S.role=isEditor()?'viewer':'editor';
@@ -1037,7 +1031,6 @@ $('insta-stream').addEventListener('focusout',e=>{
   if(ta)closeCaptionEditor(ta.closest('.ig-caption-area'));
 });
 
-/* 作業日誌一覧 */
 function renderJournal(){
   const selEl=$('j-parcel'),q=($('j-q').value||'').trim().toLowerCase(),listEl=$('j-list');
   const curVal=selEl.value;
@@ -1081,7 +1074,6 @@ $('j-list').addEventListener('click',e=>{
   if(jmp&&getP(jmp.dataset.jJump)){setNav('home');selectP(jmp.dataset.jJump,window.USE_SHEET?true:false)}
 });
 
-/* 詳細を見るモーダル */
 function openDetailModal(parcelId,photoId){
   const r=S.records[parcelId]||{},p=getP(parcelId);
   const ph=(r.photos||[]).find(x=>x.id===photoId)||photosOf(parcelId).find(x=>x.id===photoId);
@@ -1124,7 +1116,6 @@ $('dm-save').onclick=async()=>{
   toast('詳細内容を保存しました');
 };
 
-/* 事業計画・予算書・作付計画 */
 $('pl-tabs').addEventListener('click',e=>{
   const b=e.target.closest('button[data-cat]');if(!b)return;
   planCat=b.dataset.cat;
@@ -1164,7 +1155,6 @@ $('pl-list').addEventListener('click',async e=>{
   await saveState();renderPlans();toast('削除しました');
 });
 
-/* 下部ナビゲーション切替 */
 function setNav(nav){
   activeNav=nav;
   document.querySelectorAll('#bottom-nav .bnav-btn').forEach(b=>b.classList.toggle('on',b.dataset.nav===nav));
@@ -1387,7 +1377,6 @@ $('b-delc').onclick=async()=>{
   await saveState();closeP();toast('区画を削除しました');
 };
 
-/* ライトボックス */
 let lbP=[],lbI=0,lbPeriod='all',lbIsGrid=false,lbTargetParcelId=null;
 function syncLbTitle(targetId,code,lot,crop){
   lbTargetParcelId=targetId||null;const el=$('lb-t'),head=[code,lot].filter(Boolean).join(' ');
@@ -1485,7 +1474,6 @@ $('lb-s').addEventListener('touchend',e=>{
   else if(Math.abs(ldx)<10&&Math.abs(ldy)<10){const now=Date.now();if(now-lbLastTap<300){resetLBView(true);lbLastTap=0}else lbLastTap=now}
 });
 
-/* 区画追加・位置調整 */
 function setDraw(on){if(!isEditor()&&on)return;if(on&&activeNav!=='home')setNav('home');drawing=on;draft=[];renderDraft();$('draw-banner').classList.toggle('hidden',!on);vp.classList.toggle('draw',on);$('b-draw').classList.toggle('on',on)}
 $('b-draw').onclick=()=>{if(!isEditor())return;if(adjusting)setAdj(false);setDraw(!drawing)};
 $('d-cancel').onclick=()=>setDraw(false);
