@@ -640,16 +640,27 @@ function applyRoleUI(){
   $('hint').textContent=ed?'白い農地をタップして写真を表示・登録':'白い農地をタップして写真を表示';
   if(!ed){
     if(drawing)setDraw(false);
-    if(adjusting)setAdj(false);
+    if(adjusting){
+      adjusting=false;
+      $('adj-panel').classList.add('hidden');
+      $('layer').parentElement.classList.remove('adj');
+      $('b-adj').classList.remove('on');
+      syncAdjLayout();
+    }
     closeCropPicker();
     $('menu').classList.add('hidden');
   }
-}
 
 $('b-role').onclick=()=>{
   S.role=isEditor()?'viewer':'editor';
   applyRoleUI();
-  goHomeMap();
+  setNav('home');
+  if(window.USE_SHEET&&sel){
+    closeP();
+  }else{
+    stopZ();
+    fit(true);
+  }
   render();
   if(sel)feed();
   toast(isEditor()?'編集者モードに切り替えました':'閲覧者モードに切り替えました');
