@@ -94,11 +94,6 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 .nb{height:28px;padding:0 8px;border-radius:7px;border:1px solid var(--bd);background:var(--sf);font-size:11px;font-weight:700}
 
 #active .top-controls{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;border-bottom:1px solid var(--bd);background:var(--bg);min-width:0;flex-shrink:0}
-.p-nav-group{display:inline-flex;align-items:center;gap:4px;flex-shrink:0}
-.p-step-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);font-size:18px;font-weight:700;line-height:1;display:inline-flex;align-items:center;justify-content:center;transition:background .12s,border-color .12s}
-.p-step-btn:hover{border-color:var(--g2);background:rgba(45,106,79,.08)}
-.p-step-btn:active{background:var(--g2);color:#fff}
-@media(max-width:767px){.p-nav-group{display:none!important}}
 
 .bar{flex:1;min-width:0;display:flex;gap:8px}
 .id-pair{display:inline-flex;align-items:center;gap:4px;flex-shrink:0}
@@ -523,10 +518,6 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
   <div id="empty"><h2 style="color:var(--tx);font-size:16px">農地を選択してください</h2><p>地図の<b>白塗りの農地</b>をクリックすると、登録写真がここに表示されます。</p></div>
   <div id="active" class="hidden">
     <div class="top-controls">
-      <div class="p-nav-group">
-        <button id="p-prev" class="p-step-btn" type="button" title="前の農地へ移動" aria-label="前の農地へ移動">‹</button>
-        <button id="p-next" class="p-step-btn" type="button" title="次の農地へ移動" aria-label="次の農地へ移動">›</button>
-      </div>
       <div class="bar">
         <div class="bar-row1">
           <div class="id-pair">
@@ -1990,8 +1981,22 @@ $('i-photos').addEventListener('change',async e=>{
   }catch(x){toast('画像の読み込みに失敗しました')}finally{e.target.value=''}
 });
 function step(d){const ps=allParcels();if(!ps.length)return;const i=ps.findIndex(p=>p.id===sel);const nextIdx=i<0?0:(i+d+ps.length)%ps.length;selectP(ps[nextIdx].id,true)}
-$('p-prev').onclick=()=>step(-1);
-$('p-next').onclick=()=>step(1);
+document.addEventListener('keydown',e=>{
+  if(activeNav!=='home'||!sel)return;
+  if(!$('lb').classList.contains('hidden'))return;
+  if(!$('detail-modal').classList.contains('hidden')||!$('confirm').classList.contains('hidden'))return;
+  const t=e.target;
+  if(t instanceof HTMLElement&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT'||t.isContentEditable))return;
+  if(e.isComposing)return;
+
+  if(e.key==='ArrowLeft'){
+    e.preventDefault();
+    step(-1);
+  }else if(e.key==='ArrowRight'){
+    e.preventDefault();
+    step(1);
+  }
+});
 $('b-delc').onclick=async()=>{
   if(!sel||!isEditor())return;
   if(!await ask('区画の削除','この区画と登録写真を削除しますか？'))return;
