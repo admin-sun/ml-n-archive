@@ -94,6 +94,12 @@ aside{width:52%;background:var(--sf);border-left:1px solid var(--bd);display:fle
 .nb{height:28px;padding:0 8px;border-radius:7px;border:1px solid var(--bd);background:var(--sf);font-size:11px;font-weight:700}
 
 #active .top-controls{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;border-bottom:1px solid var(--bd);background:var(--bg);min-width:0;flex-shrink:0}
+.p-nav-group{display:inline-flex;align-items:center;gap:4px;flex-shrink:0}
+.p-step-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);font-size:18px;font-weight:700;line-height:1;display:inline-flex;align-items:center;justify-content:center;transition:background .12s,border-color .12s}
+.p-step-btn:hover{border-color:var(--g2);background:rgba(45,106,79,.08)}
+.p-step-btn:active{background:var(--g2);color:#fff}
+@media(max-width:767px){.p-nav-group{display:none!important}}
+
 .bar{flex:1;min-width:0;display:flex;gap:8px}
 .id-pair{display:inline-flex;align-items:center;gap:4px;flex-shrink:0}
 .pcode-badge{display:inline-flex;align-items:center;justify-content:center;height:28px;padding:0 9px;border-radius:7px;background:var(--g);color:#fff;font-size:12px;font-weight:700;letter-spacing:.03em;font-variant-numeric:tabular-nums;white-space:nowrap;flex-shrink:0}
@@ -120,11 +126,11 @@ body.role-viewer .fld:focus-within{border-color:var(--bd);box-shadow:none}
 .addrow label.btn.circle-add{width:42px;height:42px;min-width:42px;padding:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;line-height:1;box-shadow:0 2px 8px rgba(27,67,50,.22)}
 
 @media(min-width:768px){
-  #active .top-controls{padding:10px 14px;gap:12px;align-items:flex-start}
+  #active .top-controls{padding:10px 14px;gap:10px;align-items:flex-start}
   .bar{flex-direction:row;align-items:flex-start;gap:10px}
-  .bar-row1{display:flex;align-items:center;gap:8px;flex:0 1 250px;min-width:195px}
-  .bar-row1 .fld-lot{flex:1 1 auto;min-width:96px}
-  .bar-row2{display:flex;flex-direction:column;gap:5px;flex:1 1 220px;min-width:160px}
+  .bar-row1{display:flex;align-items:center;gap:8px;flex:0 1 240px;min-width:185px}
+  .bar-row1 .fld-lot{flex:1 1 auto;min-width:90px}
+  .bar-row2{display:flex;flex-direction:column;gap:5px;flex:1 1 200px;min-width:150px}
   .bar-row2 .fld-crop{width:100%}
   .addrow{margin-left:auto;align-self:center}
 }
@@ -517,6 +523,10 @@ body.layout-sheet #empty,body.layout-sheet .pill,body.layout-sheet #zoom{display
   <div id="empty"><h2 style="color:var(--tx);font-size:16px">農地を選択してください</h2><p>地図の<b>白塗りの農地</b>をクリックすると、登録写真がここに表示されます。</p></div>
   <div id="active" class="hidden">
     <div class="top-controls">
+      <div class="p-nav-group">
+        <button id="p-prev" class="p-step-btn" type="button" title="前の農地へ移動" aria-label="前の農地へ移動">‹</button>
+        <button id="p-next" class="p-step-btn" type="button" title="次の農地へ移動" aria-label="次の農地へ移動">›</button>
+      </div>
       <div class="bar">
         <div class="bar-row1">
           <div class="id-pair">
@@ -1816,12 +1826,13 @@ $('crop-strip').addEventListener('click',e=>{
 function selectP(id,center){
   if(activeNav!=='home')setNav('home');
   closeCropPicker();
-  if(sel!==id)cropFilter=null;
+  cropFilter=null;
   sel=id;const p=getP(id);if(!p)return;const r=rec(id);
   $('empty').classList.add('hidden');$('active').classList.remove('hidden');$('hint').classList.add('hidden');
   if(!adjusting)panel.classList.add('open');
   $('pcode').textContent=p.code||id;
   $('lot').value=r.lotNumber||p.defaultLot;$('crop').value=r.cropName||'';
+  $('feed').scrollTop=0;
   renderCropStrip();render();feed();
   if(center)focusP(id,window.USE_SHEET?.22:.5);
 }
@@ -1978,7 +1989,9 @@ $('i-photos').addEventListener('change',async e=>{
     await saveState();feed();render();toast(files.length+'枚の写真を追加しました');
   }catch(x){toast('画像の読み込みに失敗しました')}finally{e.target.value=''}
 });
-function step(d){const ps=allParcels(),i=ps.findIndex(p=>p.id===sel);selectP(ps[(i<0?0:(i+d+ps.length)%ps.length)].id,true)}
+function step(d){const ps=allParcels();if(!ps.length)return;const i=ps.findIndex(p=>p.id===sel);const nextIdx=i<0?0:(i+d+ps.length)%ps.length;selectP(ps[nextIdx].id,true)}
+$('p-prev').onclick=()=>step(-1);
+$('p-next').onclick=()=>step(1);
 $('b-delc').onclick=async()=>{
   if(!sel||!isEditor())return;
   if(!await ask('区画の削除','この区画と登録写真を削除しますか？'))return;
